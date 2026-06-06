@@ -4,9 +4,9 @@ const dotenv = require("dotenv")
 const express = require("express")
 const cors = require("cors")
 
-//Local Modules
-const userRouter = require("./Routes/userRouter")
-const courseRouter = require("./Routes/courseRouter")
+// //Local Modules
+// const userRouter = require("./Routes/userRouter")
+// const courseRouter = require("./Routes/courseRouter")
 const authRouter = require("./Routes/authRouter")
 
 dotenv.config()
@@ -28,7 +28,7 @@ app.get('/', (req, res)=>{
     res.send("LMS API is Running")
 })
 
-const PORT = process.env.PORT || 5000
+const PORT = process.env.PORT || 3000
 app.listen(PORT, ()=>{
     console.log(`🚀 Server is running on http://localhost:${PORT}`)
 })

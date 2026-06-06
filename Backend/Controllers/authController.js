@@ -1,5 +1,6 @@
 const bcrypt = require("bcryptjs")
 const User = require("../Models/user")
+const jwt = require("jsonwebtoken")
 
 exports.postUserRegister = async (req, res) => {
     const { name, email, password, role } = req.body
@@ -11,8 +12,7 @@ exports.postUserRegister = async (req, res) => {
             return res.status(400).json({ message: "User already exists" })
         } 
 
-        // Hash password        const salt = await bcrypt.genSalt(10)
-        const hashedPassword = await bcrypt.hash(password, salt)
+        const hashedPassword = await bcrypt.hash(password, 12)
 
         // Create new user
         const newUser = new User({
@@ -62,7 +62,7 @@ exports.postUserLogin = async (req, res) => {
             role: user.role,
             })    
         } 
-    catch {
+    catch (error){
         console.log('error while logging in the user' ,error)
         res.status(500).json({ message: "Server error" })
     }
