@@ -50,3 +50,4 @@ const courseSchema = mongoose.Schema({
 
 
     module.exports = mongoose.model("Course", courseSchema)
+    module.exports = mongoose.model("Lesson", lessonSchema)
