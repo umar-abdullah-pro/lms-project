@@ -6,8 +6,8 @@ const cors = require("cors")
 
 // //Local Modules
 // const userRouter = require("./Routes/userRouter")
-// const courseRouter = require("./Routes/courseRouter")
 const authRouter = require("./Routes/authRouter")
+const courseRouter = require("./Routes/courseRouter")
 
 dotenv.config()
 
@@ -22,7 +22,8 @@ mongoose.connect(process.env.DB_PATH).then(()=>{
     console.log("❌ MongoDB connection error:", err)
 })
 
-app.use("/api/auth", authRouter)
+app.use('/api/auth', authRouter)
+app.use('/api/courses', courseRouter)
 
 app.get('/', (req, res)=>{
     res.send("LMS API is Running")

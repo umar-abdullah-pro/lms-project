@@ -1,5 +1,5 @@
     const jwt = require('jsonwebtoken');
-    const User = require('../models/User');
+    const User = require('../Models/User');
 
     // 1. The Bouncer: Checks if the user is logged in
     const protect = async (req, res, next) => {
