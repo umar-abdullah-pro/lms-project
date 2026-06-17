@@ -1,6 +1,19 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
-/* Adding a soft background color for the whole app */
+@theme {
+  /* Creating our custom Learnly color palette */
+  --color-brand-purple: #695bf4;
+  --color-brand-coral: #ff6b60;
+  --color-brand-beige: #f9f8f4;
+  --color-brand-yellow: #ffcf54;
+  
+  /* Setting the default font for the whole app */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+}
+
 body {
-  background-color: #f3f4f6; 
+  background-color: var(--color-brand-beige);
+  color: #1a1a2e; /* A very dark, soft blue/gray instead of harsh black */
+  -webkit-font-smoothing: antialiased;
 }
