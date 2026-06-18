@@ -46,7 +46,7 @@ const Login = () => {
 
       {/* RIGHT SIDE: Login Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-brand-beige">
-        <div className="w-full max-w-md bg-white rounded-[2rem] p-10 shadow-sm border border-gray-100">
+        <div className="w-full max-w-md bg-white rounded-4xl p-10 shadow-sm border border-gray-100">
           <h2 className="text-3xl font-extrabold text-gray-900 mb-2">Log in</h2>
           <p className="text-gray-500 mb-8 font-medium">
             New to Learnly? <Link to="/register" className="text-brand-purple hover:underline">Create an account</Link>
