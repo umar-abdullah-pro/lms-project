@@ -14,7 +14,7 @@ const enrollmentSchema = mongoose.Schema({
     },
 
     completedLessons:{
-        type: mongoose.Schema.Types.ObjectId,
+        type: [mongoose.Schema.Types.ObjectId],
         required: true
     },
 

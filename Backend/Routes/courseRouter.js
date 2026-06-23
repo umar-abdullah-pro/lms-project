@@ -6,6 +6,6 @@ const authMiddleware = require('../Middlewares/authMiddleware')
 
 courseRouter.get('/', courseController.getAllCourses)
 courseRouter.post('/', authMiddleware.protect, authMiddleware.instructorOnly, courseController.postCreateCourse)
-courseRouter.get('/courses/:id', courseController.getCourseById)
+courseRouter.get('/:id', courseController.getCourseById)
 
 module.exports = courseRouter

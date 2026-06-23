@@ -19,7 +19,7 @@ const Login = () => {
       localStorage.setItem('token', response.data.token);
       navigate('/'); 
     } catch (err) {
-      setError(err.response?.data?.error || 'Invalid credentials');
+      setError(err.response?.data?.message || 'Invalid credentials');
     }
   };
 
