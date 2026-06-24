@@ -1,11 +1,12 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import { AuthProvider } from './Context/AuthContext';
-import Register from './Pages/Register';
-import Login from './Pages/Login';
-import Home from './Pages/Home';
-import Navbar from './Components/Navbar';
-import Dashboard from './Pages/Dashboard';
-import CourseDetail from './Pages/CourseDetails';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { AuthProvider } from "./Context/AuthContext";
+import Register from "./Pages/Register";
+import Login from "./Pages/Login";
+import Home from "./Pages/Home";
+import Navbar from "./Components/Navbar";
+import Dashboard from "./Pages/Dashboard";
+import CourseDetail from "./Pages/CourseDetails";
+import CreateCourse from "./Pages/CreateCourse";
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/course/:id"element={<CourseDetail />} />
+            <Route path="/course/:id" element={<CourseDetail />} />
+            <Route path="/create-course" element={<CreateCourse />} />
           </Routes>
         </div>
       </BrowserRouter>
