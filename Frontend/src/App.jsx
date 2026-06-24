@@ -7,6 +7,7 @@ import Navbar from "./Components/Navbar";
 import Dashboard from "./Pages/Dashboard";
 import CourseDetail from "./Pages/CourseDetails";
 import CreateCourse from "./Pages/CreateCourse";
+import NotFound from "./Pages/NotFound";
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/course/:id" element={<CourseDetail />} />
             <Route path="/create-course" element={<CreateCourse />} />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>
