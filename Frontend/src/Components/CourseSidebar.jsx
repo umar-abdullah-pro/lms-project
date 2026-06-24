@@ -1,0 +1,70 @@
+const CourseSidebar = ({ course, isEnrolled = true }) => {
+  return (
+    <div className="sticky top-24 p-8 bg-white border border-gray-100 shadow-[0_20px_40px_rgb(0,0,0,0.04)] rounded-[2rem]">
+      <div className="mb-8">
+        <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
+          {course?.price === 0 ? "Free" : `$${course?.price}`}
+        </h2>
+        <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">
+          {course?.lessons?.length || 4} Lessons
+        </p>
+      </div>
+
+      {/* Progress Bar (Only show if enrolled, otherwise show a basic line or nothing) */}
+      {isEnrolled && (
+        <div className="p-4 mb-8 bg-gray-50 rounded-2xl">
+          <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden mb-2">
+            <div
+              className="h-full bg-[#1de9b6] rounded-full"
+              style={{ width: "50%" }}
+            ></div>
+          </div>
+          <div className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
+            50% Complete
+          </div>
+        </div>
+      )}
+
+      {/* Action Button */}
+      {isEnrolled ? (
+        <button className="w-full flex items-center justify-center gap-2 py-3.5 mb-8 text-gray-600 font-bold bg-white border-2 border-gray-200 rounded-full hover:bg-gray-50 transition-colors cursor-default">
+          <svg
+            className="w-5 h-5 text-gray-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="3"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          Enrolled
+        </button>
+      ) : (
+        <button className="w-full py-3.5 mb-8 text-white font-bold bg-brand-coral rounded-full hover:bg-[#ff554a] transition-all shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:-translate-y-0.5">
+          Enroll Now
+        </button>
+      )}
+
+      {/* Instructor Info */}
+      <div className="pt-6 border-t border-gray-100">
+        <p className="mb-3 text-[10px] font-black tracking-widest text-gray-400 uppercase">
+          Instructor
+        </p>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center justify-center font-bold text-brand-purple bg-[#f0f2ff] rounded-full w-11 h-11">
+            {course?.instructor?.name?.substring(0, 2).toUpperCase() || "IN"}
+          </div>
+          <span className="font-extrabold text-gray-900">
+            {course?.instructor?.name || "Instructor Name"}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CourseSidebar;

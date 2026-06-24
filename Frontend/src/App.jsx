@@ -5,6 +5,7 @@ import Login from './Pages/Login';
 import Home from './Pages/Home';
 import Navbar from './Components/Navbar';
 import Dashboard from './Pages/Dashboard';
+import CourseDetail from './Pages/CourseDetails';
 
 function App() {
   return (
@@ -19,7 +20,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
-            Route
+            <Route path="/course/:id"element={<CourseDetail />} />
           </Routes>
         </div>
       </BrowserRouter>
