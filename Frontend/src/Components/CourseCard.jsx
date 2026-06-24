@@ -1,68 +1,52 @@
 import { Link } from "react-router-dom";
 
-const CourseCard = ({ course }) => {
-  const { _id, title, description, price, instructor, lessons } = course;
+const CourseCard = ({ course, index }) => {
+  // Creating dynamic pastel colors based on index
+  const colors = [
+    {
+      bg: "bg-[#ffeae5]",
+      text: "text-brand-coral",
+      pill: "bg-[#ffedec] text-[#ff7970]",
+    },
+    {
+      bg: "bg-[#eef0ff]",
+      text: "text-brand-purple",
+      pill: "bg-[#f0f2ff] text-[#7b6df5]",
+    },
+    {
+      bg: "bg-[#fff5d6]",
+      text: "text-[#d99f00]",
+      pill: "bg-[#fff8e1] text-[#d99f00]",
+    },
+  ];
+  const theme = colors[index % 3];
 
   return (
     <Link
-      to={`/courses/${_id}`}
-      className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden"
+      to={`/course/${course._id}`}
+      className="flex flex-col overflow-hidden transition-all bg-white border border-gray-100 group rounded-[2rem] hover:shadow-xl hover:-translate-y-1"
     >
-      {/* Card Color Banner — uses a gradient derived from the title's length for variety */}
       <div
-        className="h-3 w-full"
-        style={{
-          background:
-            title.length % 3 === 0
-              ? "linear-gradient(90deg, #695bf4, #9b8ff7)"
-              : title.length % 3 === 1
-                ? "linear-gradient(90deg, #ff6b60, #ff9a93)"
-                : "linear-gradient(90deg, #ffcf54, #ffe099)",
-        }}
-      />
-
-      <div className="p-6 flex flex-col flex-1 gap-4">
-        {/* Price Badge */}
-        <div className="flex items-center justify-between">
-          <span
-            className={`text-xs font-bold px-3 py-1 rounded-full ${
-              price === 0
-                ? "bg-green-100 text-green-700"
-                : "bg-brand-purple/10 text-brand-purple"
-            }`}
-          >
-            {price === 0 ? "Free" : `Rs.${price}`}
-          </span>
-          <span className="text-xs text-gray-400 font-medium">
-            {lessons?.length ?? 0}{" "}
-            {lessons?.length === 1 ? "lesson" : "lessons"}
-          </span>
+        className={`h-48 flex items-center justify-center text-6xl font-extrabold ${theme.bg} ${theme.text}`}
+      >
+        {course.title.charAt(0).toUpperCase()}
+      </div>
+      <div className="flex flex-col flex-grow p-8">
+        <div
+          className={`inline-flex px-3 py-1 mb-4 text-xs font-bold rounded-full w-fit ${theme.pill}`}
+        >
+          {course.instructor?.name || "Instructor"}
         </div>
-
-        {/* Title */}
-        <h3 className="text-lg font-extrabold text-gray-900 leading-snug group-hover:text-brand-purple transition-colors line-clamp-2">
-          {title}
+        <h3 className="mb-3 text-2xl font-extrabold text-gray-900 transition-colors group-hover:text-brand-purple">
+          {course.title}
         </h3>
-
-        {/* Description */}
-        <p className="text-sm text-gray-500 leading-relaxed line-clamp-3 flex-1">
-          {description}
+        <p className="flex-grow mb-8 font-medium text-gray-500 line-clamp-2">
+          {course.description}
         </p>
-
-        {/* Footer: Instructor + Arrow */}
-        <div className="flex items-center justify-between pt-2 border-t border-gray-100">
-          <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-brand-purple/10 text-brand-purple flex items-center justify-center font-bold text-xs">
-              {instructor?.name?.charAt(0)?.toUpperCase() ?? "I"}
-            </div>
-            <span className="text-sm font-semibold text-gray-600">
-              {instructor?.name ?? "Instructor"}
-            </span>
-          </div>
-          <span className="text-brand-coral font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
-            View
+        <div className="flex items-center justify-between pt-6 mt-auto border-t border-gray-100">
+          <div className="flex items-center gap-2 text-sm font-bold text-gray-400">
             <svg
-              className="w-4 h-4"
+              className="w-5 h-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -70,11 +54,15 @@ const CourseCard = ({ course }) => {
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                strokeWidth="2.5"
-                d="M9 5l7 7-7 7"
-              />
+                strokeWidth="2"
+                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+              ></path>
             </svg>
-          </span>
+            {course.lessons?.length || 0} LESSONS
+          </div>
+          <div className="text-lg font-extrabold text-brand-purple">
+            {course.price === 0 ? "Free" : `$${course.price}`}
+          </div>
         </div>
       </div>
     </Link>

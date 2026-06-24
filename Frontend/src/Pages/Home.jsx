@@ -1,45 +1,40 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+
+// Importing our Lego Blocks
 import HeroSection from "../Components/HeroSection";
 import CourseCatalog from "../Components/CourseCatalog";
+import FeaturesSection from "../Components/FeaturesSection";
+import CallToAction from "../Components/CallToAction";
+import Footer from "../Components/Footer";
 
 const Home = () => {
   const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
-  const catalogRef = useRef(null);
+  const [loading, setLoading] = useState(true);
 
+  // Fetch the data
   useEffect(() => {
     const fetchCourses = async () => {
       try {
         const response = await axios.get("http://localhost:3000/api/courses");
+        console.log(response)
         setCourses(response.data.data);
-      } catch (err) {
-        setError("Could not load courses. Please try again later.");
-        console.error(err);
-      } finally {
-        setIsLoading(false);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setLoading(false);
       }
     };
     fetchCourses();
   }, []);
 
-  const scrollToCatalog = () =>
-    catalogRef.current?.scrollIntoView({ behavior: "smooth" });
-
   return (
-    <div className="min-h-screen bg-brand-beige">
-      <HeroSection onBrowseClick={scrollToCatalog} />
-      <div ref={catalogRef}>
-        <CourseCatalog
-          courses={courses}
-          isLoading={isLoading}
-          error={error}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-        />
-      </div>
+    <div className="w-full min-h-screen bg-brand-beige">
+      <HeroSection />
+      <CourseCatalog courses={courses} loading={loading} />
+      <FeaturesSection />
+      <CallToAction />
+      <Footer />
     </div>
   );
 };
