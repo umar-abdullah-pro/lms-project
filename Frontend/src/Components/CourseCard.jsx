@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const CourseCard = ({ course }) => {
   const { _id, title, description, price, instructor, lessons } = course;
@@ -14,10 +14,10 @@ const CourseCard = ({ course }) => {
         style={{
           background:
             title.length % 3 === 0
-              ? 'linear-gradient(90deg, #695bf4, #9b8ff7)'
+              ? "linear-gradient(90deg, #695bf4, #9b8ff7)"
               : title.length % 3 === 1
-              ? 'linear-gradient(90deg, #ff6b60, #ff9a93)'
-              : 'linear-gradient(90deg, #ffcf54, #ffe099)',
+                ? "linear-gradient(90deg, #ff6b60, #ff9a93)"
+                : "linear-gradient(90deg, #ffcf54, #ffe099)",
         }}
       />
 
@@ -27,14 +27,15 @@ const CourseCard = ({ course }) => {
           <span
             className={`text-xs font-bold px-3 py-1 rounded-full ${
               price === 0
-                ? 'bg-green-100 text-green-700'
-                : 'bg-brand-purple/10 text-brand-purple'
+                ? "bg-green-100 text-green-700"
+                : "bg-brand-purple/10 text-brand-purple"
             }`}
           >
-            {price === 0 ? 'Free' : `$${price}`}
+            {price === 0 ? "Free" : `Rs.${price}`}
           </span>
           <span className="text-xs text-gray-400 font-medium">
-            {lessons?.length ?? 0} {lessons?.length === 1 ? 'lesson' : 'lessons'}
+            {lessons?.length ?? 0}{" "}
+            {lessons?.length === 1 ? "lesson" : "lessons"}
           </span>
         </div>
 
@@ -52,16 +53,26 @@ const CourseCard = ({ course }) => {
         <div className="flex items-center justify-between pt-2 border-t border-gray-100">
           <div className="flex items-center gap-2">
             <div className="w-7 h-7 rounded-full bg-brand-purple/10 text-brand-purple flex items-center justify-center font-bold text-xs">
-              {instructor?.name?.charAt(0)?.toUpperCase() ?? 'I'}
+              {instructor?.name?.charAt(0)?.toUpperCase() ?? "I"}
             </div>
             <span className="text-sm font-semibold text-gray-600">
-              {instructor?.name ?? 'Instructor'}
+              {instructor?.name ?? "Instructor"}
             </span>
           </div>
           <span className="text-brand-coral font-bold text-sm flex items-center gap-1 group-hover:gap-2 transition-all">
             View
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
+            <svg
+              className="w-4 h-4"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2.5"
+                d="M9 5l7 7-7 7"
+              />
             </svg>
           </span>
         </div>

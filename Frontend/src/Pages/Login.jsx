@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../Context/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const auth = useAuth();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -16,8 +18,8 @@ const Login = () => {
     setError('');
     try {
       const response = await axios.post('http://localhost:3000/api/auth/login', formData);
-      localStorage.setItem('token', response.data.token);
-      navigate('/'); 
+      auth.login(response.data); // saves token + user info, triggers Navbar update
+      navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials');
     }

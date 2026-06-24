@@ -1,6 +1,8 @@
-import { Link } from 'react-router-dom';
+import { useAuth } from "../Context/AuthContext";
+import { Link } from "react-router-dom";
 
 const HeroSection = ({ onBrowseClick }) => {
+  const { token, scroll } = useAuth();
   return (
     <section className="relative overflow-hidden bg-brand-beige pt-16 pb-24 px-6">
       {/* Background decorative blobs */}
@@ -16,17 +18,18 @@ const HeroSection = ({ onBrowseClick }) => {
 
         {/* Headline */}
         <h1 className="text-5xl md:text-7xl font-extrabold text-gray-900 leading-tight mb-6 tracking-tight">
-          Learn anything.{' '}
+          Learn anything.{" "}
           <span className="relative inline-block">
             <span className="relative z-10">Grow</span>
             <span className="absolute bottom-1 left-0 w-full h-4 bg-brand-yellow/60 -z-0 rounded" />
-          </span>{' '}
+          </span>{" "}
           everywhere.
         </h1>
 
         {/* Subheading */}
         <p className="text-xl text-gray-500 mb-10 max-w-2xl mx-auto leading-relaxed font-medium">
-          Join thousands of students learning from expert instructors on Learnly. Pick a course, start today, and transform your skills.
+          Join thousands of students learning from expert instructors on
+          Learnly. Pick a course, start today, and transform your skills.
         </p>
 
         {/* CTA Buttons */}
@@ -37,21 +40,31 @@ const HeroSection = ({ onBrowseClick }) => {
           >
             Browse Courses
           </button>
-          <Link
-            to="/register"
-            className="px-8 py-4 font-bold text-brand-purple bg-brand-purple/10 rounded-full hover:bg-brand-purple/15 transition-all text-lg"
-          >
-            Join for free →
-          </Link>
+
+          {token ? (
+            <button
+              onClick={onBrowseClick}
+              className="px-8 py-4 font-bold text-brand-purple bg-brand-purple/10 rounded-full hover:bg-brand-purple/15 transition-all text-lg"
+            >
+              Start Learning
+            </button>
+          ) : (
+            <Link
+              to="/register"
+              className="px-8 py-4 font-bold text-brand-purple bg-brand-purple/10 rounded-full hover:bg-brand-purple/15 transition-all text-lg"
+            >
+              Join for free →
+            </Link>
+          )}
         </div>
       </div>
 
       {/* Stats strip */}
       <div className="max-w-xl mx-auto mt-16 flex items-center justify-center gap-10 relative z-10">
         {[
-          { value: '12k+', label: 'Students' },
-          { value: '300+', label: 'Courses' },
-          { value: '95%', label: 'Satisfaction' },
+          { value: "12k+", label: "Students" },
+          { value: "300+", label: "Courses" },
+          { value: "95%", label: "Satisfaction" },
         ].map(({ value, label }, i) => (
           <div key={label} className="flex items-center gap-10">
             <div className="text-center">

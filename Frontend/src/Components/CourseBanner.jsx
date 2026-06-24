@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const CourseBanner = ({ title, description, instructor }) => {
   return (
@@ -9,8 +9,18 @@ const CourseBanner = ({ title, description, instructor }) => {
           to="/"
           className="inline-flex items-center gap-2 text-white/60 hover:text-white text-sm font-semibold transition-colors mb-6"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M15 19l-7-7 7-7" />
+          <svg
+            className="w-4 h-4"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2.5"
+              d="M15 19l-7-7 7-7"
+            />
           </svg>
           All Courses
         </Link>
@@ -27,11 +37,13 @@ const CourseBanner = ({ title, description, instructor }) => {
           {/* Instructor strip */}
           <div className="flex items-center gap-3 mt-6">
             <div className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-bold">
-              {instructor?.name?.charAt(0)?.toUpperCase() ?? 'I'}
+              {instructor?.name?.charAt(0)?.toUpperCase() ?? "I"}
             </div>
             <div>
-              <p className="text-white font-bold">{instructor?.name ?? 'Unknown Instructor'}</p>
-              <p className="text-white/50 text-sm">{instructor?.email ?? ''}</p>
+              <p className="text-white font-bold">
+                {instructor?.name ?? "Unknown Instructor"}
+              </p>
+              <p className="text-white/50 text-sm">{instructor?.email ?? ""}</p>
             </div>
           </div>
         </div>

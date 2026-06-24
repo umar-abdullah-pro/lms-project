@@ -1,7 +1,7 @@
 const { Course } = require("../Models/course");
 
 exports.postCreateCourse = async (req, res) => {
-    const {title, description, price} = req.body;
+    const {title, description, price, isPublished} = req.body;
     try {
         if (!title || !description) {
             return res.status(400).json({
@@ -15,7 +15,7 @@ exports.postCreateCourse = async (req, res) => {
             description,
             price,
             instructor: req.user._id,
-            isPublished: false
+            isPublished: isPublished !== undefined ? isPublished : false
         });
 
         res.status(201).json({

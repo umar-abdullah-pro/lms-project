@@ -16,7 +16,7 @@ const CourseDetail = () => {
     const fetchCourse = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3000/api/courses/${id}`
+          `http://localhost:3000/api/courses/${id}`,
         );
         setCourse(response.data.data);
       } catch (err) {
@@ -42,7 +42,14 @@ const CourseDetail = () => {
     );
   }
 
-  const { title, description, price, instructor, lessons = [], createdAt } = course;
+  const {
+    title,
+    description,
+    price,
+    instructor,
+    lessons = [],
+    createdAt,
+  } = course;
   const createdDate = new Date(createdAt).toLocaleDateString("en-US", {
     year: "numeric",
     month: "long",
@@ -50,7 +57,11 @@ const CourseDetail = () => {
 
   return (
     <div className="min-h-screen bg-brand-beige">
-      <CourseBanner title={title} description={description} instructor={instructor} />
+      <CourseBanner
+        title={title}
+        description={description}
+        instructor={instructor}
+      />
 
       <div className="max-w-7xl mx-auto px-6 py-12">
         <div className="flex flex-col lg:flex-row gap-10 items-start">
