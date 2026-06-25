@@ -8,6 +8,7 @@ import Dashboard from "./Pages/Dashboard";
 import CourseDetail from "./Pages/CourseDetails";
 import CreateCourse from "./Pages/CreateCourse";
 import NotFound from "./Pages/NotFound";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 function App() {
   return (
@@ -23,7 +24,14 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/course/:id" element={<CourseDetail />} />
-            <Route path="/create-course" element={<CreateCourse />} />
+            <Route
+              path="/create-course"
+              element={
+                <ProtectedRoute requiredRole="instructor">
+                  <CreateCourse />
+                </ProtectedRoute>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>
