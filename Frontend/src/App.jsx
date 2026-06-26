@@ -39,9 +39,23 @@ function App() {
                 </GuestRoute>
               }
             />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/course/:id" element={<CourseDetail />} />
-            <Route path="/all-courses" element={<CourseCatalog />} />
+            <Route
+              path="/all-courses"
+              element={
+                <ProtectedRoute>
+                  <CourseCatalog />
+                </ProtectedRoute>
+              }
+            />
             <Route
               path="/create-course"
               element={
