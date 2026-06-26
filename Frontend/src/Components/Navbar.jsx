@@ -83,9 +83,12 @@ const Navbar = () => {
                   {avatar}
                 </div>
                 <div className="leading-tight">
-                  <p className="text-sm font-extrabold text-gray-900">
+                  <Link
+                    to="/profile"
+                    className="text-sm font-extrabold text-gray-900"
+                  >
                     {user.name}
-                  </p>
+                  </Link>
                   <p className="text-xs font-semibold text-brand-purple">
                     {roleBadge}
                   </p>
@@ -207,7 +210,13 @@ const Navbar = () => {
                     {avatar}
                   </div>
                   <div>
-                    <p className="font-extrabold text-gray-900">{user.name}</p>
+                    <Link
+                      to="/profile"
+                      onClick={() => setIsMenuOpen(false)}
+                      className="font-extrabold text-gray-900"
+                    >
+                      {user.name}
+                    </Link>
                     <p className="text-sm font-semibold text-brand-purple">
                       {roleBadge}
                     </p>
