@@ -11,6 +11,7 @@ import NotFound from "./Pages/NotFound";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import CourseCatalog from "./Pages/CourseCatalog";
 import UserProfile from "./Pages/UserProfile";
+import GuestRoute from "./GuestRoute";
 
 function App() {
   return (
@@ -22,8 +23,22 @@ function App() {
         <div className="min-h-screen pb-10 bg-brand-beige">
           <Routes>
             <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route
+              path="/login"
+              element={
+                <GuestRoute>
+                  <Login />
+                </GuestRoute>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <GuestRoute>
+                  <Register />
+                </GuestRoute>
+              }
+            />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/course/:id" element={<CourseDetail />} />
             <Route path="/all-courses" element={<CourseCatalog />} />
