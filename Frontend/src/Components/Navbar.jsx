@@ -18,8 +18,6 @@ const Navbar = () => {
   // Role badge label
   const roleBadge = user?.role === "instructor" ? "Instructor" : "Student";
 
-
-
   return (
     <nav className="bg-brand-beige py-4 px-6 md:px-12 sticky top-0 z-50 border-b border-gray-100">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -54,12 +52,28 @@ const Navbar = () => {
 
         {/* RIGHT: Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
-          <Link to = '/'
+          <Link
+            to="/all-courses"
             className="font-semibold text-gray-600 hover:text-gray-900 transition-colors"
           >
             Browse courses
           </Link>
-
+          {user?.role === "student" && (
+            <Link
+              to="/dashboard"
+              className="font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Dashboard
+            </Link>
+          )}
+          {user?.role === "instructor" && (
+            <Link
+              to="/create-course"
+              className="font-semibold text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              Add New Course
+            </Link>
+          )}
           {user ? (
             /* ── Logged IN ── */
             <div className="flex items-center gap-4 border-l pl-6 border-gray-300">
@@ -160,12 +174,30 @@ const Navbar = () => {
         <div className="absolute top-0 left-0 w-full h-screen bg-brand-beige z-40 flex flex-col pt-24 px-8 md:hidden">
           <div className="flex flex-col gap-6 text-xl">
             <Link
-              to="/"
+              to="/all-courses"
               onClick={() => setIsMenuOpen(false)}
               className="font-bold text-gray-800 border-b border-gray-200 pb-4"
             >
               Browse courses
             </Link>
+            {user?.role === "student" && (
+              <Link
+                to="/dashboard"
+                onClick={() => setIsMenuOpen(false)}
+                className="font-bold text-gray-800 border-b border-gray-200 pb-4"
+              >
+                Dashboard
+              </Link>
+            )}
+            {user?.role === "instructor" && (
+              <Link
+                to="/create-course"
+                onClick={() => setIsMenuOpen(false)}
+                className="font-bold text-gray-800 border-b border-gray-200 pb-4"
+              >
+                Add New Course
+              </Link>
+            )}
 
             {user ? (
               <>

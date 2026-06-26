@@ -12,7 +12,7 @@ const HeroSection = () => {
             For Students, Not Spreadsheets
           </p>
           <h1 className="mb-6 text-5xl font-extrabold leading-[1.1] text-gray-900 md:text-6xl lg:text-7xl">
-            Learn things that actually{" "}
+            Learn things that actually
             <span className="relative inline-block">
               stick,
               <span className="absolute bottom-1 left-0 w-full h-4 bg-brand-yellow -z-10 rounded-full"></span>
