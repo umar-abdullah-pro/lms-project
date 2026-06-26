@@ -9,6 +9,7 @@ import CourseDetail from "./Pages/CourseDetails";
 import CreateCourse from "./Pages/CreateCourse";
 import NotFound from "./Pages/NotFound";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import CourseCatalog from "./Pages/CourseCatalog";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/course/:id" element={<CourseDetail />} />
+            <Route path="/all-courses" element={<CourseCatalog  />} />
             <Route
               path="/create-course"
               element={

@@ -1,6 +1,27 @@
-import CourseCard from "./CourseCard";
+import CourseCard from "../Components/CourseCard";
+import { useState, useEffect } from "react";
+import axios from "axios";
 
-const CourseCatalog = ({ courses, loading }) => {
+const CourseCatalog = () => {
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Fetch the data
+  useEffect(() => {
+    const fetchCourses = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/api/courses");
+        console.log(response);
+        setCourses(response.data.data);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching courses:", error);
+        setLoading(false);
+      }
+    };
+    fetchCourses();
+  }, []);
+
   return (
     <section id="courses" className="px-6 py-20 mx-auto max-w-7xl md:px-12">
       <div className="flex items-center justify-between mb-12">

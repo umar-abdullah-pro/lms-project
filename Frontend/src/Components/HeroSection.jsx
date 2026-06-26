@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useAuth } from "../Context/AuthContext";
 
 const HeroSection = () => {
+  const { user } = useAuth();
   return (
     <section className="px-6 pt-12 pb-24 mx-auto max-w-7xl md:px-12 md:pt-20 lg:pb-32">
       <div className="flex flex-col items-center gap-16 lg:flex-row lg:gap-8">
@@ -23,14 +25,16 @@ const HeroSection = () => {
             where you left off — so studying feels like progress, not a chore.
           </p>
           <div className="flex flex-col items-center gap-4 sm:flex-row">
-            <Link
-              to="/register"
-              className="w-full sm:w-auto px-8 py-3.5 text-lg font-bold text-white transition-all bg-brand-coral rounded-full hover:bg-[#ff554a] shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:-translate-y-0.5 text-center"
-            >
-              Get started free →
-            </Link>
+            {!user ? 
+              <Link
+                to="/register"
+                className="w-full sm:w-auto px-8 py-3.5 text-lg font-bold text-white transition-all bg-brand-coral rounded-full hover:bg-[#ff554a] shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:-translate-y-0.5 text-center"
+              >
+                Get started free →
+              </Link> : ''
+            }
             <a
-              href="#courses"
+              href="all-courses"
               className="w-full sm:w-auto px-8 py-3.5 text-lg font-bold text-gray-800 transition-all bg-white border-2 border-gray-200 rounded-full hover:border-gray-300 hover:bg-gray-50 text-center"
             >
               Browse courses
