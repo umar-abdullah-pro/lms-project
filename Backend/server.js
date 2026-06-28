@@ -1,35 +1,35 @@
 // Core Modules
-const mongoose = require("mongoose")
-const dotenv = require("dotenv")
-const express = require("express")
-const cors = require("cors")
+const mongoose = require("mongoose");
+const dotenv = require("dotenv");
+const express = require("express");
+const cors = require("cors");
 
 // //Local Modules
-// const userRouter = require("./Routes/userRouter")
-const authRouter = require("./Routes/authRouter")
-const courseRouter = require("./Routes/courseRouter")
+const authRouter = require("./Routes/authRouter");
+const courseRouter = require("./Routes/courseRouter");
+const enrollmentRouter = require("./Routes/enrollmentRouter");
 
-dotenv.config()
+dotenv.config();
 
-const app = express()
+const app = express();
 
-app.use(cors())
-app.use(express.json())
+app.use(cors());
+app.use(express.json());
 
-mongoose.connect(process.env.DB_PATH).then(()=>{
-    console.log("✅ Connected to MongoDB successfully!")
-}).catch((err)=>{
-    console.log("❌ MongoDB connection error:", err)
-})
+mongoose
+  .connect(process.env.DB_PATH)
+  .then(() => {
+    console.log("✅ Connected to MongoDB successfully!");
+  })
+  .catch((err) => {
+    console.log("❌ MongoDB connection error:", err);
+  });
 
-app.use('/api/auth', authRouter)
-app.use('/api/courses', courseRouter)
+app.use("/api/auth", authRouter);
+app.use("/api/courses", courseRouter);
+app.use("/api/enrollments", enrollmentRouter);
 
-app.get('/', (req, res)=>{
-    res.send("LMS API is Running")
-})
-
-const PORT = process.env.PORT || 3000
-app.listen(PORT, ()=>{
-    console.log(`🚀 Server is running on http://localhost:${PORT}`)
-})
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+});

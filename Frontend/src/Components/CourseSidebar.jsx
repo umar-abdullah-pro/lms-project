@@ -1,4 +1,10 @@
-const CourseSidebar = ({ course, isEnrolled = true }) => {
+const CourseSidebar = ({
+  handleEnrollment,
+  isCourseOwner,
+  progressPercentage,
+  course,
+  isEnrolled,
+}) => {
   return (
     <div className="sticky top-24 p-8 bg-white border border-gray-100 shadow-[0_20px_40px_rgb(0,0,0,0.04)] rounded-[2rem]">
       <div className="mb-8">
@@ -16,18 +22,40 @@ const CourseSidebar = ({ course, isEnrolled = true }) => {
           <div className="w-full h-2.5 bg-gray-200 rounded-full overflow-hidden mb-2">
             <div
               className="h-full bg-[#1de9b6] rounded-full"
-              style={{ width: "50%" }}
+              style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
           <div className="text-[10px] font-black tracking-widest text-gray-500 uppercase">
-            50% Complete
+            {progressPercentage}% Complete
           </div>
         </div>
       )}
 
       {/* Action Button */}
-      {isEnrolled ? (
-        <button className="w-full flex items-center justify-center gap-2 py-3.5 mb-8 text-gray-600 font-bold bg-white border-2 border-gray-200 rounded-full hover:bg-gray-50 transition-colors cursor-default">
+      {isCourseOwner ? (
+        // IF THEY OWN THE COURSE: Show the Add Lessons button
+        <button
+          onClick={() => navigate(`/course/${course._id}/manage`)}
+          className="w-full flex items-center justify-center gap-2 px-8 py-3 mb-8 text-white transition-colors rounded-full bg-brand-purple hover:bg-opacity-90 font-bold"
+        >
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          Add Lessons
+        </button>
+      ) : isEnrolled ? (
+        // IF THEY BOUGHT IT: Show the Enrolled button
+        <button className="w-full flex items-center justify-center gap-2 py-3.5 mb-8 text-gray-600 font-bold bg-white border-2 border-gray-200 rounded-full cursor-default">
           <svg
             className="w-5 h-5 text-gray-400"
             fill="none"
@@ -44,7 +72,11 @@ const CourseSidebar = ({ course, isEnrolled = true }) => {
           Enrolled
         </button>
       ) : (
-        <button className="w-full py-3.5 mb-8 text-white font-bold bg-brand-coral rounded-full hover:bg-[#ff554a] transition-all shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:-translate-y-0.5">
+        // IF THEY HAVEN'T BOUGHT IT: Show the Enroll button
+        <button
+          onClick={handleEnrollment}
+          className="w-full px-8 py-3 mb-8 font-bold text-white transition-colors rounded-full bg-brand-coral hover:bg-opacity-90"
+        >
           Enroll Now
         </button>
       )}

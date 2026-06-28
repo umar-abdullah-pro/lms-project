@@ -39,7 +39,7 @@ const ContinueLearning = ({ enrolledCourses, loading }) => {
             You haven't started any courses yet.
           </p>
           <Link
-            to="/"
+            to="/all-courses"
             className="px-6 py-3 font-bold text-white bg-brand-coral rounded-full hover:bg-[#ff554a] transition-colors"
           >
             Find a Course

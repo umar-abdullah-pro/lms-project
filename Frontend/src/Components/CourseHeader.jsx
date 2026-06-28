@@ -4,7 +4,7 @@ const CourseHeader = ({ course }) => {
   return (
     <div className="mb-12">
       <Link
-        to="/"
+        to="/all-courses"
         className="inline-flex items-center gap-2 mb-8 text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
       >
         <svg

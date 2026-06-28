@@ -1,39 +1,49 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useAuth } from "../Context/AuthContext"; // 1. Import your auth context
 import DashboardHeader from "../components/DashboardHeader";
 import ContinueLearning from "../components/ContinueLearning";
 import Footer from "../components/Footer";
 
 const Dashboard = () => {
+  const { user, token } = useAuth(); // 2. Grab the logged-in user and token
   const [enrolledCourses, setEnrolledCourses] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Mocking the stats for now until the backend has full progress tracking
+  // 3. Make stats dynamic based on actual fetched data
   const userStats = {
-    courses: enrolledCourses.length || 2,
-    lessons: 3,
-    progress: 42,
+    courses: enrolledCourses.length, 
+    lessons: 0, // We can update this when you build the lesson backend
+    progress: 0, 
   };
 
   useEffect(() => {
-    // Simulated fetch of enrolled courses
     const fetchMyCourses = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/courses");
-        setEnrolledCourses(response.data.data.slice(0, 2));
+        // 4. Hit the REAL enrollment endpoint with the authorization header
+        const response = await axios.get("http://localhost:3000/api/enrollments/my-courses", {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        // Save the actual enrollments to state
+        setEnrolledCourses(response.data.data);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
         setLoading(false);
       }
     };
-    fetchMyCourses();
-  }, []);
+
+    if (token) {
+      fetchMyCourses();
+    }
+  }, [token]);
 
   return (
     <div className="w-full min-h-screen bg-brand-beige">
       <div className="px-6 py-12 mx-auto max-w-7xl md:px-12 md:py-16">
-        <DashboardHeader stats={userStats} userName="Asha" />
+        {/* 5. Dynamically pass the user's real name instead of "Asha" */}
+        <DashboardHeader stats={userStats} userName={user?.name || "Student"} />
         <ContinueLearning enrolledCourses={enrolledCourses} loading={loading} />
       </div>
       <Footer />
