@@ -47,7 +47,7 @@ exports.enrollInCourse = async (req, res) => {
 exports.getMyEnrollments = async (req, res) => {
   try {
     const enrollments = await Enrollment.find({ student: req.user._id })
-      .populate("course", "title description price instructor")
+      .populate("course", "title description price lessons instructor")
       .sort("-enrolledAt");
 
     res

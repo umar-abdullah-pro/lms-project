@@ -7,6 +7,7 @@ const CreateCourseForm = () => {
     title: "",
     description: "",
     price: 0,
+    isPublished: true, 
   });
 
   const [error, setError] = useState("");
@@ -14,7 +15,9 @@ const CreateCourseForm = () => {
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    // 👈 2. Updated to handle checkboxes correctly
+    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    setFormData({ ...formData, [e.target.name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -97,6 +100,22 @@ const CreateCourseForm = () => {
             />
           </div>
 
+          {/* 👇 3. Added Checkbox UI 👇 */}
+          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
+            <input
+              type="checkbox"
+              name="isPublished"
+              id="isPublished"
+              checked={formData.isPublished}
+              onChange={handleChange}
+              className="w-5 h-5 text-brand-purple bg-white border-gray-300 rounded focus:ring-brand-purple focus:ring-2"
+            />
+            <label htmlFor="isPublished" className="text-sm font-bold text-gray-700 cursor-pointer">
+              Publish this course immediately
+              <span className="block text-xs font-normal text-gray-500">Uncheck this if you want to keep it hidden as a draft.</span>
+            </label>
+          </div>
+
           <button
             type="submit"
             disabled={isLoading}
@@ -126,7 +145,6 @@ const CreateCourseForm = () => {
         </form>
       </div>
 
-      {/* Back Link positioned right below the form card */}
       <div className="mt-8 text-center md:text-left">
         <Link
           to="/dashboard"

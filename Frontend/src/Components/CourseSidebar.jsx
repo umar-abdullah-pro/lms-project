@@ -1,3 +1,4 @@
+import { Navigate } from "react-router-dom";
 const CourseSidebar = ({
   handleEnrollment,
   isCourseOwner,
@@ -12,7 +13,7 @@ const CourseSidebar = ({
           {course?.price === 0 ? "Free" : `$${course?.price}`}
         </h2>
         <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">
-          {course?.lessons?.length || 4} Lessons
+          {course?.lessons?.length || 0} Lessons
         </p>
       </div>
 

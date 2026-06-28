@@ -1,52 +1,67 @@
 const CourseLessonList = ({ lessons }) => {
-  // If the database doesn't have lessons yet, we'll use a placeholder array to match the design
-  const displayLessons =
-    lessons && lessons.length > 0
-      ? lessons
-      : [
-          {
-            _id: "1",
-            title: "What psychology actually studies",
-            description: "A quick map of the field.",
-            completed: true,
-          },
-          {
-            _id: "2",
-            title: "How memory really works",
-            description: "Understanding encoding and retrieval.",
-            completed: true,
-          },
-          {
-            _id: "3",
-            title: "Motivation and habits",
-            description: "The science of starting and staying consistent.",
-            completed: false,
-          },
-          {
-            _id: "4",
-            title: "Cognitive biases in daily life",
-            description: "Why our brains take mental shortcuts.",
-            completed: false,
-          },
-        ];
+  // Use data from database, or an empty array if undefined/null
+  const displayLessons = lessons || [];
 
   return (
     <div>
       <h2 className="mb-6 text-2xl font-extrabold text-gray-900">Lessons</h2>
 
-      <div className="flex flex-col gap-3">
-        {displayLessons.map((lesson, index) => (
-          <div
-            key={lesson._id}
-            className="flex items-center justify-between p-5 transition-all bg-white border border-gray-200 shadow-sm rounded-2xl hover:border-gray-300"
-          >
-            <div className="flex items-center gap-5">
-              {/* Check Circle Icon */}
-              <div
-                className={
-                  lesson.completed ? "text-[#1de9b6]" : "text-gray-300"
-                }
-              >
+      {/* Conditional Check: If length is 0, show the empty state message */}
+      {displayLessons.length === 0 ? (
+        <div className="p-8 text-center bg-white border border-gray-200 shadow-sm rounded-2xl text-gray-500">
+          <p className="font-medium">
+            No lessons have been added to this course yet.
+          </p>
+        </div>
+      ) : (
+        /* If there ARE lessons, render the list */
+        <div className="flex flex-col gap-3">
+          {displayLessons.map((lesson, index) => (
+            <div
+              key={lesson._id}
+              className="flex items-center justify-between p-5 transition-all bg-white border border-gray-200 shadow-sm rounded-2xl hover:border-gray-300"
+            >
+              <div className="flex items-center gap-5">
+                {/* Check Circle Icon */}
+                <div
+                  className={
+                    lesson.completed ? "text-[#1de9b6]" : "text-gray-300"
+                  }
+                >
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2.5"
+                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-4 mb-1">
+                    <span className="text-sm font-bold tracking-widest text-gray-400 uppercase">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <h3
+                      className={`font-extrabold ${lesson.completed ? "text-gray-500 line-through decoration-2" : "text-gray-900"}`}
+                    >
+                      {lesson.title}
+                    </h3>
+                  </div>
+                  <p className="pl-9 text-sm font-medium text-gray-500">
+                    {lesson.description}
+                  </p>
+                </div>
+              </div>
+
+              {/* Play Button Icon */}
+              <button className="p-2 text-brand-purple hover:bg-[#f0f2ff] rounded-full transition-colors">
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -56,54 +71,21 @@ const CourseLessonList = ({ lessons }) => {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth="2.5"
-                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    strokeWidth="2"
+                    d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-              </div>
-
-              <div>
-                <div className="flex items-center gap-4 mb-1">
-                  <span className="text-sm font-bold tracking-widest text-gray-400 uppercase">
-                    {String(index + 1).padStart(2, "0")}
-                  </span>
-                  <h3
-                    className={`font-extrabold ${lesson.completed ? "text-gray-500 line-through decoration-2" : "text-gray-900"}`}
-                  >
-                    {lesson.title}
-                  </h3>
-                </div>
-                <p className="pl-9 text-sm font-medium text-gray-500">
-                  {lesson.description}
-                </p>
-              </div>
+              </button>
             </div>
-
-            {/* Play Button Icon */}
-            <button className="p-2 text-brand-purple hover:bg-[#f0f2ff] rounded-full transition-colors">
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </button>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

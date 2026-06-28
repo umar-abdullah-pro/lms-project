@@ -10,13 +10,14 @@ exports.postCreateCourse = async (req, res) => {
         error: "Title and Description are required",
       });
     }
-
+    const publishStatus = isPublished === false ? false : true;
+    
     const newCourse = await Course.create({
       title,
       description,
       price,
       instructor: req.user._id,
-      isPublished: isPublished !== undefined ? isPublished : false,
+      isPublished: publishStatus
     });
 
     res.status(201).json({

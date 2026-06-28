@@ -4,10 +4,10 @@ import axios from "axios";
 import { Navigate } from "react-router-dom";
 
 // Keeping your exact component structure!
-import CourseHeader from "../components/CourseHeader";
-import CourseLessonList from "../components/CourseLessonList";
-import CourseSidebar from "../components/CourseSidebar";
-import Footer from "../components/Footer";
+import CourseHeader from "../Components/CourseHeader";
+import CourseLessonList from "../Components/CourseLessonList";
+import CourseSidebar from "../Components/CourseSidebar";
+import Footer from "../Components/Footer";
 
 // Need this to check if the user is logged in
 import { useAuth } from "../Context/AuthContext";
@@ -54,13 +54,16 @@ const CourseDetail = () => {
 
           if (alreadyOwned) {
             setIsEnrolled(true);
-            const totalLessons = enrollmentsResponse.data.data.lessons?.length || 4; // Fallback to 4 for your mock UI
+            const totalLessons = course?.lessons?.length || 4; // Fallback to 4 for your mock UI
             const completedCount = alreadyOwned.completedLessons?.length || 0;
 
             // Calculate percentage and round to a whole number
-            const calculatedProgress = Math.round(
-              (completedCount / totalLessons) * 100,
-            );
+            const calculatedProgress =
+              totalLessons > 0
+                ? Math.round((completedCount / totalLessons) * 100)
+                : 0;
+
+                console.log(calculatedProgress)
             setProgressPercentage(calculatedProgress);
           }
         }
