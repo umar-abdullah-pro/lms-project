@@ -1,4 +1,4 @@
-const CourseLessonList = ({ lessons }) => {
+const CourseLessonList = ({ lessons, onPlay }) => {
   // Use data from database, or an empty array if undefined/null
   const displayLessons = lessons || [];
 
@@ -61,7 +61,10 @@ const CourseLessonList = ({ lessons }) => {
               </div>
 
               {/* Play Button Icon */}
-              <button className="p-2 text-brand-purple hover:bg-[#f0f2ff] rounded-full transition-colors">
+              <button
+                onClick={() => onPlay(lesson)}
+                className="p-2 text-brand-purple hover:bg-[#f0f2ff] rounded-full transition-colors"
+              >
                 <svg
                   className="w-6 h-6"
                   fill="none"

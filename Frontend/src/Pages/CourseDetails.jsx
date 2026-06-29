@@ -8,6 +8,7 @@ import CourseHeader from "../Components/CourseHeader";
 import CourseLessonList from "../Components/CourseLessonList";
 import CourseSidebar from "../Components/CourseSidebar";
 import Footer from "../Components/Footer";
+import VideoPlayer from '../Components/VideoPlayer'
 
 // Need this to check if the user is logged in
 import { useAuth } from "../Context/AuthContext";
@@ -18,6 +19,7 @@ const CourseDetail = () => {
   const { user, token } = useAuth();
 
   const [course, setCourse] = useState(null);
+  const [currentLesson, setCurrentLesson] = useState(null);
   const [loading, setLoading] = useState(true);
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [isEnrolled, setIsEnrolled] = useState(false); // Track real enrollment status
@@ -120,16 +122,27 @@ const CourseDetail = () => {
       </div>
     );
   }
-
+  const handlePlay = (lesson) => {
+    setCurrentLesson(lesson);
+  };
   return (
     <div className="w-full min-h-screen bg-brand-beige">
       <div className="px-6 py-12 mx-auto max-w-7xl md:px-12 md:py-16">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16">
           {/* Left Column */}
           <div className="lg:col-span-2">
-            {/* These stay exactly the same! */}
-            <CourseHeader course={course} />
-            <CourseLessonList lessons={course.lessons} />
+            {/* Show Video Player if a lesson is selected, otherwise Header */}
+            {currentLesson ? (
+              <VideoPlayer
+                url={currentLesson.videoUrl}
+                title={currentLesson.title}
+              />
+            ) : (
+              <CourseHeader course={course} />
+            )}
+
+            {/* Pass the handlePlay function down to the list */}
+            <CourseLessonList lessons={course.lessons} onPlay={handlePlay} />
           </div>
 
           {/* Right Column: Sidebar */}
