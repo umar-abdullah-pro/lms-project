@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Footer from "../components/Footer";
+import Footer from "../Components/Footer";
 
 const NotFound = () => {
   return (

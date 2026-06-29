@@ -12,6 +12,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import CourseCatalog from "./Pages/CourseCatalog";
 import UserProfile from "./Pages/UserProfile";
 import GuestRoute from "./GuestRoute";
+import ManageCourse from "./Pages/ManageCourse";
 
 function App() {
   return (
@@ -73,6 +74,8 @@ function App() {
                 </ProtectedRoute>
               }
             />
+
+            <Route path="/course/:id/manage" element={<ManageCourse />} />
           </Routes>
         </div>
       </BrowserRouter>

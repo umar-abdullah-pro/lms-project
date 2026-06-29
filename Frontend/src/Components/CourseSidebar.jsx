@@ -1,4 +1,4 @@
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 const CourseSidebar = ({
   handleEnrollment,
   isCourseOwner,
@@ -6,11 +6,12 @@ const CourseSidebar = ({
   course,
   isEnrolled,
 }) => {
+  const navigate = useNavigate();
   return (
     <div className="sticky top-24 p-8 bg-white border border-gray-100 shadow-[0_20px_40px_rgb(0,0,0,0.04)] rounded-[2rem]">
       <div className="mb-8">
         <h2 className="text-3xl font-extrabold text-gray-900 mb-2">
-          {course?.price === 0 ? "Free" : `$${course?.price}`}
+          {course?.price === 0 ? "Free" : `Rs.${course?.price}`}
         </h2>
         <p className="text-xs font-bold tracking-widest text-gray-400 uppercase">
           {course?.lessons?.length || 0} Lessons

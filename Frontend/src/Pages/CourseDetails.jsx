@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Navigate } from "react-router-dom";
+import { Navigate, Link } from "react-router-dom";
 
 // Keeping your exact component structure!
 import CourseHeader from "../Components/CourseHeader";
@@ -26,6 +26,12 @@ const CourseDetail = () => {
     user &&
     course &&
     (course.instructor?._id === user._id || course.instructor === user._id);
+  <Link
+    to={`/course/${id}/manage`}
+    className="px-6 py-3 bg-brand-purple text-white font-bold rounded-full"
+  >
+    + Add Lessons
+  </Link>;
 
   useEffect(() => {
     const fetchCourseData = async () => {
@@ -63,7 +69,7 @@ const CourseDetail = () => {
                 ? Math.round((completedCount / totalLessons) * 100)
                 : 0;
 
-                console.log(calculatedProgress)
+            console.log(calculatedProgress);
             setProgressPercentage(calculatedProgress);
           }
         }

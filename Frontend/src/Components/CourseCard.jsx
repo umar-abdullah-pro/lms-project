@@ -61,7 +61,7 @@ const CourseCard = ({ course, index }) => {
             {course.lessons?.length || 0} LESSONS
           </div>
           <div className="text-lg font-extrabold text-brand-purple">
-            {course.price === 0 ? "Free" : `$${course.price}`}
+            {course.price === 0 ? "Free" : `Rs.${course.price}`}
           </div>
         </div>
       </div>
