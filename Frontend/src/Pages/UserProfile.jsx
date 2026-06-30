@@ -11,7 +11,7 @@ const UserProfile = () => {
     const formData = Object.fromEntries(new FormData(e.target));
 
     try {
-      await axios.put("http://localhost:3000/api/users/profile", formData, {
+      await axios.put("http://localhost:3000/api/auth/profile", formData, {
         headers: { Authorization: `Bearer ${token}` },
       });
       alert("Profile updated successfully!");

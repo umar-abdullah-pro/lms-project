@@ -27,6 +27,12 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('token', responseData.token);
   };
 
+  const updateUser = (newUserData) => {
+  setUser(newUserData);
+  // Keep the existing token, just update the user data in local storage
+  localStorage.setItem('user', JSON.stringify(newUserData));
+};
+
   // Called when the user clicks "Logout"
   const logout = () => {
     setUser(null);
@@ -36,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, login, logout }}>
+    <AuthContext.Provider value={{ user, token, login, updateUser, logout }}>
       {children}
     </AuthContext.Provider>
   );
