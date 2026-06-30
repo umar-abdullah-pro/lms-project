@@ -59,3 +59,22 @@ exports.getMyEnrollments = async (req, res) => {
       .json({ success: false, message: "Server error", error: error.message });
   }
 };
+
+exports.completeLesson = async (req, res) => {
+  try {
+    const { enrollmentId } = req.params;
+    const { lessonId } = req.body;
+
+    const enrollment = await Enrollment.findById(enrollmentId);
+
+    // Only add if it's not already in the array
+    if (!enrollment.completedLessons.includes(lessonId)) {
+      enrollment.completedLessons.push(lessonId);
+      await enrollment.save();
+    }
+
+    res.status(200).json({ success: true, data: enrollment });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

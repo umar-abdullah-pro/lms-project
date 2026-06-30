@@ -1,14 +1,12 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Navigate, Link } from "react-router-dom";
 
-// Keeping your exact component structure!
 import CourseHeader from "../Components/CourseHeader";
 import CourseLessonList from "../Components/CourseLessonList";
 import CourseSidebar from "../Components/CourseSidebar";
 import Footer from "../Components/Footer";
-import VideoPlayer from '../Components/VideoPlayer'
+import VideoPlayer from "../Components/VideoPlayer";
 
 // Need this to check if the user is logged in
 import { useAuth } from "../Context/AuthContext";
@@ -21,58 +19,38 @@ const CourseDetail = () => {
   const [course, setCourse] = useState(null);
   const [currentLesson, setCurrentLesson] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [progressPercentage, setProgressPercentage] = useState(0);
-  const [isEnrolled, setIsEnrolled] = useState(false); // Track real enrollment status
+
+  const [isEnrolled, setIsEnrolled] = useState(false);
+  const [enrollmentId, setEnrollmentId] = useState(null);
+  const [completedLessons, setCompletedLessons] = useState([]);
 
   const isCourseOwner =
     user &&
     course &&
     (course.instructor?._id === user._id || course.instructor === user._id);
-  <Link
-    to={`/course/${id}/manage`}
-    className="px-6 py-3 bg-brand-purple text-white font-bold rounded-full"
-  >
-    + Add Lessons
-  </Link>;
 
   useEffect(() => {
     const fetchCourseData = async () => {
       try {
-        // 1. Fetch the course details
         const courseResponse = await axios.get(
           `http://localhost:3000/api/courses/${id}`,
         );
-        setCourse(courseResponse.data.data);
+        const fetchedCourse = courseResponse.data.data;
+        setCourse(fetchedCourse);
 
-        // 2. If the user is logged in, check the backend to see if they own it
         if (token) {
           const enrollmentsResponse = await axios.get(
             "http://localhost:3000/api/enrollments/my-courses",
-            {
-              headers: { Authorization: `Bearer ${token}` },
-            },
+            { headers: { Authorization: `Bearer ${token}` } },
           );
 
           const myCourses = enrollmentsResponse.data.data;
-
-          // Check if the current course ID is in their purchased courses
-          const alreadyOwned = myCourses.find(
-            (enrollment) => enrollment.course._id === id,
-          );
+          const alreadyOwned = myCourses.find((e) => e.course._id === id);
 
           if (alreadyOwned) {
             setIsEnrolled(true);
-            const totalLessons = course?.lessons?.length || 4; // Fallback to 4 for your mock UI
-            const completedCount = alreadyOwned.completedLessons?.length || 0;
-
-            // Calculate percentage and round to a whole number
-            const calculatedProgress =
-              totalLessons > 0
-                ? Math.round((completedCount / totalLessons) * 100)
-                : 0;
-
-            console.log(calculatedProgress);
-            setProgressPercentage(calculatedProgress);
+            setEnrollmentId(alreadyOwned._id);
+            setCompletedLessons(alreadyOwned.completedLessons || []);
           }
         }
       } catch (error) {
@@ -85,25 +63,75 @@ const CourseDetail = () => {
     fetchCourseData();
   }, [id, token]);
 
+  // DERIVED STATE: Automatically recalculates when completedLessons changes!
+  const progressPercentage =
+    course?.lessons?.length > 0
+      ? Math.round((completedLessons.length / course.lessons.length) * 100)
+      : 0;
+
   const handleEnrollment = async () => {
     if (!user) {
       navigate("/login");
       return;
     }
-
     try {
-      // 3. Send the real POST request to enroll
       await axios.post(
         "http://localhost:3000/api/enrollments",
         { course: course._id },
         { headers: { Authorization: `Bearer ${token}` } },
       );
-
       alert("Successfully enrolled!");
       setIsEnrolled(true);
       navigate("/dashboard");
     } catch (error) {
       alert(error.response?.data?.message || "Error enrolling in course");
+    }
+  };
+
+  const handlePlay = (lesson) => {
+    setCurrentLesson(lesson);
+  };
+
+  // --- THE UNIFIED COMPLETION LOGIC ---
+  const markLessonComplete = async (lessonId) => {
+    console.log("--- ATTEMPTING TO MARK COMPLETE ---");
+    console.log("Target Lesson ID:", lessonId);
+    console.log("Current Enrollment ID:", enrollmentId);
+
+    if (!enrollmentId) {
+      console.warn("FAILED: Enrollment ID is null or missing.");
+      alert("Could not find your enrollment ID. Try refreshing the page.");
+      return;
+    }
+
+    if (completedLessons.includes(lessonId)) {
+      console.log("ABORTED: Lesson is already marked complete in local state.");
+      return;
+    }
+
+    try {
+      console.log("Sending POST request to backend...");
+      const response = await axios.post(
+        `http://localhost:3000/api/enrollments/${enrollmentId}/complete`,
+        { lessonId },
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      console.log("Backend Success Response:", response.data);
+
+      // Update Local State Instantly!
+      setCompletedLessons((prev) => [...prev, lessonId]);
+    } catch (error) {
+      console.error("Backend Error:", error.response?.data || error);
+      alert("Failed to update progress on the server.");
+    }
+  };
+
+  // This fires when the video player reaches the end
+  const handleVideoEnd = () => {
+    if (currentLesson) {
+      console.log("Video naturally ended! Triggering complete...");
+      markLessonComplete(currentLesson._id);
     }
   };
 
@@ -122,37 +150,37 @@ const CourseDetail = () => {
       </div>
     );
   }
-  const handlePlay = (lesson) => {
-    setCurrentLesson(lesson);
-  };
+
   return (
     <div className="w-full min-h-screen bg-brand-beige">
       <div className="px-6 py-12 mx-auto max-w-7xl md:px-12 md:py-16">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16">
-          {/* Left Column */}
           <div className="lg:col-span-2">
-            {/* Show Video Player if a lesson is selected, otherwise Header */}
             {currentLesson ? (
               <VideoPlayer
                 url={currentLesson.videoUrl}
                 title={currentLesson.title}
+                onVideoEnd={handleVideoEnd} // Triggers when video finishes
               />
             ) : (
               <CourseHeader course={course} />
             )}
 
-            {/* Pass the handlePlay function down to the list */}
-            <CourseLessonList lessons={course.lessons} onPlay={handlePlay} />
+            <CourseLessonList
+              lessons={course.lessons}
+              onPlay={handlePlay}
+              completedLessons={completedLessons}
+              onMarkComplete={markLessonComplete} // Passes the manual click function down
+            />
           </div>
 
-          {/* Right Column: Sidebar */}
           <div className="lg:col-span-1">
             <CourseSidebar
               isCourseOwner={isCourseOwner}
               course={course}
               progressPercentage={progressPercentage}
-              isEnrolled={isEnrolled} // Passes the real boolean to the sidebar
-              handleEnrollment={handleEnrollment} // Passes the real backend function
+              isEnrolled={isEnrolled}
+              handleEnrollment={handleEnrollment}
             />
           </div>
         </div>
