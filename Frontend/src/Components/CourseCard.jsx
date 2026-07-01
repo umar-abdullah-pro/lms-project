@@ -24,14 +24,14 @@ const CourseCard = ({ course, index }) => {
   return (
     <Link
       to={`/course/${course._id}`}
-      className="flex flex-col overflow-hidden transition-all bg-white border border-gray-100 group rounded-[2rem] hover:shadow-xl hover:-translate-y-1"
+      className="flex flex-col overflow-hidden transition-all bg-white border border-gray-100 group rounded-4xl hover:shadow-xl hover:-translate-y-1"
     >
       <div
         className={`h-48 flex items-center justify-center text-6xl font-extrabold ${theme.bg} ${theme.text}`}
       >
         {course.title.charAt(0).toUpperCase()}
       </div>
-      <div className="flex flex-col flex-grow p-8">
+      <div className="flex flex-col grow p-8">
         <div
           className={`inline-flex px-3 py-1 mb-4 text-xs font-bold rounded-full w-fit ${theme.pill}`}
         >
@@ -40,7 +40,7 @@ const CourseCard = ({ course, index }) => {
         <h3 className="mb-3 text-2xl font-extrabold text-gray-900 transition-colors group-hover:text-brand-purple">
           {course.title}
         </h3>
-        <p className="flex-grow mb-8 font-medium text-gray-500 line-clamp-2">
+        <p className="grow mb-8 font-medium text-gray-500 line-clamp-2">
           {course.description}
         </p>
         <div className="flex items-center justify-between pt-6 mt-auto border-t border-gray-100">

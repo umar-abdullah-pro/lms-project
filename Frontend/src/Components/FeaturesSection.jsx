@@ -11,7 +11,7 @@ const FeaturesSection = () => {
       </div>
 
       <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <div className="p-8 bg-white border border-gray-100 shadow-sm rounded-[2rem]">
+        <div className="p-8 bg-white border border-gray-100 shadow-sm rounded-4xl">
           <div className="flex items-center justify-center w-12 h-12 mb-6 rounded-xl bg-amber-50 text-amber-500">
             <svg
               className="w-6 h-6"
@@ -35,7 +35,7 @@ const FeaturesSection = () => {
             classes — not just before exams.
           </p>
         </div>
-        <div className="p-8 bg-white border border-gray-100 shadow-sm rounded-[2rem]">
+        <div className="p-8 bg-white border border-gray-100 shadow-sm rounded-4xl">
           <div className="flex items-center justify-center w-12 h-12 mb-6 text-[#1de9b6] rounded-xl bg-[#e6fcf5]">
             <svg
               className="w-6 h-6"
@@ -59,7 +59,7 @@ const FeaturesSection = () => {
             where you stopped, no scrolling required.
           </p>
         </div>
-        <div className="p-8 bg-white border border-gray-100 shadow-sm rounded-[2rem]">
+        <div className="p-8 bg-white border border-gray-100 shadow-sm rounded-4xl">
           <div className="flex items-center justify-center w-12 h-12 mb-6 rounded-xl bg-brand-purple/10 text-brand-purple">
             <svg
               className="w-6 h-6"

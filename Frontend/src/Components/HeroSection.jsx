@@ -45,13 +45,13 @@ const HeroSection = () => {
         {/* Right CSS Illustration (The Notepad) */}
         <div className="w-full lg:w-1/2">
           <div className="relative w-full max-w-md mx-auto mt-10 lg:mt-0">
-            <div className="absolute top-4 left-4 w-full h-[400px] bg-white/40 rounded-[2.5rem] -rotate-3 border border-gray-100/50"></div>
-            <div className="relative w-full h-[400px] bg-white rounded-[2.5rem] shadow-xl border border-gray-100 p-8 flex flex-col overflow-hidden">
+            <div className="absolute top-4 left-4 w-full h-100 bg-white/40 rounded-[2.5rem] -rotate-3 border border-gray-100/50"></div>
+            <div className="relative w-full h-100 bg-white rounded-[2.5rem] shadow-xl border border-gray-100 p-8 flex flex-col overflow-hidden">
               <div className="absolute top-0 bottom-0 flex flex-col justify-center py-12 border-r left-6 w-9 border-brand-purple/10 gap-7">
                 {[1, 2, 3, 4, 5].map((i) => (
                   <div
                     key={i}
-                    className="w-3.5 h-3.5 rounded-full border-2 border-brand-purple/20 bg-white -ml-[7px]"
+                    className="w-3.5 h-3.5 rounded-full border-2 border-brand-purple/20 bg-white -ml-1.75"
                   ></div>
                 ))}
               </div>

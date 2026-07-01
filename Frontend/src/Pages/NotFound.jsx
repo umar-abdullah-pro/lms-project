@@ -5,7 +5,7 @@ const NotFound = () => {
   return (
     <div className="flex flex-col w-full min-h-[calc(100vh-80px)] bg-brand-beige">
       {/* Centered Content Container */}
-      <div className="flex flex-col items-center justify-center flex-grow px-6 text-center">
+      <div className="flex flex-col items-center justify-center grow px-6 text-center">
         {/* Yellow Compass Icon */}
         <div className="flex items-center justify-center w-20 h-20 mb-8 rounded-full bg-[#fff8e1] text-[#d99f00]">
           <svg

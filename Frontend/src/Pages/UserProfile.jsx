@@ -26,7 +26,7 @@ const UserProfile = () => {
     <div className="min-h-screen py-8 bg-gray-50 md:py-12">
       <div className="container max-w-3xl px-4 mx-auto">
         {/* Adjusted padding: p-6 on mobile, p-12 on desktop */}
-        <div className="p-6 bg-white shadow-lg sm:p-8 md:p-12 rounded-[2rem]">
+        <div className="p-6 bg-white shadow-lg sm:p-8 md:p-12 rounded-4xl">
           {/* RESPONSIVE HEADER: Stacks on mobile, Row on larger screens */}
           <div className="flex flex-col items-start justify-between gap-6 mb-8 sm:flex-row sm:items-center sm:gap-4">
             {/* Title & Role Badge */}

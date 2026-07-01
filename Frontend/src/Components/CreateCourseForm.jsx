@@ -47,7 +47,7 @@ const CreateCourseForm = () => {
 
   return (
     <>
-      <div className="p-8 bg-white border border-gray-100 shadow-sm md:p-10 rounded-[2rem]">
+      <div className="p-8 bg-white border border-gray-100 shadow-sm md:p-10 rounded-4xl">
         {error && (
           <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
             {error}

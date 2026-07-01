@@ -44,7 +44,7 @@ const ManageCourse = () => {
   };
 
   return (
-    <div className="p-10 bg-white rounded-[2rem] max-w-2xl mx-auto mt-10 shadow-sm border border-gray-100">
+    <div className="p-10 bg-white rounded-4xl max-w-2xl mx-auto mt-10 shadow-sm border border-gray-100">
       <h1 className="text-2xl font-bold mb-6">Add New Lesson</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
