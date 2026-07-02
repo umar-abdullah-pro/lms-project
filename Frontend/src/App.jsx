@@ -1,84 +1,64 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
+
+//Loaders
+import dashboardLoader from './Loaders/dashboardLoader';
+import CatalogLoader from "./Loaders/CatalogLoader"
+import courseDetailsLoader from "./Loaders/courseDetailsLoader"
+
+//Context
 import { AuthProvider } from "./Context/AuthContext";
+
+//Pages
 import Register from "./Pages/Register";
 import Login from "./Pages/Login";
 import Home from "./Pages/Home";
-import Navbar from "./Components/Navbar";
 import Dashboard from "./Pages/Dashboard";
 import CourseDetail from "./Pages/CourseDetails";
 import CreateCourse from "./Pages/CreateCourse";
 import NotFound from "./Pages/NotFound";
-import ProtectedRoute from "./Components/ProtectedRoute";
 import CourseCatalog from "./Pages/CourseCatalog";
 import UserProfile from "./Pages/UserProfile";
-import GuestRoute from "./GuestRoute";
 import ManageCourse from "./Pages/ManageCourse";
+
+//Components and Routes
+import Navbar from "./Components/Navbar";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import GuestRoute from "./GuestRoute";
+
+const RootLayout = () => {
+  return (
+    <>
+      <Navbar />
+      <div className="min-h-screen pb-10 bg-brand-beige">
+        <Outlet />
+      </div>
+    </>
+  );
+};  
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <RootLayout />,
+    errorElement: <NotFound />,
+    children: [
+      { index: true, element: <Home /> },
+      { path: "login", element: <GuestRoute><Login /></GuestRoute> },
+      { path: "register", element: <GuestRoute><Register /></GuestRoute> },
+      { path: "dashboard", element: <ProtectedRoute><Dashboard /></ProtectedRoute>, loader: dashboardLoader },
+      { path: "all-courses", element: <ProtectedRoute><CourseCatalog /></ProtectedRoute>, loader: CatalogLoader },
+      { path: "profile", element: <ProtectedRoute><UserProfile /></ProtectedRoute> },
+      { path: "create-course", element: <ProtectedRoute requiredRole="instructor"><CreateCourse /></ProtectedRoute> },
+      { path: "course/:id", element: <CourseDetail />, loader: courseDetailsLoader },
+      { path: "course/:id/manage", element: <ManageCourse /> },
+    ],
+  },
+])
 
 function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        {/* Navbar is outside Routes so it appears on every page */}
-        <Navbar />
-
-        <div className="min-h-screen pb-10 bg-brand-beige">
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route
-              path="/login"
-              element={
-                <GuestRoute>
-                  <Login />
-                </GuestRoute>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <GuestRoute>
-                  <Register />
-                </GuestRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <Dashboard />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="/course/:id" element={<CourseDetail />} />
-            <Route
-              path="/all-courses"
-              element={
-                <ProtectedRoute>
-                  <CourseCatalog />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/create-course"
-              element={
-                <ProtectedRoute requiredRole="instructor">
-                  <CreateCourse />
-                </ProtectedRoute>
-              }
-            />
-            <Route path="*" element={<NotFound />} />
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <UserProfile />
-                </ProtectedRoute>
-              }
-            />
-
-            <Route path="/course/:id/manage" element={<ManageCourse />} />
-          </Routes>
-        </div>
-      </BrowserRouter>
+      <RouterProvider router={router} />
     </AuthProvider>
   );
 }
