@@ -18,8 +18,12 @@ const CreateCourse = () => {
   useEffect(() => {
     if (actionData?.success) {
       alert("Course created successfully! Let's add some lessons.");
+      console.log(
+        "🚀 5. Redirecting to the new course's lessons page:",
+        actionData.courseId,
+      );
       // Assuming you have a route to manage the specific course they just built
-      navigate(`/course/${actionData.courseId}/lessons`);
+      navigate(`/course/${actionData.courseId}`);
     }
   }, [actionData, navigate]);
 
@@ -93,12 +97,13 @@ const CreateCourse = () => {
                   <option value="design">Design</option>
                   <option value="business">Business</option>
                   <option value="marketing">Marketing</option>
+                  <option value="Uncatagorized">Uncatagorized</option>
                 </select>
               </div>
 
               <div>
                 <label className="block mb-2 text-sm font-bold text-gray-700">
-                  Price ($)
+                  Price (INR)
                 </label>
                 <input
                   type="number"
@@ -111,7 +116,7 @@ const CreateCourse = () => {
                 />
               </div>
             </div>
-{/* 
+
             <div>
               <label className="block mb-2 text-sm font-bold text-gray-700">
                 Course Thumbnail
@@ -122,7 +127,26 @@ const CreateCourse = () => {
                 accept="image/*"
                 className="w-full px-4 py-2 transition-colors bg-white border border-gray-200 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brand-purple/10 file:text-brand-purple hover:file:bg-brand-purple/20"
               />
-            </div> */}
+            </div>
+
+            <div className="flex items-center gap-4 p-5 border border-gray-200 rounded-xl bg-gray-50">
+              <input
+                type="checkbox"
+                id="isPublished"
+                name="isPublished"
+                value="true"
+                className="w-6 h-6 text-brand-purple bg-white border-gray-300 rounded cursor-pointer focus:ring-brand-purple focus:ring-2"
+              />
+              <label htmlFor="isPublished" className="cursor-pointer">
+                <span className="block text-sm font-bold text-gray-700">
+                  Publish immediately?
+                </span>
+                <span className="block text-sm font-medium text-gray-500">
+                  If unchecked, this course will be hidden from students as a
+                  draft.
+                </span>
+              </label>
+            </div>
 
             <button
               type="submit"

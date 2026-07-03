@@ -8,7 +8,7 @@ const { single } = require('../Middlewares/multer')
 const upload = require('../Middlewares/multer')
 
 courseRouter.get('/', courseController.getAllCourses)
-courseRouter.post('/', authMiddleware.protect, authMiddleware.instructorOnly, courseController.postCreateCourse)
+courseRouter.post('/', authMiddleware.protect, authMiddleware.instructorOnly, upload.single('thumbnail'), courseController.postCreateCourse)
 courseRouter.get('/:id', courseController.getCourseById)
 courseRouter.post('/:id/lessons', authMiddleware.protect, authMiddleware.instructorOnly, upload.single('video'), courseController.postaddLesson)
 

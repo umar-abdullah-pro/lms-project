@@ -26,6 +26,17 @@ const courseSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    catogory: {
+        type: String,
+        default: "Uncategorized",
+        enum: ["Programming", "Design", "Business", "Marketing", "Uncategorized"],
+        required: true,
+    },
+
+    thumbnail:{
+        type: String,
+        default: ""
+    },
 
     instructor:{
         type: mongoose.Schema.Types.ObjectId,
