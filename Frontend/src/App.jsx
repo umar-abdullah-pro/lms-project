@@ -11,6 +11,7 @@ import courseDetailsLoader from "./Loaders/courseDetailsLoader";
 //Actions
 import loginAction from "../Actions/loginAction";
 import registerAction from "../Actions/registerAction";
+import updateProfileAction from "../Actions/updateProfileAction";
 
 //Pages
 import Register from "./Pages/Register";
@@ -21,7 +22,7 @@ import CourseDetail from "./Pages/CourseDetails";
 import CreateCourse from "./Pages/CreateCourse";
 import NotFound from "./Pages/NotFound";
 import CourseCatalog from "./Pages/CourseCatalog";
-import UserProfile from "./Pages/UserProfile";
+import UpdateProfile from "./Pages/UpdateProfile";
 import ManageCourse from "./Pages/ManageCourse";
 
 //Components and Routes
@@ -87,9 +88,10 @@ const router = createBrowserRouter([
         path: "profile",
         element: (
           <ProtectedRoute>
-            <UserProfile />
+            <UpdateProfile />
           </ProtectedRoute>
         ),
+        action: updateProfileAction,
       },
       {
         path: "create-course",
