@@ -1,173 +1,141 @@
-import { useState } from "react";
-import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+// Frontend/src/Pages/CreateCourse.jsx
+import { useEffect } from "react";
+import {
+  Form,
+  useNavigation,
+  useActionData,
+  useNavigate,
+} from "react-router-dom";
 
-const CreateCourseForm = () => {
-  const [formData, setFormData] = useState({
-    title: "",
-    description: "",
-    price: 0,
-    isPublished: true, 
-  });
-
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+const CreateCourse = () => {
+  const actionData = useActionData();
+  const navigation = useNavigation();
   const navigate = useNavigate();
 
-  const handleChange = (e) => {
-    // 👈 2. Updated to handle checkboxes correctly
-    const value = e.target.type === "checkbox" ? e.target.checked : e.target.value;
-    setFormData({ ...formData, [e.target.name]: value });
-  };
+  const isSubmitting = navigation.state === "submitting";
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setError("");
-    setIsLoading(true);
-
-    try {
-      const token = localStorage.getItem("token");
-
-      await axios.post("http://localhost:3000/api/courses", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      navigate("/dashboard");
-    } catch (err) {
-      setError(
-        err.response?.data?.error ||
-          "Failed to create course. Make sure you are logged in as an Instructor.",
-      );
-    } finally {
-      setIsLoading(false);
+  // The Bridge: Redirect the instructor to their new course page when successful!
+  useEffect(() => {
+    if (actionData?.success) {
+      alert("Course created successfully! Let's add some lessons.");
+      // Assuming you have a route to manage the specific course they just built
+      navigate(`/course/${actionData.courseId}/lessons`);
     }
-  };
+  }, [actionData, navigate]);
 
   return (
-    <>
-      <div className="p-8 bg-white border border-gray-100 shadow-sm md:p-10 rounded-4xl">
-        {error && (
-          <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
-            {error}
-          </div>
-        )}
+    <div className="min-h-screen px-6 py-12 bg-brand-beige md:px-12">
+      <div className="max-w-3xl mx-auto">
+        <div className="mb-10 text-center">
+          <h1 className="text-4xl font-extrabold text-gray-900 lg:text-5xl">
+            Create a{" "}
+            <span className="underline decoration-brand-yellow decoration-4 underline-offset-8">
+              New Course
+            </span>
+          </h1>
+          <p className="mt-4 text-lg text-gray-600">
+            Share your knowledge with the Learnly community.
+          </p>
+        </div>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label className="block mb-2 text-sm font-bold text-gray-700">
-              Course title
-            </label>
-            <input
-              type="text"
-              name="title"
-              placeholder="Intro to Calculus"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
-              required
-            />
-          </div>
+        <div className="p-10 bg-white border border-gray-100 shadow-sm rounded-4xl">
+          {/* Show Errors from Action */}
+          {actionData?.error && (
+            <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
+              {actionData.error}
+            </div>
+          )}
 
-          <div>
-            <label className="block mb-2 text-sm font-bold text-gray-700">
-              Description
-            </label>
-            <textarea
-              name="description"
-              placeholder="What will students be able to do after this course?"
-              value={formData.description}
-              onChange={handleChange}
-              rows="4"
-              className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 resize-none rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
-              required
-            ></textarea>
-          </div>
-
-          <div>
-            <label className="block mb-2 text-sm font-bold text-gray-700">
-              Price (USD — leave at 0 for a free course)
-            </label>
-            <input
-              type="number"
-              name="price"
-              min="0"
-              value={formData.price}
-              onChange={handleChange}
-              className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
-              required
-            />
-          </div>
-
-          {/* 👇 3. Added Checkbox UI 👇 */}
-          <div className="flex items-center gap-3 p-4 bg-gray-50 rounded-xl border border-gray-100">
-            <input
-              type="checkbox"
-              name="isPublished"
-              id="isPublished"
-              checked={formData.isPublished}
-              onChange={handleChange}
-              className="w-5 h-5 text-brand-purple bg-white border-gray-300 rounded focus:ring-brand-purple focus:ring-2"
-            />
-            <label htmlFor="isPublished" className="text-sm font-bold text-gray-700 cursor-pointer">
-              Publish this course immediately
-              <span className="block text-xs font-normal text-gray-500">Uncheck this if you want to keep it hidden as a draft.</span>
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full py-4 mt-4 font-bold text-white transition-all transform rounded-full bg-brand-coral hover:bg-[#ff554a] shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:shadow-[0_10px_25px_rgb(255,107,96,0.4)] hover:-translate-y-0.5 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+          {/* Important: encType is required for file uploads (like thumbnails) */}
+          <Form
+            method="post"
+            encType="multipart/form-data"
+            className="space-y-6"
           >
-            {isLoading ? (
-              "Creating..."
-            ) : (
-              <>
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
+            <div>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Course Title
+              </label>
+              <input
+                type="text"
+                name="title"
+                placeholder="e.g., Advanced React Patterns"
+                className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
+                required
+              />
+            </div>
+
+            <div>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Description
+              </label>
+              <textarea
+                name="description"
+                rows="4"
+                placeholder="What will students learn in this course?"
+                className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
+                required
+              />
+            </div>
+
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+              <div>
+                <label className="block mb-2 text-sm font-bold text-gray-700">
+                  Category
+                </label>
+                <select
+                  name="category"
+                  className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
+                  required
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="3"
-                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-                  />
-                </svg>
-                Create course
-              </>
-            )}
-          </button>
-        </form>
-      </div>
+                  <option value="">Select a category...</option>
+                  <option value="programming">Programming</option>
+                  <option value="design">Design</option>
+                  <option value="business">Business</option>
+                  <option value="marketing">Marketing</option>
+                </select>
+              </div>
 
-      <div className="mt-8 text-center md:text-left">
-        <Link
-          to="/dashboard"
-          className="inline-flex items-center gap-2 font-bold transition-colors text-brand-purple hover:text-indigo-800"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="3"
-              d="M10 19l-7-7m0 0l7-7m-7 7h18"
-            />
-          </svg>
-          Back to dashboard
-        </Link>
+              <div>
+                <label className="block mb-2 text-sm font-bold text-gray-700">
+                  Price ($)
+                </label>
+                <input
+                  type="number"
+                  name="price"
+                  min="0"
+                  step="0.01"
+                  placeholder="0.00"
+                  className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
+                  required
+                />
+              </div>
+            </div>
+{/* 
+            <div>
+              <label className="block mb-2 text-sm font-bold text-gray-700">
+                Course Thumbnail
+              </label>
+              <input
+                type="file"
+                name="thumbnail"
+                accept="image/*"
+                className="w-full px-4 py-2 transition-colors bg-white border border-gray-200 rounded-xl file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-bold file:bg-brand-purple/10 file:text-brand-purple hover:file:bg-brand-purple/20"
+              />
+            </div> */}
+
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-4 mt-8 text-white font-bold bg-brand-coral rounded-full hover:bg-[#ff554a] transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 text-lg shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:shadow-[0_10px_25px_rgb(255,107,96,0.4)]"
+            >
+              {isSubmitting ? "Publishing Course..." : "Create Course"}
+            </button>
+          </Form>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 
-export default CreateCourseForm;
+export default CreateCourse;

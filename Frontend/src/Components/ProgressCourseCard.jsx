@@ -26,7 +26,7 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
   return (
     <Link
       to={`/course/${course?._id}`}
-      className="flex flex-col overflow-hidden transition-all bg-white border border-gray-100 group rounded-[2rem] hover:shadow-lg hover:-translate-y-1"
+      className="flex flex-col overflow-hidden transition-all bg-white border border-gray-100 group rounded-4xl hover:shadow-lg hover:-translate-y-1"
     >
       <div
         className={`h-40 flex items-center justify-center text-5xl font-extrabold ${theme.bg} ${theme.text}`}
@@ -35,7 +35,7 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
         {(course?.title?.charAt(0) || "C").toUpperCase()}
       </div>
       
-      <div className="flex flex-col flex-grow p-6 md:p-8">
+      <div className="flex flex-col grow p-6 md:p-8">
         <div
           className={`inline-flex px-3 py-1 mb-4 text-xs font-bold rounded-full w-fit ${theme.pill}`}
         >
@@ -48,7 +48,7 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
           {course?.title || "Untitled Course"}
         </h3>
         
-        <p className="flex-grow mb-6 text-sm font-medium text-gray-500 line-clamp-2">
+        <p className="grow mb-6 text-sm font-medium text-gray-500 line-clamp-2">
           {/* ✅ FIX: Safe description fallback */}
           {course?.description || "No description provided."}
         </p>

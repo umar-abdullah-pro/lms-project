@@ -12,6 +12,7 @@ import courseDetailsLoader from "./Loaders/courseDetailsLoader";
 import loginAction from "../Actions/loginAction";
 import registerAction from "../Actions/registerAction";
 import updateProfileAction from "../Actions/updateProfileAction";
+import createCourseAction from "../Actions/createCourseAction";
 
 //Pages
 import Register from "./Pages/Register";
@@ -28,7 +29,7 @@ import ManageCourse from "./Pages/ManageCourse";
 //Components and Routes
 import Navbar from "./Components/Navbar";
 import ProtectedRoute from "./Components/ProtectedRoute";
-import GuestRoute from "./GuestRoute";
+import GuestRoute from "./Components/GuestRoute";
 
 const RootLayout = () => {
   return (
@@ -100,6 +101,7 @@ const router = createBrowserRouter([
             <CreateCourse />
           </ProtectedRoute>
         ),
+        action: createCourseAction,
       },
       {
         path: "course/:id",
