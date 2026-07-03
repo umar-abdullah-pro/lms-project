@@ -1,12 +1,15 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
+//Context
+import { AuthProvider } from "./Context/AuthContext";
+
 //Loaders
 import dashboardLoader from './Loaders/dashboardLoader';
 import CatalogLoader from "./Loaders/CatalogLoader"
 import courseDetailsLoader from "./Loaders/courseDetailsLoader"
 
-//Context
-import { AuthProvider } from "./Context/AuthContext";
+//Actions
+import loginAction from "../Actions/loginAction";
 
 //Pages
 import Register from "./Pages/Register";
@@ -43,7 +46,7 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <GuestRoute><Login /></GuestRoute> },
+      { path: "login", element: <GuestRoute><Login /></GuestRoute>, action: loginAction },
       { path: "register", element: <GuestRoute><Register /></GuestRoute> },
       { path: "dashboard", element: <ProtectedRoute><Dashboard /></ProtectedRoute>, loader: dashboardLoader },
       { path: "all-courses", element: <ProtectedRoute><CourseCatalog /></ProtectedRoute>, loader: CatalogLoader },
