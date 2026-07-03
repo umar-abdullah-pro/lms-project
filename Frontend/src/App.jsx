@@ -4,12 +4,13 @@ import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import { AuthProvider } from "./Context/AuthContext";
 
 //Loaders
-import dashboardLoader from './Loaders/dashboardLoader';
-import CatalogLoader from "./Loaders/CatalogLoader"
-import courseDetailsLoader from "./Loaders/courseDetailsLoader"
+import dashboardLoader from "./Loaders/dashboardLoader";
+import CatalogLoader from "./Loaders/CatalogLoader";
+import courseDetailsLoader from "./Loaders/courseDetailsLoader";
 
 //Actions
 import loginAction from "../Actions/loginAction";
+import registerAction from "../Actions/registerAction";
 
 //Pages
 import Register from "./Pages/Register";
@@ -37,7 +38,7 @@ const RootLayout = () => {
       </div>
     </>
   );
-};  
+};
 
 const router = createBrowserRouter([
   {
@@ -46,17 +47,67 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, element: <Home /> },
-      { path: "login", element: <GuestRoute><Login /></GuestRoute>, action: loginAction },
-      { path: "register", element: <GuestRoute><Register /></GuestRoute> },
-      { path: "dashboard", element: <ProtectedRoute><Dashboard /></ProtectedRoute>, loader: dashboardLoader },
-      { path: "all-courses", element: <ProtectedRoute><CourseCatalog /></ProtectedRoute>, loader: CatalogLoader },
-      { path: "profile", element: <ProtectedRoute><UserProfile /></ProtectedRoute> },
-      { path: "create-course", element: <ProtectedRoute requiredRole="instructor"><CreateCourse /></ProtectedRoute> },
-      { path: "course/:id", element: <CourseDetail />, loader: courseDetailsLoader },
+      {
+        path: "login",
+        element: (
+          <GuestRoute>
+            <Login />
+          </GuestRoute>
+        ),
+        action: loginAction,
+      },
+      {
+        path: "register",
+        element: (
+          <GuestRoute>
+            <Register />
+          </GuestRoute>
+        ),
+        action: registerAction,
+      },
+      {
+        path: "dashboard",
+        element: (
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        ),
+        loader: dashboardLoader,
+      },
+      {
+        path: "all-courses",
+        element: (
+          <ProtectedRoute>
+            <CourseCatalog />
+          </ProtectedRoute>
+        ),
+        loader: CatalogLoader,
+      },
+      {
+        path: "profile",
+        element: (
+          <ProtectedRoute>
+            <UserProfile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "create-course",
+        element: (
+          <ProtectedRoute requiredRole="instructor">
+            <CreateCourse />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "course/:id",
+        element: <CourseDetail />,
+        loader: courseDetailsLoader,
+      },
       { path: "course/:id/manage", element: <ManageCourse /> },
     ],
   },
-])
+]);
 
 function App() {
   return (

@@ -6,7 +6,9 @@ const loginAction = async ({ request }) => {
 
   try {
     const response = await apiClient.post("/auth/login", data);
-    const { token, ...userData } = response.data;
+    console.log(response);
+    const token = response.data.token;
+    const userData = response.data.user;
 
     if (!token || !userData._id) {
       throw new Error("Could not find user or token in the API response!");
