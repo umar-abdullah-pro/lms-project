@@ -36,7 +36,7 @@ const DesktopMenu = ({ user, onLogout }) => {
               to="/profile"
               className="flex items-center gap-3 p-1.5 pr-5 transition-all border border-gray-100 rounded-full bg-gray-50 hover:bg-white hover:shadow-sm"
             >
-              <div className="flex-shrink-0 w-10 h-10 overflow-hidden bg-white border-2 rounded-full border-brand-purple/20">
+              <div className="shrink-0 w-10 h-10 overflow-hidden bg-white border-2 rounded-full border-brand-purple/20">
                 <img
                   src={
                     user.avatar ||

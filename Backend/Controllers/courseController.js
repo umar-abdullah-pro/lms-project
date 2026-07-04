@@ -10,7 +10,7 @@ exports.postCreateCourse = async (req, res) => {
         error: "Title and Description are required",
       });
     }
-    const publishStatus = isPublished === false ? false : true;
+    const publishStatus = isPublished === "false" ? false : true;
 
     let thumbnailUrl = "";
 
@@ -28,11 +28,15 @@ exports.postCreateCourse = async (req, res) => {
       thumbnailUrl = uploadResult.secure_url;
     }
 
+    let formattedCategory = req.body.category
+      ? req.body.catagory.charAt(0).toUpperCase() + req.body.catagory.slice(1)
+      : "Uncategorized";
+
     const newCourse = await Course.create({
       title,
       description,
       price: Number(price) || 0,
-      catagory: req.body.category || "Uncategorized",
+      catagory: formattedCategory,
       thumbnail: thumbnailUrl,
       instructor: req.user._id,
       isPublished: publishStatus,
@@ -110,12 +114,10 @@ exports.postaddLesson = async (req, res) => {
         .json({ success: false, message: "Course not found" });
     }
     if (course.instructor.toString() !== req.user._id.toString()) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Not authorized to edit this course",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to edit this course",
+      });
     }
 
     // 2. Check if a video file was actually attached to the request
@@ -160,12 +162,10 @@ exports.postaddLesson = async (req, res) => {
     });
   } catch (error) {
     console.error("Video Upload Error:", error);
-    res
-      .status(500)
-      .json({
-        success: false,
-        message: "Server error during upload",
-        error: error.message,
-      });
+    res.status(500).json({
+      success: false,
+      message: "Server error during upload",
+      error: error.message,
+    });
   }
 };

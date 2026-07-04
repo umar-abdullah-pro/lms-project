@@ -66,6 +66,18 @@ exports.completeLesson = async (req, res) => {
     const { lessonId } = req.body;
 
     const enrollment = await Enrollment.findById(enrollmentId);
+    if (!enrollment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Enrollment not found" });
+    }
+
+    if (enrollment.student.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to modify someone else's progress.",
+      });
+    }
 
     // Only add if it's not already in the array
     if (!enrollment.completedLessons.includes(lessonId)) {
