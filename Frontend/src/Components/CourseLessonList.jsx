@@ -95,7 +95,7 @@ const CourseLessonList = ({
                 </div>
 
                 {/* 🌟 DYNAMIC ICON: Play button OR Padlock */}
-                <div className="flex-shrink-0 p-2">
+                <div className="shrink-0 p-2">
                   {isLocked ? (
                     <svg
                       className="w-6 h-6 text-gray-400"
