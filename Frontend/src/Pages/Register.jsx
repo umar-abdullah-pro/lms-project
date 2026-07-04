@@ -8,6 +8,15 @@ import {
 } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
 
+const AVATAR_OPTIONS = [
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Felix",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Aneka",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Oliver",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Sophie",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Jack",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Mia",
+];
+
 const Register = () => {
   const actionData = useActionData();
   const { login } = useAuth();
@@ -76,6 +85,36 @@ const Register = () => {
           {/* The Form */}
           <Form method="post" className="space-y-5">
             <div>
+              <label className="block mb-3 text-sm font-bold text-gray-700">
+                Choose your Avatar
+              </label>
+              <div className="flex justify-between gap-2">
+                {AVATAR_OPTIONS.map((avatarUrl, index) => (
+                  <label key={index} className="cursor-pointer relative">
+                    {/* The hidden radio input that actually sends the data to the Action! */}
+                    <input
+                      type="radio"
+                      name="avatar"
+                      value={avatarUrl}
+                      className="peer sr-only" // sr-only hides it visually but keeps it working
+                      defaultChecked={index === 0} // Makes the first one selected by default
+                      required
+                    />
+                    {/* The visible Image */}
+                    <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent peer-checked:border-brand-purple peer-checked:ring-2 peer-checked:ring-brand-purple/30 transition-all hover:scale-110 bg-gray-100">
+                      <img
+                        src={avatarUrl}
+                        alt={`Avatar option ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            {/* Existing Fields */}
+            <div>
               <label className="block mb-2 text-sm font-bold text-gray-700">
                 Full Name
               </label>
@@ -115,10 +154,84 @@ const Register = () => {
               />
             </div>
 
+            <div>
+              <label className="block mb-3 text-sm font-bold text-gray-700">
+                I want to...
+              </label>
+              <div className="grid grid-cols-2 gap-4">
+                {/* 1. STUDENT ROLE CARD */}
+                <label className="relative cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="student"
+                    className="peer sr-only"
+                    defaultChecked
+                    required
+                  />
+                  <div className="flex flex-col items-center p-5 transition-all bg-white border-2 border-gray-200 rounded-xl peer-checked:border-brand-purple peer-checked:bg-brand-purple/5 hover:border-brand-purple/50">
+                    <svg
+                      className="w-8 h-8 mb-3 text-gray-400 transition-colors peer-checked:text-brand-purple group-hover:text-brand-purple"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 14l9-5-9-5-9 5 9 5z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"
+                      />
+                    </svg>
+                    <span className="font-bold text-gray-900">Learn</span>
+                    <span className="mt-1 text-xs font-medium text-center text-gray-500">
+                      Join as a student
+                    </span>
+                  </div>
+                </label>
+
+                {/* 2. INSTRUCTOR ROLE CARD */}
+                <label className="relative cursor-pointer group">
+                  <input
+                    type="radio"
+                    name="role"
+                    value="instructor"
+                    className="peer sr-only"
+                    required
+                  />
+                  <div className="flex flex-col items-center p-5 transition-all bg-white border-2 border-gray-200 rounded-xl peer-checked:border-brand-purple peer-checked:bg-brand-purple/5 hover:border-brand-purple/50">
+                    <svg
+                      className="w-8 h-8 mb-3 text-gray-400 transition-colors peer-checked:text-brand-purple group-hover:text-brand-purple"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
+                      />
+                    </svg>
+                    <span className="font-bold text-gray-900">Teach</span>
+                    <span className="mt-1 text-xs font-medium text-center text-gray-500">
+                      Join as an instructor
+                    </span>
+                  </div>
+                </label>
+              </div>
+            </div>
+
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3.5 mt-4 text-white font-bold bg-brand-coral rounded-full hover:bg-[#ff554a] transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0"
+              className="w-full py-3.5 mt-4 text-white font-bold bg-brand-coral rounded-full hover:bg-[#ff554a] transition-all transform hover:-translate-y-0.5 disabled:opacity-70 disabled:hover:translate-y-0 text-lg shadow-[0_8px_20px_rgb(255,107,96,0.3)] hover:shadow-[0_10px_25px_rgb(255,107,96,0.4)]"
             >
               {isSubmitting ? "Creating account..." : "Create account"}
             </button>

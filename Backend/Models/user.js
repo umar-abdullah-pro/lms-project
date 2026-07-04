@@ -21,7 +21,12 @@ const userSchema = mongoose.Schema({
         type: String,
         enum: ['student', 'instructor', 'admin'],
         default: 'student'
-    }
+    },
+
+    avatar: {
+        type: String,
+        default: "https://api.dicebear.com/7.x/bottts/svg?seed=Learnly"
+    },
 
     }, {timestamps: true})
 

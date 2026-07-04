@@ -3,7 +3,7 @@ const User = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
 exports.postUserRegister = async (req, res) => {
-  const { name, email, password, role } = req.body;
+  const { name, email, password, role, avatar } = req.body;
 
   try {
     // Check if user already exists
@@ -20,6 +20,7 @@ exports.postUserRegister = async (req, res) => {
       email,
       password: hashedPassword,
       role,
+      avatar: avatar || "https://api.dicebear.com/7.x/bottts/svg?seed=Learnly",
     });
 
     await newUser.save();

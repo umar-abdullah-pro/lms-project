@@ -20,8 +20,16 @@ const UpdateProfile = () => {
     <div className="flex flex-col items-center justify-center min-h-screen px-6 py-12 bg-brand-beige md:px-12">
       <div className="w-full max-w-xl p-10 bg-white border border-gray-100 shadow-sm rounded-4xl">
         <div className="flex items-center gap-4 mb-8">
-          <div className="flex items-center justify-center w-16 h-16 text-2xl font-bold text-white rounded-full bg-brand-purple">
-            {user?.name?.charAt(0).toUpperCase() || "U"}
+          <div className="w-20 h-20 overflow-hidden bg-white border-2 rounded-full border-brand-purple/20">
+            <img
+              // Use their avatar, or a fallback robot if they somehow don't have one!
+              src={
+                user.avatar ||
+                `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`
+              }
+              alt={user.name}
+              className="object-cover w-full h-full"
+            />
           </div>
           <div>
             <h2 className="text-3xl font-extrabold text-gray-900">
