@@ -79,7 +79,7 @@ const CourseSidebar = ({
           onClick={handleEnrollment}
           className="w-full px-8 py-3 mb-8 font-bold text-white transition-colors rounded-full bg-brand-coral hover:bg-opacity-90"
         >
-          Enroll Now
+          Enroll Now!
         </button>
       )}
 
@@ -93,7 +93,7 @@ const CourseSidebar = ({
             {course?.instructor?.name?.substring(0, 2).toUpperCase() || "IN"}
           </div>
           <span className="font-extrabold text-gray-900">
-            {course?.instructor?.name || "Instructor Name"}
+            {course?.instructor?.name || "Instructor"}
           </span>
         </div>
       </div>

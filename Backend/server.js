@@ -4,12 +4,13 @@ const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
 
+dotenv.config();
+
 // //Local Modules
 const authRouter = require("./Routes/authRouter");
 const courseRouter = require("./Routes/courseRouter");
 const enrollmentRouter = require("./Routes/enrollmentRouter");
-
-dotenv.config();
+const paymentRouter = require('./Routes/paymentRouter')
 
 const app = express();
 
@@ -28,6 +29,7 @@ mongoose
 app.use("/api/auth", authRouter);
 app.use("/api/courses", courseRouter);
 app.use("/api/enrollments", enrollmentRouter);
+app.use('/api/payments', paymentRouter)
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

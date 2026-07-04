@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLoaderData } from "react-router-dom";
-import { useAuth } from "../src/Context/AuthContext"; 
-import apiClient from "../API/client"; 
+import { useAuth } from "../src/Context/AuthContext";
+import apiClient from "../API/client";
 
 export const useCourseDetails = () => {
   const { user } = useAuth();
@@ -14,7 +14,8 @@ export const useCourseDetails = () => {
 
   // 2. Derived Math (Added optional chaining ? to course.instructor just in case)
   const isCourseOwner = Boolean(
-    user && (course?.instructor?._id === user._id || course?.instructor === user._id)
+    user &&
+    (course?.instructor?._id === user._id || course?.instructor === user._id),
   );
   const isEnrolled = Boolean(enrollment);
   const completedLessons = enrollment?.completedLessons || [];
@@ -24,13 +25,82 @@ export const useCourseDetails = () => {
 
   // 3. API Actions
   const handleEnrollment = async () => {
-    if (!user) return navigate("/login");
+    // 1. Check if the user is logged in
+    if (!user) {
+      alert("Please log in to purchase this course.");
+      return;
+    }
     try {
-      const res = await apiClient.post("/enrollments", { course: course._id });
-      setEnrollment(res.data.data);
-      alert("Successfully enrolled!");
+      // 3. Ask the backend to generate the Bill (Order)
+      const orderResponse = await apiClient.post("/payments/create-order", {
+        courseId: course._id,
+      });
+      console.log(orderResponse);
+
+      const { order } = orderResponse.data;
+
+      // 4. Configure the Razorpay Popup
+      const options = {
+        key: import.meta.env.VITE_RAZORPAY_KEY,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Learnly LMS",
+        description: `Unlock: ${course.title}`,
+        image: course.thumbnail,
+        order_id: order.id,
+
+        // 5. The 'handler' runs automatically when the student pays successfully
+        handler: async function (response) {
+          try {
+            // Send the secret signatures back to our backend for cryptographic verification
+            const verifyResponse = await apiClient.post(
+              "/payments/verify-payment",
+              {
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                courseId: course._id,
+              },
+            );
+
+            if (verifyResponse.data.success) {
+              alert("Payment Successful! Welcome to the course 🚀");
+              // Refresh the page so the padlocks disappear!
+              window.location.reload();
+            }
+          } catch (error) {
+            // 🌟 Upgraded error logging!
+            console.error(
+              "Order creation failed:",
+              error.response?.data || error,
+            );
+
+            const errorMessage =
+              error.response?.data?.message || "Could not initiate checkout.";
+            alert(`Checkout Error: ${errorMessage}`);
+          }
+        },
+        prefill: {
+          name: user.name,
+          email: user.email,
+        },
+        theme: {
+          color: "#7c3aed", // Matches your brand-purple
+        },
+      };
+
+      // 6. Open the beautiful Razorpay Popup!
+      const razorpayPopup = new window.Razorpay(options);
+
+      razorpayPopup.on("payment.failed", function (response) {
+        console.error("Payment Failed:", response.error.description);
+        alert("Payment failed or was cancelled. You have not been charged.");
+      });
+
+      razorpayPopup.open();
     } catch (error) {
-      alert("Error enrolling in course");
+      console.error("Order creation failed", error);
+      alert("Could not initiate checkout. Please try again.");
     }
   };
 
@@ -67,4 +137,4 @@ export const useCourseDetails = () => {
   };
 };
 
-export default useCourseDetails 
+export default useCourseDetails;

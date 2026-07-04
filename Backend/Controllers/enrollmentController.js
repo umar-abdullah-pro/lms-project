@@ -47,7 +47,14 @@ exports.enrollInCourse = async (req, res) => {
 exports.getMyEnrollments = async (req, res) => {
   try {
     const enrollments = await Enrollment.find({ student: req.user._id })
-      .populate("course", "title description price lessons instructor")
+      .populate({
+        path: "course", // 1. First, populate the course details
+        select: "title description thumbnail price lessons instructor",
+        populate: {
+          path: "instructor", // 2. Then, go inside the course and populate the instructor!
+          select: "name avatar",
+        },
+      })
       .sort("-enrolledAt");
 
     res
