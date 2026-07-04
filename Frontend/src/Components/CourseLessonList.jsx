@@ -22,7 +22,7 @@ const CourseLessonList = ({
         <div className="flex flex-col gap-3">
           {displayLessons.map((lesson, index) => {
             // Find the original chronological number of the lesson
-            const chronologicalNumber = displayLessons.length - index;
+            const chronologicalNumber = index +1;
             const isCompleted = completedLessons?.some(
               (id) => String(id) === String(lesson._id),
             );

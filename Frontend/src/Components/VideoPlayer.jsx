@@ -14,7 +14,7 @@ const VideoPlayer = ({ url, title, isLocked, onVideoEnd }) => {
   if (isLocked) {
     return (
       <div className="overflow-hidden bg-gray-900 rounded-3xl shadow-2xl">
-        <div className="flex flex-col items-center justify-center w-full px-8 text-center bg-gradient-to-br from-gray-900 to-black aspect-video">
+        <div className="flex flex-col items-center justify-center w-full px-8 text-center bg-linear-to-br from-gray-900 to-black aspect-video">
           <div className="p-4 mb-4 bg-white/10 rounded-full">
             <svg
               className="w-10 h-10 text-brand-yellow"
