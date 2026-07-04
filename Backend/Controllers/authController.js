@@ -66,6 +66,7 @@ exports.postUserLogin = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        avatar: user.avatar
       },
     });
   } catch (error) {
@@ -108,6 +109,7 @@ exports.updateProfile = async (req, res) => {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
+        avatar: updatedUser.avatar,
       },
     });
   } catch (error) {

@@ -29,7 +29,7 @@ exports.postCreateCourse = async (req, res) => {
     }
 
     let formattedCategory = req.body.category
-      ? req.body.catagory.charAt(0).toUpperCase() + req.body.catagory.slice(1)
+      ? req.body.category.charAt(0).toUpperCase() + req.body.category.slice(1)
       : "Uncategorized";
 
     const newCourse = await Course.create({

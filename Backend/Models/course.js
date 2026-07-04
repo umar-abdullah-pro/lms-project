@@ -26,7 +26,7 @@ const courseSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    catogory: {
+    category: {
         type: String,
         default: "Uncategorized",
         enum: ["Programming", "Design", "Business", "Marketing", "Uncategorized"],
