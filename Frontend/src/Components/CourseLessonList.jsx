@@ -1,3 +1,9 @@
+import {
+  HiOutlineCheckCircle,
+  HiOutlineLockClosed,
+  HiOutlinePlayCircle,
+} from "react-icons/hi2";
+
 const CourseLessonList = ({
   lessons,
   completedLessons,
@@ -5,7 +11,7 @@ const CourseLessonList = ({
   onPlay,
   onMarkComplete,
 }) => {
-  const displayLessons = [...(lessons || [])]
+  const displayLessons = [...(lessons || [])];
   return (
     <div className="mt-8">
       <h2 className="mb-6 text-2xl font-extrabold text-gray-900">
@@ -22,7 +28,7 @@ const CourseLessonList = ({
         <div className="flex flex-col gap-3">
           {displayLessons.map((lesson, index) => {
             // Find the original chronological number of the lesson
-            const chronologicalNumber = index +1;
+            const chronologicalNumber = index + 1;
             const isCompleted = completedLessons?.some(
               (id) => String(id) === String(lesson._id),
             );
@@ -55,19 +61,7 @@ const CourseLessonList = ({
                           : "text-gray-200 hover:text-[#1de9b6]"
                       }
                     >
-                      <svg
-                        className="w-6 h-6"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2.5"
-                          d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                        />
-                      </svg>
+                      <HiOutlineCheckCircle className="w-6 h-6" />
                     </div>
                   </button>
 
@@ -97,32 +91,10 @@ const CourseLessonList = ({
                 {/* 🌟 DYNAMIC ICON: Play button OR Padlock */}
                 <div className="shrink-0 p-2">
                   {isLocked ? (
-                    <svg
-                      className="w-6 h-6 text-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                      />
-                    </svg>
+                    <HiOutlineLockClosed className="w-6 h-6 text-gray-400" />
                   ) : (
                     <div className="p-2 text-brand-purple bg-[#f0f2ff] rounded-full transition-colors group-hover:bg-brand-purple group-hover:text-white">
-                      <svg
-                        className="w-5 h-5 ml-0.5"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
+                      <HiOutlinePlayCircle className="w-5 h-5 ml-0.5" />
                     </div>
                   )}
                 </div>

@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { HiOutlineClock } from "react-icons/hi2";
 
 const CourseCard = ({ course, index }) => {
   // Creating dynamic pastel colors based on index
@@ -53,19 +54,7 @@ const CourseCard = ({ course, index }) => {
         </p>
         <div className="flex items-center justify-between pt-6 mt-auto border-t border-gray-100">
           <div className="flex items-center gap-2 text-sm font-bold text-gray-400">
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
+            <HiOutlineClock className="w-5 h-5" />
             {course.lessons?.length || 0} LESSONS
           </div>
           <div className="text-lg font-extrabold text-brand-purple">

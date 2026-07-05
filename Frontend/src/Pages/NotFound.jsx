@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import Footer from "../Components/Footer";
+import { FiCompass } from "react-icons/fi";
 
 const NotFound = () => {
   return (
@@ -8,27 +9,7 @@ const NotFound = () => {
       <div className="flex flex-col items-center justify-center grow px-6 text-center">
         {/* Yellow Compass Icon */}
         <div className="flex items-center justify-center w-20 h-20 mb-8 rounded-full bg-[#fff8e1] text-[#d99f00]">
-          <svg
-            className="w-10 h-10"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              cx="12"
-              cy="12"
-              r="9"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-            <path
-              d="M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36 6.36-2.12z"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
+          <FiCompass className="w-10 h-10" />
         </div>
 
         {/* Text content */}

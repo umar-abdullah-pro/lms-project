@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { HiOutlineArrowLeft } from "react-icons/hi2";
 
 const CourseHeader = ({ course }) => {
   return (
@@ -7,19 +8,7 @@ const CourseHeader = ({ course }) => {
         to="/all-courses"
         className="inline-flex items-center gap-2 mb-8 text-sm font-bold text-gray-500 transition-colors hover:text-gray-900"
       >
-        <svg
-          className="w-4 h-4"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth="3"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
+        <HiOutlineArrowLeft className="w-4 h-4" strokeWidth={3} />
         Back to courses
       </Link>
 

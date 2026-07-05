@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { HiOutlineClock } from 'react-icons/hi2'
 
 const ProgressCourseCard = ({ course, index, progress = 0 }) => {
   // Reusing our beautiful pastel theme logic
@@ -56,19 +57,7 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
         {/* Lesson Count & Progress Bar */}
         <div className="pt-4 mt-auto border-t border-gray-50">
           <div className="flex items-center gap-2 mb-4 text-xs font-bold text-gray-400 uppercase tracking-wider">
-            <svg
-              className="w-4 h-4"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-              ></path>
-            </svg>
+            <HiOutlineClock className="w-5 h-5" />
             {/* ✅ FIX: Safe lesson array check */}
             {course?.lessons?.length || 0} LESSONS
           </div>

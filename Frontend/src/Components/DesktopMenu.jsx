@@ -1,5 +1,5 @@
-// Frontend/src/Components/DesktopMenu.jsx
 import { Link } from "react-router-dom";
+import { HiOutlineArrowRightOnRectangle } from "react-icons/hi2";
 
 const DesktopMenu = ({ user, onLogout }) => {
   return (
@@ -60,19 +60,7 @@ const DesktopMenu = ({ user, onLogout }) => {
               title="Logout"
               className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full transition-all"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
-                />
-              </svg>
+              <HiOutlineArrowRightOnRectangle className="w-5 h-5" />
             </button>
           </div>
         ) : (

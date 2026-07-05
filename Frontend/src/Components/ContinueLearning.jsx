@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import ProgressCourseCard from "./ProgressCourseCard";
+import { HiOutlineLink } from "react-icons/hi2";
 
 const ContinueLearning = ({ enrolledCourses, loading }) => {
   return (
@@ -12,19 +13,7 @@ const ContinueLearning = ({ enrolledCourses, loading }) => {
           to="/"
           className="flex items-center gap-2 font-bold text-brand-purple hover:text-indigo-700 transition-colors"
         >
-          <svg
-            className="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"
-            ></path>
-          </svg>
+          <HiOutlineLink className="w-5 h-5" />
           Browse more
         </Link>
       </div>
@@ -50,9 +39,11 @@ const ContinueLearning = ({ enrolledCourses, loading }) => {
           {enrolledCourses.map((enrollment, index) => {
             // Calculate dynamic progress
             // 'enrollment.course' is the course data, 'enrollment.completedLessons' is the progress array
-            const totalLessons = enrollment.course?.lessons?.length || 1; 
+            const totalLessons = enrollment.course?.lessons?.length || 1;
             const completedLessons = enrollment.completedLessons?.length || 0;
-            const progress = Math.round((completedLessons / totalLessons) * 100);
+            const progress = Math.round(
+              (completedLessons / totalLessons) * 100,
+            );
 
             return (
               <ProgressCourseCard

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../Context/AuthContext";
+import { HiOutlineCheckCircle } from 'react-icons/hi2'
 
 const HeroSection = () => {
   const { user } = useAuth();
@@ -73,19 +74,7 @@ const HeroSection = () => {
             </div>
             <div className="absolute bottom-1/4 -right-4 md:-right-12 bg-white rounded-2xl p-4 shadow-[0_10px_40px_rgb(0,0,0,0.08)] border border-gray-50 flex items-center gap-3 animate-[bounce_5s_infinite_1s]">
               <div className="flex items-center justify-center w-8 h-8 rounded-full bg-[#e6fcf5] text-[#1de9b6]">
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="3"
-                    d="M5 13l4 4L19 7"
-                  ></path>
-                </svg>
+                <HiOutlineCheckCircle className="w-9 h-9 text-green-400" />
               </div>
               <div>
                 <div className="text-sm font-extrabold text-gray-900">
