@@ -29,7 +29,6 @@ exports.enrollInCourse = async (req, res) => {
       student: student,
       course: course,
       completedLessons: [],
-      progress: [],
     });
 
     res.status(201).json({

@@ -1,7 +1,3 @@
-import { useState, useEffect } from "react";
-import axios from "axios";
-
-// Importing our Lego Blocks
 import HeroSection from "../Components/HeroSection";
 import FeaturesSection from "../Components/FeaturesSection";
 import CallToAction from "../Components/CallToAction";

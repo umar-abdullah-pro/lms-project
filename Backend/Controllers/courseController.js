@@ -36,7 +36,7 @@ exports.postCreateCourse = async (req, res) => {
       title,
       description,
       price: Number(price) || 0,
-      catagory: formattedCategory,
+      category: formattedCategory,
       thumbnail: thumbnailUrl,
       instructor: req.user._id,
       isPublished: publishStatus,

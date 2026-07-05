@@ -36,7 +36,7 @@ export const useCourseDetails = () => {
       if (course.price === 0) {
         try {
           const { data } = await apiClient.post("/enrollments", {
-            courseId: course._id,
+            course: course._id,
           });
           if (data.success) {
             alert("You have been Enrolled in the Course, Start Learning!");

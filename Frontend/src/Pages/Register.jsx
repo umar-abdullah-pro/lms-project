@@ -34,6 +34,7 @@ const Register = () => {
     if (actionData?.success) {
       login({ userData: actionData.userData, userToken: actionData.userToken });
     }
+    navigate("/dashboard")
   }, [actionData, login, navigate]);
   return (
     <div className="flex min-h-screen">
