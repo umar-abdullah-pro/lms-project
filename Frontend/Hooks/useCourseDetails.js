@@ -30,13 +30,31 @@ export const useCourseDetails = () => {
       alert("Please log in to purchase this course.");
       return;
     }
+
+    //FREE Course, Skip the Razorpay
     try {
-      // 3. Ask the backend to generate the Bill (Order)
+      if (course.price === 0) {
+        try {
+          const { data } = await apiClient.post("/enrollments", {
+            courseId: course._id,
+          });
+          if (data.success) {
+            alert("You have been Enrolled in the Course, Start Learning!");
+            window.location.reload();
+          }
+        } catch (error) {
+          const msg =
+            error.response?.data?.message || "Could not enroll. Try again.";
+          alert(`Enrollment Error: ${msg}`);
+        }
+
+        return;
+      }
+      
+      // 3. PAID Course, Ask the backend to generate the Bill (Order)
       const orderResponse = await apiClient.post("/payments/create-order", {
         courseId: course._id,
       });
-      console.log(orderResponse);
-
       const { order } = orderResponse.data;
 
       // 4. Configure the Razorpay Popup
@@ -44,7 +62,7 @@ export const useCourseDetails = () => {
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: order.amount,
         currency: order.currency,
-        name: "Learnly LMS",
+        name: "Learnly",
         description: `Unlock: ${course.title}`,
         image: course.thumbnail,
         order_id: order.id,

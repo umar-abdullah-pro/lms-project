@@ -108,7 +108,14 @@ const router = createBrowserRouter([
         element: <CourseDetail />,
         loader: courseDetailsLoader,
       },
-      { path: "course/:id/manage", element: <ManageCourse /> },
+      {
+        path: "course/:id/manage",
+        element: (
+          <ProtectedRoute>
+            <ManageCourse />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
