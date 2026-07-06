@@ -1,79 +1,158 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import axios from "axios";
-import { useAuth } from "../Context/AuthContext";
-//import { LiaFileUploadSolid } from "react-icons/lia";
+import {
+  Form,
+  useLoaderData,
+  useNavigation,
+  useActionData,
+} from "react-router-dom";
+// 🌟 Import all our beautiful icons from the Feather (Fi) set!
+import {
+  FiVideo,
+  FiAlertCircle,
+  FiAlignLeft,
+  FiFilm,
+  FiUploadCloud,
+  FiLoader,
+  FiUpload,
+} from "react-icons/fi";
+import { PiLightning } from "react-icons/pi";
 
 const ManageCourse = () => {
-  const { id } = useParams();
-  const navigate = useNavigate();
-  const { token } = useAuth();
+  const { course } = useLoaderData();
+  const navigation = useNavigation();
+  const actionData = useActionData();
+  const isSubmitting = navigation.state === "submitting";
 
-  const [formData, setFormData] = useState({ title: "", description: "" });
-  const [videoFile, setVideoFile] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!videoFile) return alert("Please select a video");
-
-    setLoading(true);
-    const data = new FormData();
-    data.append("title", formData.title);
-    data.append("description", formData.description);
-    data.append("video", videoFile); // Must match upload.single("video") in backend
-
-    try {
-      await axios.post(
-        `http://localhost:3000/api/courses/${id}/lessons`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-      alert("Lesson uploaded!");
-      navigate(`/course/${id}`);
-    } catch (err) {
-      alert("Upload failed: " + err.response?.data?.message);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [fileName, setFileName] = useState("");
 
   return (
-    <div className="p-10 bg-white rounded-4xl max-w-2xl mx-auto mt-10 shadow-sm border border-gray-100">
-      <h1 className="text-2xl font-bold mb-6">Add New Lesson</h1>
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <input
-          className="w-full p-3 border rounded-xl"
-          placeholder="Lesson Title"
-          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-          required
-        />
-        <textarea
-          className="w-full p-3 border rounded-xl"
-          placeholder="Description"
-          onChange={(e) =>
-            setFormData({ ...formData, description: e.target.value })
-          }
-        />
-        {/* <LiaFileUploadSolid /> */}
-        <input
-          type="file"
-          onChange={(e) => setVideoFile(e.target.files[0])}
-          accept="video/*"
-          required
-        />
+    <div className="max-w-2xl p-8 mx-auto mt-12 bg-white border border-gray-100 shadow-xl rounded-3xl">
+      {/* --- HEADER SECTION --- */}
+      <div className="flex items-center gap-4 mb-8">
+        <div className="p-3 text-brand-purple bg-[#f0f2ff] rounded-2xl">
+          <FiVideo className="w-8 h-8" />
+        </div>
+        <div>
+          <h1 className="text-2xl font-extrabold text-gray-900">
+            Add New Lesson
+          </h1>
+          <p className="mt-1 font-medium text-gray-500">
+            To course:
+            <span className="font-bold text-brand-purple">
+              "{course.title}"
+            </span>
+          </p>
+        </div>
+      </div>
+
+      {/* --- ERROR BANNER --- */}
+      {actionData?.error && (
+        <div className="flex items-center gap-3 p-4 mb-6 text-sm font-bold text-red-700 bg-red-50 border border-red-100 rounded-xl">
+          <FiAlertCircle className="shrink-0 w-5 h-5" />
+          {actionData.error}
+        </div>
+      )}
+
+      {/* --- THE FORM --- */}
+      <Form method="post" encType="multipart/form-data" className="space-y-6">
+        <div className="space-y-2">
+          <label className="ml-1 text-sm font-bold text-gray-700">
+            Lesson Title
+          </label>
+          <div className="relative">
+            <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none text-gray-400">
+              <PiLightning className="w-5 h-5" />
+            </div>
+            <input
+              name="title"
+              className="w-full py-4 pl-12 pr-4 transition-all border-2 border-gray-100 bg-gray-50 focus:border-brand-purple focus:bg-white focus:outline-none rounded-2xl"
+              placeholder="e.g. Introduction to React"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <label className="ml-1 text-sm font-bold text-gray-700">
+            Description (Optional)
+          </label>
+          <div className="relative">
+            <div className="absolute left-0 flex items-center pl-4 pointer-events-none top-4 text-gray-400">
+              <FiAlignLeft className="w-5 h-5" />
+            </div>
+            <textarea
+              name="description"
+              rows="3"
+              className="w-full py-4 pl-12 pr-4 transition-all resize-none border-2 border-gray-100 bg-gray-50 focus:border-brand-purple focus:bg-white focus:outline-none rounded-2xl"
+              placeholder="What will students learn in this video?"
+            />
+          </div>
+        </div>
+
+        {/* 3. Fancy File Upload Box */}
+        <div className="space-y-2">
+          <label className="ml-1 text-sm font-bold text-gray-700">
+            Video File
+          </label>
+
+          <label
+            className={`flex flex-col items-center justify-center w-full h-40 border-2 border-dashed rounded-3xl cursor-pointer transition-all 
+            ${fileName ? "border-brand-purple bg-[#f0f2ff]" : "border-gray-300 bg-gray-50 hover:bg-gray-100 hover:border-brand-purple"}`}
+          >
+            <div className="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+              {fileName ? (
+                <>
+                  <div className="p-3 mb-3 text-white rounded-full bg-brand-purple">
+                    <FiFilm className="w-6 h-6" />
+                  </div>
+                  <p className="max-w-xs px-4 text-sm font-bold truncate text-brand-purple">
+                    {fileName}
+                  </p>
+                  <p className="mt-1 text-xs text-brand-purple/70">
+                    Click to change video
+                  </p>
+                </>
+              ) : (
+                <>
+                  <FiUploadCloud className="w-10 h-10 mb-3 text-gray-400" />
+                  <p className="mb-1 text-sm font-bold text-gray-700">
+                    Click to select a video
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    MP4, WebM, or OGG files
+                  </p>
+                </>
+              )}
+            </div>
+            <input
+              type="file"
+              name="video"
+              accept="video/*"
+              required
+              className="hidden"
+              onChange={(e) => setFileName(e.target.files[0]?.name || "")}
+            />
+          </label>
+        </div>
+
+        {/* 4. Submit Button */}
         <button
-          disabled={loading}
-          className="w-full py-3 bg-brand-purple text-white rounded-xl font-bold"
+          disabled={isSubmitting}
+          className="relative flex items-center justify-center w-full gap-2 py-4 font-extrabold text-white transition-all rounded-2xl bg-brand-purple hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed group"
         >
-          {loading ? "Uploading to Cloudinary..." : "Upload Lesson"}
+          {isSubmitting ? (
+            <>
+              <FiLoader className="w-5 h-5 animate-spin" />
+              Uploading the Video
+            </>
+          ) : (
+            <>
+              <FiUpload className="w-5 h-5 transition-transform group-hover:-translate-y-0.5" />
+              Publish Lesson
+            </>
+          )}
         </button>
-      </form>
+      </Form>
     </div>
   );
 };

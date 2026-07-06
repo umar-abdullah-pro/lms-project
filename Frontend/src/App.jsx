@@ -7,12 +7,14 @@ import { AuthProvider } from "./Context/AuthContext";
 import dashboardLoader from "./Loaders/dashboardLoader";
 import CatalogLoader from "./Loaders/CatalogLoader";
 import courseDetailsLoader from "./Loaders/courseDetailsLoader";
+import { manageCourseLoader } from "./Loaders/manageCourseLoader";
 
 //Actions
 import loginAction from "../Actions/loginAction";
 import registerAction from "../Actions/registerAction";
 import updateProfileAction from "../Actions/updateProfileAction";
 import createCourseAction from "../Actions/createCourseAction";
+import manageCourseAction from "../Actions/manageCourseAction";
 
 //Pages
 import Register from "./Pages/Register";
@@ -115,6 +117,8 @@ const router = createBrowserRouter([
             <ManageCourse />
           </ProtectedRoute>
         ),
+        loader: manageCourseLoader,
+        action: manageCourseAction,
       },
     ],
   },

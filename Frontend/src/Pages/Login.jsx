@@ -34,7 +34,7 @@ const Login = () => {
             <HiOutlineBookOpen className="w-6 h-6 text-white" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6">
-            Welcome back — let's pick up{" "}
+            Welcome back — let's pick up
             <span className="underline decoration-brand-yellow decoration-4 underline-offset-8">
               right where you left off.
             </span>
@@ -51,7 +51,7 @@ const Login = () => {
         <div className="w-full max-w-md p-10 bg-white border border-gray-100 shadow-sm rounded-4xl">
           <h2 className="mb-2 text-3xl font-extrabold text-gray-900">Log in</h2>
           <p className="mb-8 font-medium text-gray-500">
-            New to Learnly?{" "}
+            New to Learnly?
             <Link to="/register" className="text-brand-purple hover:underline">
               Create an account
             </Link>

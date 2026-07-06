@@ -56,7 +56,7 @@ const Navbar = () => {
             <HiOutlineXMark className="w-7 h-7" />
           ) : (
             <HiOutlineBars3 className="w-7 h-7" />
-          )}{" "}
+          )}
         </button>
       </div>
 

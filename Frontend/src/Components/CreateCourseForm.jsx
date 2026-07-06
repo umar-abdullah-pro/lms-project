@@ -32,7 +32,7 @@ const CreateCourse = () => {
       <div className="max-w-3xl mx-auto">
         <div className="mb-10 text-center">
           <h1 className="text-4xl font-extrabold text-gray-900 lg:text-5xl">
-            Create a{" "}
+            Create a
             <span className="underline decoration-brand-yellow decoration-4 underline-offset-8">
               New Course
             </span>

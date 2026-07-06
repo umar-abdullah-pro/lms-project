@@ -34,7 +34,6 @@ const Register = () => {
     if (actionData?.success) {
       login({ userData: actionData.userData, userToken: actionData.userToken });
     }
-    navigate("/dashboard")
   }, [actionData, login, navigate]);
   return (
     <div className="flex min-h-screen">
@@ -45,7 +44,7 @@ const Register = () => {
             <HiOutlineBookOpen className="w-6 h-6 text-white" />
           </div>
           <h1 className="text-4xl lg:text-5xl font-extrabold text-white leading-tight mb-6">
-            Join Learnly —{" "}
+            Join Learnly —
             <span className="underline decoration-brand-yellow decoration-4 underline-offset-8">
               start learning today.
             </span>
@@ -64,7 +63,7 @@ const Register = () => {
             Sign up
           </h2>
           <p className="mb-8 font-medium text-gray-500">
-            Already have an account?{" "}
+            Already have an account?
             <Link to="/login" className="text-brand-purple hover:underline">
               Log in
             </Link>
