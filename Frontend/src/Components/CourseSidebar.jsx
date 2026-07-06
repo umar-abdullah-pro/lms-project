@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { HiOutlinePlus, HiCheck } from "react-icons/hi2";
+import { FiCheckCircle, FiPlusCircle } from "react-icons/fi";
+
 
 const CourseSidebar = ({
   handleEnrollment,
@@ -42,13 +43,13 @@ const CourseSidebar = ({
           onClick={() => navigate(`/course/${course._id}/manage`)}
           className="w-full flex items-center justify-center gap-2 px-8 py-3 mb-8 text-white transition-colors rounded-full bg-brand-purple hover:bg-opacity-90 font-bold"
         >
-          <HiOutlinePlus className="w-5 h-5" />
+          <FiPlusCircle  className="w-5 h-5" />
           Add Lessons
         </button>
       ) : isEnrolled ? (
         // IF THEY BOUGHT IT: Show the Enrolled button
         <button className="w-full flex items-center justify-center gap-2 py-3.5 mb-8 text-gray-600 font-bold bg-white border-2 border-gray-200 rounded-full cursor-default">
-          <HiCheck className="w-5 h-5 text-gray-400" />
+          <FiCheckCircle  className="w-5 h-5 text-gray-400" />
           Enrolled
         </button>
       ) : (
