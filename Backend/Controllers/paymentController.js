@@ -94,7 +94,6 @@ exports.verifyRazorpayPayment = async (req, res) => {
       student: studentId,
       course: courseId,
       completedLessons: [],
-      progress: [],
     });
 
     res.status(200).json({

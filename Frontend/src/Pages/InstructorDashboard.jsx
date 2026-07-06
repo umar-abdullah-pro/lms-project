@@ -136,8 +136,8 @@ const InstructorDashboard = () => {
                   <div className="flex items-center gap-2 mt-auto">
                     {/* Manage Button (Flexible Width) */}
                     <Link
-                      to={`/manage-course/${course._id}`}
-                      className="flex items-center justify-center flex-grow gap-2 py-3 font-bold transition-all border-2 text-brand-purple border-brand-purple/20 bg-brand-purple/5 hover:bg-brand-purple hover:text-white rounded-xl"
+                      to={`/course/${course._id}`}
+                      className="flex items-center justify-center grow gap-2 py-3 font-bold transition-all border-2 text-brand-purple border-brand-purple/20 bg-brand-purple/5 hover:bg-brand-purple hover:text-white rounded-xl"
                     >
                       <FiEdit3 className="w-5 h-5" />
                       Manage
