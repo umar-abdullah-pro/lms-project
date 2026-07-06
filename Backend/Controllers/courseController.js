@@ -1,8 +1,9 @@
 const { Course } = require("../Models/course");
+const Enrollment = require("../Models/enrollment");
 const cloudinary = require("../cloudinaryConfig");
 
 exports.postCreateCourse = async (req, res) => {
-  const { title, description, catagory, price, isPublished } = req.body;
+  const { title, description, category, price, isPublished } = req.body;
   try {
     if (!title || !description) {
       return res.status(400).json({
@@ -167,5 +168,87 @@ exports.postaddLesson = async (req, res) => {
       message: "Server error during upload",
       error: error.message,
     });
+  }
+};
+
+exports.getInstructorDashboard = async (req, res) => {
+  try {
+    // 1. Find all courses owned by this specific instructor (newest first)
+    const courses = await Course.find({ instructor: req.user._id }).sort("-createdAt");
+
+    // 2. Loop through each course and count how many students are enrolled
+    const coursesWithStats = await Promise.all(
+      courses.map(async (course) => {
+        const studentCount = await Enrollment.countDocuments({ course: course._id });
+        
+        return {
+          ...course._doc, // Spreads the course data
+          studentCount,   // Attaches the new student count
+        };
+      })
+    );
+
+    res.status(200).json({
+      success: true,
+      data: coursesWithStats,
+    });
+  } catch (error) {
+    console.error("Error fetching instructor courses:", error);
+    res.status(500).json({
+      success: false,
+      message: "Server error while fetching instructor dashboard",
+      error: error.message,
+    });
+  }
+};
+
+// --- DELETE A LESSON ---
+exports.deleteLesson = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.params;
+
+    // 1. Find the course
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ success: false, message: "Course not found" });
+
+    // 2. Verify ownership (Security Check!)
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Not authorized to edit this course" });
+    }
+
+    // 3. Remove the lesson from the array
+    course.lessons = course.lessons.filter(
+      (lesson) => lesson._id.toString() !== lessonId
+    );
+
+    // 4. Save the updated course
+    await course.save();
+
+    res.status(200).json({ success: true, message: "Lesson deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+};
+
+// --- DELETE AN ENTIRE COURSE ---
+exports.deleteCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+
+    // 1. Find the course
+    const course = await Course.findById(courseId);
+    if (!course) return res.status(404).json({ success: false, message: "Course not found" });
+
+    // 2. Verify ownership
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Not authorized to delete this course" });
+    }
+
+    // 3. Delete the course (This also automatically deletes all embedded lessons!)
+    await Course.findByIdAndDelete(courseId);
+
+    res.status(200).json({ success: true, message: "Course deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };

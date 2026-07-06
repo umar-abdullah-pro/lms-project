@@ -16,22 +16,14 @@ const MobileMenu = ({ isOpen, user, onLogout, closeMenu }) => {
             Browse courses
           </Link>
         )}
-        {user?.role === "student" && (
+
+        {user && (
           <Link
             to="/dashboard"
             onClick={closeMenu}
             className="font-bold text-gray-800 border-b border-gray-200 pb-4"
           >
             Dashboard
-          </Link>
-        )}
-        {user?.role === "instructor" && (
-          <Link
-            to="/create-course"
-            onClick={closeMenu}
-            className="font-bold text-gray-800 border-b border-gray-200 pb-4"
-          >
-            Add New Course
           </Link>
         )}
 

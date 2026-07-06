@@ -15,6 +15,7 @@ import registerAction from "../Actions/registerAction";
 import updateProfileAction from "../Actions/updateProfileAction";
 import createCourseAction from "../Actions/createCourseAction";
 import manageCourseAction from "../Actions/manageCourseAction";
+import { dashboardAction } from "../Actions/dashboardAction";
 
 //Pages
 import Register from "./Pages/Register";
@@ -77,6 +78,7 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
         loader: dashboardLoader,
+        action: dashboardAction,
       },
       {
         path: "all-courses",

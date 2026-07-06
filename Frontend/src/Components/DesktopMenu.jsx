@@ -12,22 +12,13 @@ const DesktopMenu = ({ user, onLogout }) => {
           Browse courses
         </Link>
       )}
-      {user?.role === "student" && (
-        <Link
+      
+        {user && <Link
           to="/dashboard"
           className="font-semibold text-gray-600 hover:text-gray-900 transition-colors"
         >
           Dashboard
-        </Link>
-      )}
-      {user?.role === "instructor" && (
-        <Link
-          to="/create-course"
-          className="font-semibold text-gray-600 hover:text-gray-900 transition-colors"
-        >
-          Add New Course
-        </Link>
-      )}
+        </Link>}
 
       <div className="border-l pl-6 border-gray-300">
         {user ? (
