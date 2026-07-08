@@ -29,9 +29,17 @@ exports.postUserRegister = async (req, res) => {
       expiresIn: "30d",
     });
 
-    res
-      .status(201)
-      .json({ message: "User registered successfully", data: newUser, token });
+    res.status(201).json({
+      message: "User registered successfully",
+      token,
+      data: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        role: newUser.role,
+        avatar: newUser.avatar,
+      },
+    });
   } catch (error) {
     console.log("error while registering the user", error);
     res.status(500).json({ message: "Server error" });
@@ -66,7 +74,7 @@ exports.postUserLogin = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
-        avatar: user.avatar
+        avatar: user.avatar,
       },
     });
   } catch (error) {

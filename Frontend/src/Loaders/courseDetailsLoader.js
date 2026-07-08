@@ -1,6 +1,6 @@
 import apiClient from "../../API/client";
 
-const CatalogLoader = async ({ params }) => {
+const courseDetailsLoader = async ({ params }) => {
   try {
     const courseResponse = await apiClient.get(`/courses/${params.id}`);
     const courseData = courseResponse.data.data || courseResponse.data || [];
@@ -20,4 +20,4 @@ const CatalogLoader = async ({ params }) => {
   }
 };
 
-export default CatalogLoader;
+export default courseDetailsLoader;

@@ -115,7 +115,7 @@ const router = createBrowserRouter([
       {
         path: "course/:id/manage",
         element: (
-          <ProtectedRoute>
+          <ProtectedRoute requiredRole="instructor">
             <ManageCourse />
           </ProtectedRoute>
         ),

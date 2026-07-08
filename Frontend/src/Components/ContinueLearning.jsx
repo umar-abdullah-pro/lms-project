@@ -10,7 +10,7 @@ const ContinueLearning = ({ enrolledCourses, loading }) => {
           Continue learning
         </h2>
         <Link
-          to="/"
+          to="/all-courses"
           className="flex items-center gap-2 font-bold text-brand-purple hover:text-indigo-700 transition-colors"
         >
           <HiOutlineLink className="w-5 h-5" />

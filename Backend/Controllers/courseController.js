@@ -182,7 +182,7 @@ exports.getInstructorDashboard = async (req, res) => {
         const studentCount = await Enrollment.countDocuments({ course: course._id });
         
         return {
-          ...course._doc, // Spreads the course data
+          ...course.toObject(), // Spreads the course data
           studentCount,   // Attaches the new student count
         };
       })

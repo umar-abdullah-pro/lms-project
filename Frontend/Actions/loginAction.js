@@ -6,7 +6,6 @@ const loginAction = async ({ request }) => {
 
   try {
     const response = await apiClient.post("/auth/login", data);
-    console.log(response);
     const token = response.data.token;
     const userData = response.data.user;
 

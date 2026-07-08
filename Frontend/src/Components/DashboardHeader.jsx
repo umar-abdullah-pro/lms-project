@@ -1,4 +1,4 @@
-import { HiOutlineBookOpen, HiOutlineCheckCircle, HiOutlineXMark } from 'react-icons/hi2'
+import { HiOutlineBookOpen, HiOutlineCheckCircle } from 'react-icons/hi2'
 import { FaArrowTrendUp } from "react-icons/fa6";
 
 const DashboardHeader = ({ userName = "Asha", stats }) => {
@@ -17,7 +17,7 @@ const DashboardHeader = ({ userName = "Asha", stats }) => {
         {/* Stat Card 1: Courses */}
         <div className="flex items-center p-6 bg-white border border-gray-100 shadow-sm rounded-2xl gap-5">
           <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-brand-purple/10 text-brand-purple">
-            <HiOutlineBookOpen className="w-8 h-8 text-purple" />
+            <HiOutlineBookOpen className="w-8 h-8 text-brand-purple" />
           </div>
           <div>
             <div className="text-2xl font-extrabold text-gray-900">{stats?.courses || 0}</div>
