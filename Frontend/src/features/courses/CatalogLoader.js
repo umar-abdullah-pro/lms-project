@@ -1,5 +1,4 @@
   import apiClient from "../../API/client";
-
   const CatalogLoader = async () => {
     try {
       const response = await apiClient.get("/courses");

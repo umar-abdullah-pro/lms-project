@@ -1,5 +1,5 @@
 import { useLoaderData, Link, useFetcher } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 import {
   FiBookOpen,
   FiUsers,
@@ -8,7 +8,7 @@ import {
   FiTrendingUp,
   FiTrash2,
 } from "react-icons/fi";
-import Footer from "../Components/Footer";
+import Footer from "../../components/Footer";
 
 const InstructorDashboard = () => {
   const fetcher = useFetcher();

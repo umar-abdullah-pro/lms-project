@@ -1,7 +1,7 @@
-import HeroSection from "../Components/HeroSection";
-import FeaturesSection from "../Components/FeaturesSection";
-import CallToAction from "../Components/CallToAction";
-import Footer from "../Components/Footer";
+import HeroSection from "./HeroSection";
+import FeaturesSection from "./FeaturesSection";
+import CallToAction from "./CallToAction";
+import Footer from "../../components/Footer";
 
 const Home = () => {
   return (

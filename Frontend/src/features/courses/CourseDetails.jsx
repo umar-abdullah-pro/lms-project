@@ -3,11 +3,11 @@ import { useLoaderData, useNavigate } from "react-router-dom";
 import useCourseDetails from "../../Hooks/useCourseDetails";
 import apiClient from "../../API/client";
 
-import CourseHeader from "../Components/CourseHeader";
-import CourseLessonList from "../Components/CourseLessonList";
-import CourseSidebar from "../Components/CourseSidebar";
-import Footer from "../Components/Footer";
-import VideoPlayer from "../Components/VideoPlayer";
+import CourseHeader from "./CourseHeader";
+import CourseLessonList from "./CourseLessonList";
+import CourseSidebar from "./CourseSidebar";
+import Footer from "../../components/Footer";
+import VideoPlayer from "../../components/VideoPlayer";
 
 const CourseDetail = () => {
   const {

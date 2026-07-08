@@ -1,7 +1,6 @@
-// Frontend/src/Components/Navbar.jsx
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../features/auth/AuthContext";
 
 import {
   HiOutlineBookOpen,
@@ -9,9 +8,8 @@ import {
   HiOutlineXMark,
 } from "react-icons/hi2";
 
-// Import your newly extracted components!
-import DesktopMenu from "./DesktopMenu";
-import MobileMenu from "./MobileMenu";
+import DesktopMenu from "../components/DesktopMenu";
+import MobileMenu from "../components/MobileMenu";
 
 const Navbar = () => {
   const navigate = useNavigate();

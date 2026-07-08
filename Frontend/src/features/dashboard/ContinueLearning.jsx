@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import ProgressCourseCard from "./ProgressCourseCard";
+import ProgressCourseCard from "../../components/ProgressCourseCard";
 import { HiOutlineLink } from "react-icons/hi2";
 
 const ContinueLearning = ({ enrolledCourses, loading }) => {

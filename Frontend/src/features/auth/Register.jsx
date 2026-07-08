@@ -12,7 +12,7 @@ import {
   Form,
   Link,
 } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "./AuthContext";
 
 const AVATAR_OPTIONS = [
   "https://api.dicebear.com/7.x/bottts/svg?seed=Felix",

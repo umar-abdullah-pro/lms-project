@@ -1,38 +1,38 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
 //Context
-import { AuthProvider } from "./Context/AuthContext";
+import { AuthProvider } from "./features/auth/AuthContext";
 
 //Loaders
-import dashboardLoader from "./Loaders/dashboardLoader";
-import CatalogLoader from "./Loaders/CatalogLoader";
-import courseDetailsLoader from "./Loaders/courseDetailsLoader";
-import { manageCourseLoader } from "./Loaders/manageCourseLoader";
+import dashboardLoader from "./features/dashboard/dashboardLoader";
+import CatalogLoader from "./features/courses/CatalogLoader"
+import courseDetailsLoader from "./features/courses/courseDetailsLoader";
+import { manageCourseLoader } from "./features/courses/manageCourseLoader";
 
 //Actions
-import loginAction from "../Actions/loginAction";
-import registerAction from "../Actions/registerAction";
-import updateProfileAction from "../Actions/updateProfileAction";
-import createCourseAction from "../Actions/createCourseAction";
-import manageCourseAction from "../Actions/manageCourseAction";
-import { dashboardAction } from "../Actions/dashboardAction";
+import loginAction from "./features/auth/loginAction";
+import registerAction from "./features/auth/registerAction";
+import updateProfileAction from "./features/dashboard/updateProfileAction";
+import createCourseAction from "./features/courses/createCourseAction";
+import manageCourseAction from "./Actions/manageCourseAction";
+import { dashboardAction } from "./features/dashboard/dashboardAction";
 
 //Pages
-import Register from "./Pages/Register";
-import Login from "./Pages/Login";
-import Home from "./Pages/Home";
-import Dashboard from "./Pages/Dashboard";
-import CourseDetail from "./Pages/CourseDetails";
-import CreateCourse from "./Pages/CreateCourse";
+import Register from "./features/auth/Register";
+import Login from "./features/auth/Login";
+import Home from "./features/home/Home";
+import Dashboard from "./features/dashboard/Dashboard";
+import CourseDetail from "./features/courses/CourseDetails";
+import CreateCourse from "./features/courses/CreateCourse";
 import NotFound from "./Pages/NotFound";
-import CourseCatalog from "./Pages/CourseCatalog";
-import UpdateProfile from "./Pages/UpdateProfile";
-import ManageCourse from "./Pages/ManageCourse";
+import CourseCatalog from "./features/courses/CourseCatalog";
+import UpdateProfile from "./features/dashboard/UpdateProfile";
+import ManageCourse from "./features/courses/ManageCourse";
 
 //Components and Routes
-import Navbar from "./Components/Navbar";
-import ProtectedRoute from "./Components/ProtectedRoute";
-import GuestRoute from "./Components/GuestRoute";
+import Navbar from "./components/Navbar";
+import ProtectedRoute from "./features/auth/ProtectedRoute";
+import GuestRoute from "./features/auth/GuestRoute";
 
 const RootLayout = () => {
   return (

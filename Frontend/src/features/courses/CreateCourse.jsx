@@ -1,6 +1,6 @@
-import CreateCourseHeader from "../Components/CreateCourseHeader";
-import CreateCourseForm from "../Components/CreateCourseForm";
-import Footer from "../Components/Footer";
+import CreateCourseHeader from "./CreateCourseHeader";
+import CreateCourseForm from "./CreateCourseForm";
+import Footer from "../../components/Footer";
 
 const CreateCourse = () => {
   return (

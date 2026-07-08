@@ -1,4 +1,4 @@
-import apiClient from "../API/client";
+import apiClient from "../../API/client";
 
 export const dashboardAction = async ({ request }) => {
   // If the form method is DELETE, process the course deletion

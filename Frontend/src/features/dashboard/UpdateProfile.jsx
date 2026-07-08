@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigation, useActionData, Form } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 const UpdateProfile = () => {
   const actionData = useActionData();

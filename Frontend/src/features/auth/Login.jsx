@@ -8,7 +8,7 @@ import {
   useNavigate,
   Link,
 } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "./AuthContext";
 
 const Login = () => {
   const actionData = useActionData();

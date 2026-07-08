@@ -1,4 +1,3 @@
-// Frontend/src/Components/MobileMenu.jsx
 import { Link } from "react-router-dom";
 
 const MobileMenu = ({ isOpen, user, onLogout, closeMenu }) => {

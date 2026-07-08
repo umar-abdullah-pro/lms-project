@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { useAuth } from "../Context/AuthContext";
+import { useAuth } from "../auth/AuthContext";
 
 const CallToAction = () => {
   const { user } = useAuth();

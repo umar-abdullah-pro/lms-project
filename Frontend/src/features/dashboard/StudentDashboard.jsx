@@ -1,10 +1,10 @@
 // Frontend/src/Pages/Dashboard.jsx
 import { useLoaderData } from "react-router-dom";
 import { useMemo } from "react";
-import { useAuth } from "../Context/AuthContext";
-import DashboardHeader from "../Components/DashboardHeader";
-import ContinueLearning from "../Components/ContinueLearning";
-import Footer from "../Components/Footer";
+import { useAuth } from "../auth/AuthContext";
+import DashboardHeader from "./DashboardHeader";
+import ContinueLearning from "./ContinueLearning";
+import Footer from "../../components/Footer";
 
 const StudentDashboard = () => {
   const { user } = useAuth();

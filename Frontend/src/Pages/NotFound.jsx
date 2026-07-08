@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import Footer from "../Components/Footer";
+import Footer from "../components/Footer";
 import { FiCompass } from "react-icons/fi";
 
 const NotFound = () => {

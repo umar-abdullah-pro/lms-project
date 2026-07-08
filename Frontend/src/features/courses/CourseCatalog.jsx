@@ -1,4 +1,4 @@
-import CourseCard from "../Components/CourseCard";
+import CourseCard from "../../components/CourseCard";
 import { useLoaderData } from "react-router-dom";
 
 const CourseCatalog = () => {

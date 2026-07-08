@@ -1,5 +1,4 @@
-// Frontend/src/Actions/createCourseAction.js
-import apiClient from "../API/client";
+import apiClient from "../../API/client";
 
 const createCourseAction = async ({ request }) => {
   const formData = await request.formData();
