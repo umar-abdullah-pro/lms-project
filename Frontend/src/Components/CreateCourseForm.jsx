@@ -18,11 +18,6 @@ const CreateCourse = () => {
   useEffect(() => {
     if (actionData?.success) {
       alert("Course created successfully! Let's add some lessons.");
-      console.log(
-        "🚀 5. Redirecting to the new course's lessons page:",
-        actionData.courseId,
-      );
-      // Assuming you have a route to manage the specific course they just built
       navigate(`/course/${actionData.courseId}`);
     }
   }, [actionData, navigate]);

@@ -1,6 +1,6 @@
 const express = require("express");
 const courseRouter = express.Router();
-const multer = require("../Middlewares/multer");
+const upload = require("../Middlewares/multer");
 const courseController = require("../Controllers/courseController");
 const authMiddleware = require("../Middlewares/authMiddleware");
 
@@ -11,7 +11,7 @@ courseRouter.post(
   "/",
   authMiddleware.protect,
   authMiddleware.instructorOnly,
-  gitupload.single("thumbnail"),
+  upload.single("thumbnail"),
   courseController.postCreateCourse,
 );
 

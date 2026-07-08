@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 import useCourseDetails from "../../Hooks/useCourseDetails";
+import apiClient from "../../API/client";
 
 import CourseHeader from "../Components/CourseHeader";
 import CourseLessonList from "../Components/CourseLessonList";
@@ -24,12 +25,9 @@ const CourseDetail = () => {
   // We need local state to track if the lesson they just clicked is locked!
   const [isCurrentLessonLocked, setIsCurrentLessonLocked] = useState(false);
 
-  // Custom handler so we can receive the 'isLocked' flag from the LessonList
   const handleLessonPlay = (lesson, lockedStatus) => {
     setCurrentLesson(lesson);
     setIsCurrentLessonLocked(lockedStatus);
-
-    // Automatically scroll to top so mobile users instantly see the video player!
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -37,11 +35,19 @@ const CourseDetail = () => {
     return <div className="py-20 text-center text-xl">Course not found.</div>;
   }
 
+  const handleDeleteLesson = async (lessonId) => {
+    try {
+      await apiClient.delete(`/courses/${course._id}/lessons/${lessonId}`);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="w-full min-h-screen bg-brand-beige">
       <div className="px-6 py-12 mx-auto max-w-7xl md:px-12 md:py-16">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-3 lg:gap-16">
-          {/* LEFT SIDE: Video Player & Lesson List */}
           <div className="lg:col-span-2">
             {currentLesson ? (
               <VideoPlayer
@@ -59,9 +65,11 @@ const CourseDetail = () => {
             <CourseLessonList
               lessons={course.lessons}
               completedLessons={completedLessons}
-              isEnrolled={isEnrolled || isCourseOwner} // Pass Enrollment status!
-              onPlay={handleLessonPlay} // Use our custom play handler
+              isEnrolled={isEnrolled || isCourseOwner}
+              isCourseOwner={isCourseOwner}
+              onPlay={handleLessonPlay}
               onMarkComplete={markLessonComplete}
+              onDeleteLesson={handleDeleteLesson}
             />
           </div>
 

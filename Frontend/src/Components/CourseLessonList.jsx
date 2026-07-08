@@ -3,11 +3,14 @@ import {
   HiOutlineLockClosed,
   HiOutlinePlayCircle,
 } from "react-icons/hi2";
+import { FiTrash2 } from "react-icons/fi";
 
 const CourseLessonList = ({
   lessons,
   completedLessons,
-  isEnrolled, // 🌟 NEW: We need to know if they bought the course!
+  isEnrolled,
+  isCourseOwner,
+  onDeleteLesson,
   onPlay,
   onMarkComplete,
 }) => {
@@ -39,16 +42,15 @@ const CourseLessonList = ({
             return (
               <div
                 key={lesson._id}
-                onClick={() => onPlay(lesson, isLocked)} // Pass lock status to the player!
+                onClick={() => onPlay(lesson, isLocked)}
                 className={`flex items-center justify-between p-5 transition-all border shadow-sm rounded-2xl cursor-pointer
                   ${isLocked ? "bg-gray-50 border-gray-100 hover:bg-gray-100 opacity-80" : "bg-white border-gray-200 hover:border-brand-purple hover:shadow-md"}
                 `}
               >
                 <div className="flex items-center gap-5">
-                  {/* Mark Complete Checkbox (Only works if enrolled and not locked) */}
                   <button
                     onClick={(e) => {
-                      e.stopPropagation(); // Prevents the lesson from playing when clicking the checkbox
+                      e.stopPropagation();
                       if (!isLocked && isEnrolled) onMarkComplete(lesson._id);
                     }}
                     disabled={isLocked || !isEnrolled}
@@ -87,16 +89,32 @@ const CourseLessonList = ({
                     </p>
                   </div>
                 </div>
+                <div className="flex">
+                  <div className="shrink-0 p-2">
+                    {isLocked ? (
+                      <HiOutlineLockClosed className="w-6 h-6 text-gray-400" />
+                    ) : (
+                      <div className="p-2 text-brand-purple bg-[#f0f2ff] rounded-full transition-colors group-hover:bg-brand-purple group-hover:text-white">
+                        <HiOutlinePlayCircle className="w-5 h-5 ml-0.5" />
+                      </div>
+                    )}
+                  </div>
 
-                {/* 🌟 DYNAMIC ICON: Play button OR Padlock */}
-                <div className="shrink-0 p-2">
-                  {isLocked ? (
-                    <HiOutlineLockClosed className="w-6 h-6 text-gray-400" />
-                  ) : (
-                    <div className="p-2 text-brand-purple bg-[#f0f2ff] rounded-full transition-colors group-hover:bg-brand-purple group-hover:text-white">
-                      <HiOutlinePlayCircle className="w-5 h-5 ml-0.5" />
-                    </div>
-                  )}
+                  <div className="shrink-0 p-2">
+                    {isCourseOwner && (
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          if (window.confirm(`Delete "${lesson.title}"?`)) {
+                            onDeleteLesson(lesson._id);
+                          }
+                        }}
+                        className="shrink-0 p-2 text-red-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                      >
+                        <FiTrash2 className="w-4 h-4" />
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             );

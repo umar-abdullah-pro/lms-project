@@ -15,7 +15,7 @@ const courseDetailsLoader = async ({ params }) => {
     }
     return { course: courseData, initialEnrollment: initialEnrollment };
   } catch (error) {
-    console.error("❌ ERROR: Failed to load courses Details", error);
+    console.error("ERROR: Failed to load courses Details", error);
     return { course: null, initialEnrollment: null };
   }
 };
