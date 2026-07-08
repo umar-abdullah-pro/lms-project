@@ -1,15 +1,32 @@
 import { createContext, useContext, useState } from "react";
 
-// 1. Create the context
-const AuthContext = createContext(null);
+const AuthContext = createContext({
+  login: () => {},
+  logout: () => {},
+  updateUser: () => {},
+});
 
-// 2. The Provider — wraps the whole app and holds the auth state
+const getInitialUser = () => {
+  try {
+    const item = localStorage.getItem("user");
+    if (item && item !== "undefined") {
+      return JSON.parse(item);
+    }
+    return null;
+  } catch (error) {
+    console.error("Failed to parse user from local storage:", error);
+    localStorage.removeItem("user");
+    return null;
+  }
+};
+
 export const AuthProvider = ({ children }) => {
-  // Read initial state from localStorage so the user stays logged in on refresh
-  const [user, setUser] = useState(JSON.parse(localStorage.getItem('user')) || null);
-  const [token, setToken] = useState(localStorage.getItem('token') || null);
+  // Read initial state safely from localStorage
+  const [user, setUser] = useState(getInitialUser);
+  const [token, setToken] = useState(localStorage.getItem("token") || null);
+
   // Called after a successful login API response
-  const login = ({userData, userToken}) => {
+  const login = ({ userData, userToken }) => {
     setUser(userData);
     setToken(userToken);
     localStorage.setItem("user", JSON.stringify(userData));
@@ -35,5 +52,4 @@ export const AuthProvider = ({ children }) => {
   );
 };
 
-// 3. Custom hook — any component can call useAuth() to read/change auth state
 export const useAuth = () => useContext(AuthContext);
