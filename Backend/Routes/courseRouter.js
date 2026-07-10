@@ -4,7 +4,6 @@ const upload = require("../Middlewares/multer");
 const courseController = require("../Controllers/courseController");
 const authMiddleware = require("../Middlewares/authMiddleware");
 
-
 courseRouter.get("/", courseController.getAllCourses);
 
 courseRouter.post(

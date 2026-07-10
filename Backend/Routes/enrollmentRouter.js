@@ -1,12 +1,23 @@
-const express = require("express")
-const enrollmentRouter = express.Router()
+const express = require("express");
+const enrollmentRouter = express.Router();
 
+const enrollmentController = require("../Controllers/enrollmentController");
+const authMiddleware = require("../Middlewares/authMiddleware");
 
-const enrollmentController = require('../Controllers/enrollmentController')
-const authMiddleware = require('../Middlewares/authMiddleware')
-
-enrollmentRouter.post('/', authMiddleware.protect, enrollmentController.enrollInCourse)
-enrollmentRouter.get('/my-courses', authMiddleware.protect, enrollmentController.getMyEnrollments)
-enrollmentRouter.post('/:enrollmentId/complete', authMiddleware.protect, enrollmentController.completeLesson)
+enrollmentRouter.post(
+  "/",
+  authMiddleware.protect,
+  enrollmentController.enrollInCourse,
+);
+enrollmentRouter.get(
+  "/my-courses",
+  authMiddleware.protect,
+  enrollmentController.getMyEnrollments,
+);
+enrollmentRouter.post(
+  "/:enrollmentId/complete",
+  authMiddleware.protect,
+  enrollmentController.completeLesson,
+);
 
 module.exports = enrollmentRouter;

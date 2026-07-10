@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const User = require("../Models/user");
+const user = require("../Models/user");
 const jwt = require("jsonwebtoken");
 
 exports.postUserRegister = async (req, res) => {
@@ -7,15 +7,14 @@ exports.postUserRegister = async (req, res) => {
 
   try {
     // Check if user already exists
-    const existingUser = await User.findOne({ email });
+    const existingUser = await user.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+      return res.status(400).json({ message: "user already exists" });
     }
-
     const hashedPassword = await bcrypt.hash(password, 12);
 
     // Create new user
-    const newUser = new User({
+    const newUser = new user({
       name,
       email,
       password: hashedPassword,
@@ -30,7 +29,7 @@ exports.postUserRegister = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "User registered successfully",
+      message: "user registered successfully",
       token,
       data: {
         _id: newUser._id,
@@ -41,17 +40,16 @@ exports.postUserRegister = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log("error while registering the user", error);
+    console.log("Error while registering the user", error);
     res.status(500).json({ message: "Server error" });
   }
 };
 
 exports.postUserLogin = async (req, res) => {
   const { email, password } = req.body;
-
   try {
     // Check if user exists
-    const user = await User.findOne({ email });
+    const user = await user.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
@@ -85,20 +83,19 @@ exports.postUserLogin = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    // req.user._id comes from your authMiddleware
-    const user = await User.findById(req.user._id);
+    const user = await user.findById(req.user._id);
 
     if (!user) {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "user not found" });
     }
 
     // Update fields if they are provided in the request body
     user.name = req.body.name || user.name;
 
     if (req.body.email && req.body.email !== user.email) {
-      const emailExists = await User.findOne({ email: req.body.email });
+      const emailExists = await user.findOne({ email: req.body.email });
       if (emailExists) {
         return res
           .status(400)

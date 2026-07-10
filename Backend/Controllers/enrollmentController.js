@@ -24,7 +24,6 @@ exports.enrollInCourse = async (req, res) => {
       });
     }
 
-    // 4. FIXED: Use 'course' to save the record
     const enrollment = await Enrollment.create({
       student: student,
       course: course,
@@ -47,10 +46,10 @@ exports.getMyEnrollments = async (req, res) => {
   try {
     const enrollments = await Enrollment.find({ student: req.user._id })
       .populate({
-        path: "course", // 1. First, populate the course details
+        path: "course",
         select: "title description thumbnail price lessons instructor",
         populate: {
-          path: "instructor", // 2. Then, go inside the course and populate the instructor!
+          path: "instructor",
           select: "name avatar",
         },
       })
@@ -85,7 +84,6 @@ exports.completeLesson = async (req, res) => {
       });
     }
 
-    // Only add if it's not already in the array
     if (!enrollment.completedLessons.includes(lessonId)) {
       enrollment.completedLessons.push(lessonId);
       await enrollment.save();

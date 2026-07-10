@@ -1,10 +1,8 @@
-// Backend/Controllers/paymentController.js
 const Razorpay = require("razorpay");
 const crypto = require("crypto");
 const { Course } = require("../Models/course");
 const Enrollment = require("../Models/enrollment");
 
-// Initialize Razorpay with your keys
 const razorpayInstance = new Razorpay({
   key_id: process.env.RAZORPAY_TEST_API_KEY,
   key_secret: process.env.RAZORPAY_TEST_API_SECRET,
@@ -22,8 +20,6 @@ exports.createRazorpayOrder = async (req, res) => {
         .json({ success: false, message: "Course not found" });
     }
 
-    // Razorpay expects amounts in subunits (Paise). So ₹500 = 50000 Paise.
-    // If your course price is in USD, you can change currency to "USD", but "INR" is standard for Razorpay India.
     const amountInPaise = Math.round(course.price * 100);
 
     const options = {
@@ -60,7 +56,7 @@ exports.verifyRazorpayPayment = async (req, res) => {
     } = req.body;
     const studentId = req.user._id;
 
-    // A. Cryptographically verify the signature using your Secret Key
+    //Cryptographically verify the signature using your Secret Key
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_TEST_API_SECRET)
@@ -78,7 +74,7 @@ exports.verifyRazorpayPayment = async (req, res) => {
         });
     }
 
-    // B. If authentic, check if they are already enrolled (just in case)
+    //If authentic, check if they are already enrolled (just in case)
     const existingEnrollment = await Enrollment.findOne({
       student: studentId,
       course: courseId,
@@ -89,7 +85,7 @@ exports.verifyRazorpayPayment = async (req, res) => {
         .json({ success: false, message: "Already enrolled in this course." });
     }
 
-    // C. Securely enroll the student!
+    //Securely enroll the student!
     const newEnrollment = await Enrollment.create({
       student: studentId,
       course: courseId,

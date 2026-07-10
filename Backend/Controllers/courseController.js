@@ -4,6 +4,7 @@ const cloudinary = require("../cloudinaryConfig");
 
 exports.postCreateCourse = async (req, res) => {
   const { title, description, category, price, isPublished } = req.body;
+
   try {
     if (!title || !description) {
       return res.status(400).json({
@@ -133,21 +134,19 @@ exports.postaddLesson = async (req, res) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: "video",
-          folder: "lms_lessons", // It will create this folder in your Cloudinary account!
+          folder: "lms_lessons",
         },
         (error, result) => {
           if (error) reject(error);
           else resolve(result);
         },
       );
-      // Shoot the memory buffer up to Cloudinary
+
       uploadStream.end(req.file.buffer);
     });
 
-    // 4. Cloudinary is done! Grab the secure video URL it generated
     const videoUrl = uploadResult.secure_url;
 
-    // 5. Save the lesson to our MongoDB course document
     course.lessons.push({
       title,
       description,
@@ -173,19 +172,20 @@ exports.postaddLesson = async (req, res) => {
 
 exports.getInstructorDashboard = async (req, res) => {
   try {
-    // 1. Find all courses owned by this specific instructor (newest first)
-    const courses = await Course.find({ instructor: req.user._id }).sort("-createdAt");
-
-    // 2. Loop through each course and count how many students are enrolled
+    const courses = await Course.find({ instructor: req.user._id }).sort(
+      "-createdAt",
+    );
     const coursesWithStats = await Promise.all(
       courses.map(async (course) => {
-        const studentCount = await Enrollment.countDocuments({ course: course._id });
-        
+        const studentCount = await Enrollment.countDocuments({
+          course: course._id,
+        });
+
         return {
-          ...course.toObject(), // Spreads the course data
-          studentCount,   // Attaches the new student count
+          ...course.toObject(),
+          studentCount,
         };
-      })
+      }),
     );
 
     res.status(200).json({
@@ -202,53 +202,63 @@ exports.getInstructorDashboard = async (req, res) => {
   }
 };
 
-// --- DELETE A LESSON ---
 exports.deleteLesson = async (req, res) => {
   try {
     const { courseId, lessonId } = req.params;
-
-    // 1. Find the course
     const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ success: false, message: "Course not found" });
+    if (!course)
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
 
-    // 2. Verify ownership (Security Check!)
     if (course.instructor.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Not authorized to edit this course" });
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to edit this course",
+      });
     }
 
-    // 3. Remove the lesson from the array
     course.lessons = course.lessons.filter(
-      (lesson) => lesson._id.toString() !== lessonId
+      (lesson) => lesson._id.toString() !== lessonId,
     );
 
-    // 4. Save the updated course
     await course.save();
 
-    res.status(200).json({ success: true, message: "Lesson deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Lesson deleted successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };
 
-// --- DELETE AN ENTIRE COURSE ---
 exports.deleteCourse = async (req, res) => {
+
   try {
     const courseId = req.params.id;
-
-    // 1. Find the course
     const course = await Course.findById(courseId);
-    if (!course) return res.status(404).json({ success: false, message: "Course not found" });
+    if (!course)
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
 
-    // 2. Verify ownership
     if (course.instructor.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Not authorized to delete this course" });
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to delete this course",
+      });
     }
 
-    // 3. Delete the course (This also automatically deletes all embedded lessons!)
     await Course.findByIdAndDelete(courseId);
 
-    res.status(200).json({ success: true, message: "Course deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Course deleted successfully" });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };

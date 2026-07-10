@@ -10,7 +10,7 @@ dotenv.config();
 const authRouter = require("./Routes/authRouter");
 const courseRouter = require("./Routes/courseRouter");
 const enrollmentRouter = require("./Routes/enrollmentRouter");
-const paymentRouter = require('./Routes/paymentRouter')
+const paymentRouter = require("./Routes/paymentRouter");
 
 const app = express();
 
@@ -22,7 +22,7 @@ app.use(
   cors({
     origin: allowedOrigins,
     credentials: true,
-  })
+  }),
 );
 
 app.use(express.json());
@@ -39,7 +39,7 @@ mongoose
 app.use("/api/auth", authRouter);
 app.use("/api/courses", courseRouter);
 app.use("/api/enrollments", enrollmentRouter);
-app.use('/api/payments', paymentRouter)
+app.use("/api/payments", paymentRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
