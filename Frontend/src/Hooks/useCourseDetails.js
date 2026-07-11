@@ -1,18 +1,15 @@
 import { useState } from "react";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import { useAuth } from "../features/auth/AuthContext";
-import apiClient from "../API/client";
+import apiClient from "../api/client";
 
 export const useCourseDetails = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const { course, initialEnrollment } = useLoaderData();
 
-  // 1. Local state
   const [enrollment, setEnrollment] = useState(initialEnrollment);
   const [currentLesson, setCurrentLesson] = useState(null);
-
-  // 2. Derived Math (Added optional chaining ? to course.instructor just in case)
   const isCourseOwner = Boolean(
     user &&
     (course?.instructor?._id === user._id || course?.instructor === user._id),
@@ -23,9 +20,7 @@ export const useCourseDetails = () => {
     ? Math.round((completedLessons.length / course.lessons.length) * 100)
     : 0;
 
-  // 3. API Actions
   const handleEnrollment = async () => {
-    // 1. Check if the user is logged in
     if (!user) {
       alert("Please log in to purchase this course.");
       return;
@@ -87,7 +82,6 @@ export const useCourseDetails = () => {
               window.location.reload();
             }
           } catch (error) {
-            // 🌟 Upgraded error logging!
             console.error(
               "Order creation failed:",
               error.response?.data || error,
@@ -103,7 +97,7 @@ export const useCourseDetails = () => {
           email: user.email,
         },
         theme: {
-          color: "#7c3aed", // Matches your brand-purple
+          color: "#7c3aed",
         },
       };
 
@@ -124,8 +118,7 @@ export const useCourseDetails = () => {
 
   const markLessonComplete = async (lessonId) => {
     if (!enrollment || completedLessons.includes(lessonId)) return;
-
-    // Optimistic update
+    
     setEnrollment((prev) => ({
       ...prev,
       completedLessons: [...prev.completedLessons, lessonId],
@@ -137,7 +130,6 @@ export const useCourseDetails = () => {
       });
     } catch (error) {
       console.error("Failed to sync completion with backend");
-      // Optional: You could revert the state here if the API fails
     }
   };
 

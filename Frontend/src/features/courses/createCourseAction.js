@@ -1,4 +1,4 @@
-import apiClient from "../../API/client";
+import apiClient from "../../api/client";
 
 const createCourseAction = async ({ request }) => {
   const formData = await request.formData();

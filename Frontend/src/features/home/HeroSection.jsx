@@ -7,7 +7,6 @@ const HeroSection = () => {
   return (
     <section className="px-6 pt-12 pb-24 mx-auto max-w-7xl md:px-12 md:pt-20 lg:pb-32">
       <div className="flex flex-col items-center gap-16 lg:flex-row lg:gap-8">
-        {/* Left Text Content */}
         <div className="w-full lg:w-1/2">
           <p className="mb-6 text-sm font-bold tracking-widest text-gray-400 uppercase">
             For Students, Not Spreadsheets

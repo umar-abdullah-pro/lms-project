@@ -1,5 +1,5 @@
 import { redirect } from "react-router-dom";
-import apiClient from "../API/client";
+import apiClient from "../api/client";
 
 export const manageCourseAction = async ({ request, params }) => {
   const formData = await request.formData();

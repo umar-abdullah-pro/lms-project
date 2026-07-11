@@ -1,4 +1,4 @@
-import apiClient from "../../API/client";
+import apiClient from "../../api/client";
 
 export const manageCourseLoader = async ({ params }) => {
   try {

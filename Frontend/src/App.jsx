@@ -14,17 +14,17 @@ import loginAction from "./features/auth/loginAction";
 import registerAction from "./features/auth/registerAction";
 import updateProfileAction from "./features/dashboard/updateProfileAction";
 import createCourseAction from "./features/courses/createCourseAction";
-import manageCourseAction from "./Actions/manageCourseAction";
+import manageCourseAction from "./actions/manageCourseAction";
 import { dashboardAction } from "./features/dashboard/dashboardAction";
 
-//Pages
+//pages
 import Register from "./features/auth/Register";
 import Login from "./features/auth/Login";
 import Home from "./features/home/Home";
 import Dashboard from "./features/dashboard/Dashboard";
 import CourseDetail from "./features/courses/CourseDetails";
 import CreateCourse from "./features/courses/CreateCourse";
-import NotFound from "./Pages/NotFound";
+import NotFound from "./pages/NotFound";
 import CourseCatalog from "./features/courses/CourseCatalog";
 import UpdateProfile from "./features/dashboard/UpdateProfile";
 import ManageCourse from "./features/courses/ManageCourse";

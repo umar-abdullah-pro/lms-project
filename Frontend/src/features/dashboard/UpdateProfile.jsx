@@ -22,7 +22,6 @@ const UpdateProfile = () => {
         <div className="flex items-center gap-4 mb-8">
           <div className="w-20 h-20 overflow-hidden bg-white border-2 rounded-full border-brand-purple/20">
             <img
-              // Use their avatar, or a fallback robot if they somehow don't have one!
               src={
                 user.avatar ||
                 `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`
@@ -40,15 +39,11 @@ const UpdateProfile = () => {
             </p>
           </div>
         </div>
-
-        {/* Show Errors from Action */}
         {actionData?.error && (
           <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
             {actionData.error}
           </div>
         )}
-
-        {/* The Form */}
         <Form method="post" className="space-y-6">
           <div>
             <label className="block mb-2 text-sm font-bold text-gray-700">
@@ -57,7 +52,7 @@ const UpdateProfile = () => {
             <input
               type="text"
               name="name"
-              defaultValue={user?.name} // Pre-fills the input!
+              defaultValue={user?.name}
               className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
               required
             />
@@ -70,7 +65,7 @@ const UpdateProfile = () => {
             <input
               type="email"
               name="email"
-              defaultValue={user?.email} // Pre-fills the input!
+              defaultValue={user?.email}
               className="w-full px-4 py-3 transition-colors bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-purple/50 focus:border-brand-purple"
               required
             />

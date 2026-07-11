@@ -26,10 +26,8 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen">
-      {/* LEFT SIDE: Purple Branding Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-brand-purple p-12 flex-col justify-center">
         <div className="max-w-md mx-auto">
-          {/* Small blas icon replacement */}
           <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-8">
             <HiOutlineBookOpen className="w-6 h-6 text-white" />
           </div>
@@ -56,15 +54,11 @@ const Login = () => {
               Create an account
             </Link>
           </p>
-
-          {/* Show Errors from Action */}
           {actionData?.error && (
             <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
               {actionData.error}
             </div>
           )}
-
-          {/* NO onChange, NO value, NO preventDefault! */}
           <Form method="post" className="space-y-5">
             <div>
               <label className="block mb-2 text-sm font-bold text-gray-700">

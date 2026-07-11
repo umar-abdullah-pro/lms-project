@@ -5,7 +5,6 @@ import {
   useNavigation,
   useActionData,
 } from "react-router-dom";
-// 🌟 Import all our beautiful icons from the Feather (Fi) set!
 import {
   FiVideo,
   FiAlertCircle,
@@ -27,7 +26,6 @@ const ManageCourse = () => {
 
   return (
     <div className="max-w-2xl p-8 mx-auto mt-12 bg-white border border-gray-100 shadow-xl rounded-3xl">
-      {/* --- HEADER SECTION --- */}
       <div className="flex items-center gap-4 mb-8">
         <div className="p-3 text-brand-purple bg-[#f0f2ff] rounded-2xl">
           <FiVideo className="w-8 h-8" />
@@ -44,16 +42,12 @@ const ManageCourse = () => {
           </p>
         </div>
       </div>
-
-      {/* --- ERROR BANNER --- */}
       {actionData?.error && (
         <div className="flex items-center gap-3 p-4 mb-6 text-sm font-bold text-red-700 bg-red-50 border border-red-100 rounded-xl">
           <FiAlertCircle className="shrink-0 w-5 h-5" />
           {actionData.error}
         </div>
       )}
-
-      {/* --- THE FORM --- */}
       <Form method="post" encType="multipart/form-data" className="space-y-6">
         <div className="space-y-2">
           <label className="ml-1 text-sm font-bold text-gray-700">
@@ -88,8 +82,6 @@ const ManageCourse = () => {
             />
           </div>
         </div>
-
-        {/* 3. Fancy File Upload Box */}
         <div className="space-y-2">
           <label className="ml-1 text-sm font-bold text-gray-700">
             Video File
@@ -134,8 +126,6 @@ const ManageCourse = () => {
             />
           </label>
         </div>
-
-        {/* 4. Submit Button */}
         <button
           disabled={isSubmitting}
           className="relative flex items-center justify-center w-full gap-2 py-4 font-extrabold text-white transition-all rounded-2xl bg-brand-purple hover:shadow-lg disabled:opacity-70 disabled:cursor-not-allowed group"

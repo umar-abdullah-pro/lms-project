@@ -37,8 +37,6 @@ const ContinueLearning = ({ enrolledCourses, loading }) => {
       ) : (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {enrolledCourses.map((enrollment, index) => {
-            // Calculate dynamic progress
-            // 'enrollment.course' is the course data, 'enrollment.completedLessons' is the progress array
             const totalLessons = enrollment.course?.lessons?.length || 1;
             const completedLessons = enrollment.completedLessons?.length || 0;
             const progress = Math.round(
@@ -48,9 +46,9 @@ const ContinueLearning = ({ enrolledCourses, loading }) => {
             return (
               <ProgressCourseCard
                 key={enrollment._id}
-                course={enrollment.course} // Pass the course object
+                course={enrollment.course}
                 index={index}
-                progress={progress} // Pass the real calculated percentage
+                progress={progress}
               />
             );
           })}

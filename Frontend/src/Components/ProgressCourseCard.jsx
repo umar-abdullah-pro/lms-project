@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { HiOutlineClock } from 'react-icons/hi2'
 
 const ProgressCourseCard = ({ course, index, progress = 0 }) => {
-  // Reusing our beautiful pastel theme logic
   const colors = [
     {
       bg: "bg-[#ffeae5]",
@@ -20,8 +19,7 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
       pill: "bg-[#fff8e1] text-[#d99f00]",
     },
   ];
-  
-  // Safe fallback in case index is missing
+
   const theme = colors[(index || 0) % 3];
 
   return (
@@ -32,7 +30,6 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
       <div
         className={`h-40 flex items-center justify-center text-5xl font-extrabold ${theme.bg} ${theme.text}`}
       >
-        {/* ✅ FIX: Added optional chaining and a fallback "C" */}
         {(course?.title?.charAt(0) || "C").toUpperCase()}
       </div>
       
@@ -40,17 +37,14 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
         <div
           className={`inline-flex px-3 py-1 mb-4 text-xs font-bold rounded-full w-fit ${theme.pill}`}
         >
-          {/* ✅ FIX: Safely grab instructor name */}
           {course?.instructor?.name || "Instructor"}
         </div>
         
         <h3 className="mb-2 text-xl font-extrabold text-gray-900 transition-colors group-hover:text-brand-purple">
-          {/* ✅ FIX: Safe title fallback */}
           {course?.title || "Untitled Course"}
         </h3>
         
         <p className="grow mb-6 text-sm font-medium text-gray-500 line-clamp-2">
-          {/* ✅ FIX: Safe description fallback */}
           {course?.description || "No description provided."}
         </p>
 
@@ -58,7 +52,6 @@ const ProgressCourseCard = ({ course, index, progress = 0 }) => {
         <div className="pt-4 mt-auto border-t border-gray-50">
           <div className="flex items-center gap-2 mb-4 text-xs font-bold text-gray-400 uppercase tracking-wider">
             <HiOutlineClock className="w-5 h-5" />
-            {/* ✅ FIX: Safe lesson array check */}
             {course?.lessons?.length || 0} LESSONS
           </div>
 

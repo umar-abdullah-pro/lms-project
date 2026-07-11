@@ -14,10 +14,8 @@ const InstructorDashboard = () => {
   const fetcher = useFetcher();
   const { user } = useAuth();
 
-  // 🌟 Grabbed straight from our dashboardLoader!
   const { instructorCourses } = useLoaderData();
 
-  // Calculate global stats for the top cards
   const totalCourses = instructorCourses?.length || 0;
   const totalStudents =
     instructorCourses?.reduce((sum, course) => sum + course.studentCount, 0) ||
@@ -97,7 +95,6 @@ const InstructorDashboard = () => {
                 key={course._id}
                 className="flex flex-col overflow-hidden transition-shadow bg-white border border-gray-200 shadow-sm rounded-3xl hover:shadow-md"
               >
-                {/* Course Image */}
                 <div className="relative aspect-video">
                   <img
                     src={course.thumbnail}
@@ -115,7 +112,6 @@ const InstructorDashboard = () => {
                   )}
                 </div>
 
-                {/* Course Details */}
                 <div className="flex flex-col grow p-6">
                   <h3 className="mb-2 text-xl font-extrabold text-gray-900 line-clamp-1">
                     {course.title}
@@ -132,9 +128,7 @@ const InstructorDashboard = () => {
                     </span>
                   </div>
 
-                  {/* Manage Button */}
                   <div className="flex items-center gap-2 mt-auto">
-                    {/* Manage Button (Flexible Width) */}
                     <Link
                       to={`/course/${course._id}`}
                       className="flex items-center justify-center grow gap-2 py-3 font-bold transition-all border-2 text-brand-purple border-brand-purple/20 bg-brand-purple/5 hover:bg-brand-purple hover:text-white rounded-xl"
@@ -142,8 +136,6 @@ const InstructorDashboard = () => {
                       <FiEdit3 className="w-5 h-5" />
                       Manage
                     </Link>
-
-                    {/* Delete Button (Icon Only, Fixed Square) */}
                     <fetcher.Form method="delete" className="m-0">
                       <input type="hidden" name="courseId" value={course._id} />
                       <button

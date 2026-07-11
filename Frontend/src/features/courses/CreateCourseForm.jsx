@@ -1,4 +1,4 @@
-// Frontend/src/Pages/CreateCourse.jsx
+// Frontend/src/pages/CreateCourse.jsx
 import { useEffect } from "react";
 import {
   Form,
@@ -13,8 +13,6 @@ const CreateCourse = () => {
   const navigate = useNavigate();
 
   const isSubmitting = navigation.state === "submitting";
-
-  // The Bridge: Redirect the instructor to their new course page when successful!
   useEffect(() => {
     if (actionData?.success) {
       alert("Course created successfully! Let's add some lessons.");
@@ -38,14 +36,11 @@ const CreateCourse = () => {
         </div>
 
         <div className="p-10 bg-white border border-gray-100 shadow-sm rounded-4xl">
-          {/* Show Errors from Action */}
           {actionData?.error && (
             <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
               {actionData.error}
             </div>
           )}
-
-          {/* Important: encType is required for file uploads (like thumbnails) */}
           <Form
             method="post"
             encType="multipart/form-data"

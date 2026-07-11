@@ -1,7 +1,7 @@
 import { HiOutlineLockClosed } from "react-icons/hi2";
 
 const VideoPlayer = ({ url, title, isLocked, onVideoEnd }) => {
-  // 1. Empty State
+  //Empty State
   if (!url) {
     return (
       <div className="flex items-center justify-center w-full bg-gray-900 aspect-video rounded-3xl shadow-2xl">
@@ -12,7 +12,7 @@ const VideoPlayer = ({ url, title, isLocked, onVideoEnd }) => {
     );
   }
 
-  // 2. Paywall State (If they click a locked lesson!)
+  //Paywall State (If they click a locked lesson!)
   if (isLocked) {
     return (
       <div className="overflow-hidden bg-gray-900 rounded-3xl shadow-2xl">
@@ -37,13 +37,13 @@ const VideoPlayer = ({ url, title, isLocked, onVideoEnd }) => {
     );
   }
 
-  // 3. Playing State (Unlocked)
+  //Playing State (Unlocked)
   return (
     <div className="overflow-hidden bg-black shadow-2xl rounded-3xl group">
       <video
         key={url}
         controls
-        controlsList="nodownload" // Stops easy downloading
+        controlsList="nodownload"
         className="w-full aspect-video outline-none"
         autoPlay
         onEnded={() => {

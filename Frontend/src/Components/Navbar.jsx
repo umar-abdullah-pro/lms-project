@@ -42,10 +42,10 @@ const Navbar = () => {
           </span>
         </Link>
 
-        {/* 💻 DESKTOP MENU */}
+        {/* DESKTOP MENU */}
         <DesktopMenu user={user} onLogout={handleLogout} />
 
-        {/* 📱 MOBILE HAMBURGER BUTTON */}
+        {/* MOBILE HAMBURGER BUTTON */}
         <button
           className="md:hidden p-2 text-gray-600 z-50"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -58,7 +58,7 @@ const Navbar = () => {
         </button>
       </div>
 
-      {/* 📱 MOBILE MENU SLIDE-DOWN */}
+      {/* MOBILE MENU SLIDE-DOWN */}
       <MobileMenu
         isOpen={isMenuOpen}
         user={user}

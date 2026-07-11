@@ -25,7 +25,7 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(getInitialUser);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-  // Called after a successful login API response
+  // Called after a successful login api response
   const login = ({ userData, userToken }) => {
     setUser(userData);
     setToken(userToken);

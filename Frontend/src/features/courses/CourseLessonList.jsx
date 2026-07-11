@@ -36,7 +36,6 @@ const CourseLessonList = ({
               (id) => String(id) === String(lesson._id),
             );
 
-            // 🌟 THE LOCK LOGIC: Lesson 1 is always free. The rest require enrollment!
             const isLocked = !isEnrolled && chronologicalNumber !== 1;
 
             return (

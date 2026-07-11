@@ -1,4 +1,4 @@
-import apiClient from "../../API/client";
+import apiClient from "../../api/client";
 
 const loginAction = async ({ request }) => {
   const formData = await request.formData();
@@ -10,7 +10,7 @@ const loginAction = async ({ request }) => {
     const userData = response.data.user;
 
     if (!token || !userData._id) {
-      throw new Error("Could not find user or token in the API response!");
+      throw new Error("Could not find user or token in the api response!");
     }
     return { success: true, userData: userData, userToken: token };
   } catch (error) {

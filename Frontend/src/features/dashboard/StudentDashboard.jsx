@@ -1,4 +1,3 @@
-// Frontend/src/Pages/Dashboard.jsx
 import { useLoaderData } from "react-router-dom";
 import { useMemo } from "react";
 import { useAuth } from "../auth/AuthContext";
@@ -10,8 +9,6 @@ const StudentDashboard = () => {
   const { user } = useAuth();
 
   const { enrolledCourses } = useLoaderData();
-
-  //Calculate stats safely using useMemo (only runs if data changes)
   const userStats = useMemo(() => {
     let totalLessons = 0;
     let totalProgressSum = 0;
@@ -32,8 +29,6 @@ const StudentDashboard = () => {
         : 0,
     };
   }, [enrolledCourses]);
-
-  // 3. Render Pure UI
   return (
     <div className="w-full min-h-screen bg-brand-beige">
       <div className="px-6 py-12 mx-auto max-w-7xl md:px-12 md:py-16">

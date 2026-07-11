@@ -37,7 +37,6 @@ const Register = () => {
   }, [actionData, login, navigate]);
   return (
     <div className="flex min-h-screen">
-      {/* LEFT SIDE: Purple Branding Section */}
       <div className="hidden lg:flex lg:w-1/2 bg-brand-purple p-12 flex-col justify-center">
         <div className="max-w-md mx-auto">
           <div className="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mb-8">
@@ -56,7 +55,6 @@ const Register = () => {
         </div>
       </div>
 
-      {/* RIGHT SIDE: Register Form */}
       <div className="flex items-center justify-center w-full p-8 lg:w-1/2 bg-brand-beige">
         <div className="w-full max-w-md p-10 bg-white border border-gray-100 shadow-sm rounded-4xl">
           <h2 className="mb-2 text-3xl font-extrabold text-gray-900">
@@ -68,15 +66,11 @@ const Register = () => {
               Log in
             </Link>
           </p>
-
-          {/* Show Errors from Action */}
           {actionData?.error && (
             <div className="p-4 mb-6 text-sm font-medium text-red-600 bg-red-50 rounded-xl">
               {actionData.error}
             </div>
           )}
-
-          {/* The Form */}
           <Form method="post" className="space-y-5">
             <div>
               <label className="block mb-3 text-sm font-bold text-gray-700">
@@ -85,16 +79,15 @@ const Register = () => {
               <div className="flex justify-between gap-2">
                 {AVATAR_OPTIONS.map((avatarUrl, index) => (
                   <label key={index} className="cursor-pointer relative">
-                    {/* The hidden radio input that actually sends the data to the Action! */}
+
                     <input
                       type="radio"
                       name="avatar"
                       value={avatarUrl}
-                      className="peer sr-only" // sr-only hides it visually but keeps it working
-                      defaultChecked={index === 0} // Makes the first one selected by default
+                      className="peer sr-only"
+                      defaultChecked={index === 0}
                       required
                     />
-                    {/* The visible Image */}
                     <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-transparent peer-checked:border-brand-purple peer-checked:ring-2 peer-checked:ring-brand-purple/30 transition-all hover:scale-110 bg-gray-100">
                       <img
                         src={avatarUrl}
@@ -107,7 +100,6 @@ const Register = () => {
               </div>
             </div>
 
-            {/* Existing Fields */}
             <div>
               <label className="block mb-2 text-sm font-bold text-gray-700">
                 Full Name
@@ -153,7 +145,6 @@ const Register = () => {
                 I want to...
               </label>
               <div className="grid grid-cols-2 gap-4">
-                {/* 1. STUDENT ROLE CARD */}
                 <label className="relative cursor-pointer group">
                   <input
                     type="radio"
@@ -171,8 +162,6 @@ const Register = () => {
                     </span>
                   </div>
                 </label>
-
-                {/* 2. INSTRUCTOR ROLE CARD */}
                 <label className="relative cursor-pointer group">
                   <input
                     type="radio"

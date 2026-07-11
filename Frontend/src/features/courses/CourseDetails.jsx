@@ -1,7 +1,6 @@
 import { useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
-import useCourseDetails from "../../Hooks/useCourseDetails";
-import apiClient from "../../API/client";
+import useCourseDetails from "../../hooks/useCourseDetails";
+import apiClient from "../../api/client";
 
 import CourseHeader from "./CourseHeader";
 import CourseLessonList from "./CourseLessonList";
@@ -53,7 +52,7 @@ const CourseDetail = () => {
               <VideoPlayer
                 url={currentLesson.videoUrl}
                 title={currentLesson.title}
-                isLocked={isCurrentLessonLocked} // Pass the lock status!
+                isLocked={isCurrentLessonLocked}
                 onVideoEnd={() => {
                   if (isEnrolled) markLessonComplete(currentLesson._id);
                 }}
@@ -73,7 +72,6 @@ const CourseDetail = () => {
             />
           </div>
 
-          {/* RIGHT SIDE: Enrollment Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-28">
               <CourseSidebar

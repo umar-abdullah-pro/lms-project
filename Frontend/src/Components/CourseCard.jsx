@@ -21,8 +21,9 @@ const CourseCard = ({ course, index }) => {
     },
   ];
   const theme = colors[index % 3];
-  const fallbackImage =
-    "https://placehold.co/600x400/f3f4f6/6b7280?text=No+Thumbnail";
+
+  const fallbackImage ="https://placehold.co/600x400/f3f4f6/6b7280?text=No+Thumbnail";
+  
   return (
     <Link
       to={`/course/${course._id}`}
