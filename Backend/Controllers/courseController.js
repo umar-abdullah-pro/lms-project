@@ -12,7 +12,7 @@ exports.postCreateCourse = async (req, res) => {
         error: "Title and Description are required",
       });
     }
-    const publishStatus = isPublished === "false" ? false : true;
+    const publishStatus = isPublished === "true";
 
     let thumbnailUrl = "";
 

@@ -49,30 +49,30 @@ exports.postUserLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
     // Check if user exists
-    const user = await user.findOne({ email });
+    const existingUser = await user.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, existingUser.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
     // Generate JWT token
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
       expiresIn: "30d",
     });
 
     res.status(200).json({
       token,
       user: {
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        avatar: user.avatar,
+        _id: existingUser._id,
+        name: existingUser.name,
+        email: existingUser.email,
+        role: existingUser.role,
+        avatar: existingUser.avatar,
       },
     });
   } catch (error) {
@@ -83,18 +83,18 @@ exports.postUserLogin = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
   try {
-    const user = await user.findById(req.user._id);
+    const existingUser = await user.findById(req.user._id);
 
-    if (!user) {
+    if (!existingUser) {
       return res
         .status(404)
         .json({ success: false, message: "user not found" });
     }
 
     // Update fields if they are provided in the request body
-    user.name = req.body.name || user.name;
+    existingUser.name = req.body.name || existingUser.name;
 
-    if (req.body.email && req.body.email !== user.email) {
+    if (req.body.email && req.body.email !== existingUser.email) {
       const emailExists = await user.findOne({ email: req.body.email });
       if (emailExists) {
         return res
@@ -102,7 +102,7 @@ exports.updateProfile = async (req, res) => {
           .json({ success: false, message: "Email is already in use." });
       }
     }
-    user.email = req.body.email || user.email;
+    existingUser.email = req.body.email || existingUserzx.email;
 
     const updatedUser = await user.save();
 

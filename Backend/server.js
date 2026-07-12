@@ -31,17 +31,17 @@ mongoose
   .connect(process.env.DB_PATH)
   .then(() => {
     console.log("✅ Connected to MongoDB successfully!");
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+    });
   })
   .catch((err) => {
     console.log("❌ MongoDB connection error:", err);
+    process.exit(1);
   });
 
 app.use("/api/auth", authRouter);
 app.use("/api/courses", courseRouter);
 app.use("/api/enrollments", enrollmentRouter);
 app.use("/api/payments", paymentRouter);
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
-});
