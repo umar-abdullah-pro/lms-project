@@ -262,3 +262,42 @@ exports.deleteCourse = async (req, res) => {
       .json({ success: false, message: "Server error", error: error.message });
   }
 };
+
+exports.updateCourse = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const { isPublished } = req.body;
+
+    // 1. Find the course
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    // 2. Security Check: Ensure the logged-in user actually owns this course
+    if (course.instructor.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: "Not authorized to edit this course" });
+    }
+
+    // 3. Update the field if it was provided
+    if (isPublished !== undefined) {
+      course.isPublished = isPublished;
+    }
+
+    // Save to database
+    await course.save();
+
+    res.status(200).json({ 
+      success: true, 
+      message: "Course updated successfully",
+      data: course 
+    });
+
+  } catch (error) {
+    res.status(500).json({ 
+      success: false, 
+      message: "Server error while updating course", 
+      error: error.message 
+    });
+  }
+};

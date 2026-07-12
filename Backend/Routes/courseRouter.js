@@ -45,4 +45,6 @@ courseRouter.delete(
   courseController.deleteLesson,
 );
 
+courseRouter.put('/:id', authMiddleware.protect, authMiddleware.instructorOnly, courseController.updateCourse)
+
 module.exports = courseRouter;

@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const user = require("../Models/user");
+const user = require('../Models/user')
 const jwt = require("jsonwebtoken");
 
 exports.postUserRegister = async (req, res) => {
@@ -102,9 +102,9 @@ exports.updateProfile = async (req, res) => {
           .json({ success: false, message: "Email is already in use." });
       }
     }
-    existingUser.email = req.body.email || existingUserzx.email;
+    existingUser.email = req.body.email || existingUser.email;
 
-    const updatedUser = await user.save();
+    const updatedUser = await existingUser.save();
 
     // Send back the updated user data (DO NOT send the password back!)
     res.status(200).json({

@@ -10,7 +10,7 @@ import {
 } from "react-icons/fi";
 import Footer from "../../components/Footer";
 
-const InstructorDashboard = () => {
+const InstructorDashboard = ({ onToggle }) => {
   const fetcher = useFetcher();
   const { user } = useAuth();
 
@@ -93,9 +93,9 @@ const InstructorDashboard = () => {
             {instructorCourses.map((course) => (
               <div
                 key={course._id}
-                className="flex flex-col overflow-hidden transition-shadow bg-white border border-gray-200 shadow-sm rounded-3xl hover:shadow-md"
+                className="flex flex-col relative overflow-hidden transition-shadow bg-white border border-gray-200 shadow-sm rounded-3xl hover:shadow-md"
               >
-                <div className="relative aspect-video">
+                <div className="w-full h-80 overflow-hidden bg-gray-100 rounded-t-lg">
                   <img
                     src={course.thumbnail}
                     alt={course.title}
@@ -129,6 +129,7 @@ const InstructorDashboard = () => {
                   </div>
 
                   <div className="flex items-center gap-2 mt-auto">
+                    {/* 1. Manage Button */}
                     <Link
                       to={`/course/${course._id}`}
                       className="flex items-center justify-center grow gap-2 py-3 font-bold transition-all border-2 text-brand-purple border-brand-purple/20 bg-brand-purple/5 hover:bg-brand-purple hover:text-white rounded-xl"
@@ -136,6 +137,20 @@ const InstructorDashboard = () => {
                       <FiEdit3 className="w-5 h-5" />
                       Manage
                     </Link>
+
+                    {/* 2. Toggle Publish Button */}
+                    <button
+                      onClick={() => onToggle(course)}
+                      className={`h-12 px-4 flex items-center justify-center text-sm font-bold rounded-xl transition-all border-2 ${
+                        course.isPublished
+                          ? "bg-yellow-50 text-yellow-700 border-yellow-100 hover:bg-yellow-500 hover:text-white hover:border-yellow-500"
+                          : "bg-green-50 text-green-700 border-green-100 hover:bg-green-500 hover:text-white hover:border-green-500"
+                      }`}
+                    >
+                      {course.isPublished ? "Unpublish" : "Publish"}
+                    </button>
+
+                    {/* 3. Delete Form */}
                     <fetcher.Form method="delete" className="m-0">
                       <input type="hidden" name="courseId" value={course._id} />
                       <button
