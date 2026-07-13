@@ -6,11 +6,13 @@ const paymentController = require("../Controllers/paymentController");
 paymentRouter.post(
   "/create-order",
   authMiddleware.protect,
+  authMiddleware.requireVerified,
   paymentController.createRazorpayOrder,
 );
 paymentRouter.post(
   "/verify-payment",
   authMiddleware.protect,
+  authMiddleware.requireVerified,
   paymentController.verifyRazorpayPayment,
 );
 

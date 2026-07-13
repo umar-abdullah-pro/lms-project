@@ -30,6 +30,18 @@ const protect = async (req, res, next) => {
   }
 };
 
+// Add this below your existing 'protect' middleware
+const requireVerified = (req, res, next) => {
+  if (req.user && req.user.isEmailVerified === false) {
+    return res.status(403).json({
+      success: false,
+      message:
+        "Access denied. Please verify your email address to perform this action.",
+    });
+  }
+  next();
+};
+
 //Checks if the logged-in user is an instructor
 const instructorOnly = (req, res, next) => {
   if (req.user && req.user.role === "instructor") {
@@ -39,4 +51,4 @@ const instructorOnly = (req, res, next) => {
   }
 };
 
-module.exports = { protect, instructorOnly };
+module.exports = { protect, instructorOnly, requireVerified };

@@ -9,6 +9,7 @@ courseRouter.get("/", courseController.getAllCourses);
 courseRouter.post(
   "/",
   authMiddleware.protect,
+  authMiddleware.requireVerified,
   authMiddleware.instructorOnly,
   upload.single("thumbnail"),
   courseController.postCreateCourse,
@@ -27,6 +28,7 @@ courseRouter.post(
   "/:id/lessons",
   authMiddleware.protect,
   authMiddleware.instructorOnly,
+  authMiddleware.requireVerified,
   upload.single("video"),
   courseController.postaddLesson,
 );

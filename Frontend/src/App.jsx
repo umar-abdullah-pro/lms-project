@@ -18,6 +18,8 @@ import manageCourseAction from "./actions/manageCourseAction";
 import { dashboardAction } from "./features/dashboard/dashboardAction";
 import { forgotPasswordAction } from "./features/auth/forgotPasswordAction";
 import { resetPasswordAction } from "./features/auth/resetPasswordAction";
+import { verifyEmailAction } from "./features/auth/verifyEmailAction";
+import { sendVerificationAction } from "./features/auth/sendVerificationAction";
 
 //pages
 import Register from "./features/auth/Register";
@@ -33,14 +35,17 @@ import ManageCourse from "./features/courses/ManageCourse";
 
 //Components and Routes
 import Navbar from "./components/Navbar";
+import VerificationBanner from "./components/VerificationBanner";
 import ProtectedRoute from "./features/auth/ProtectedRoute";
 import GuestRoute from "./features/auth/GuestRoute";
-import ForgotPassword from "./features/auth/forgotPassword";
+import ForgotPassword from "./features/auth/ForgotPassword";
 import ResetPassword from "./features/auth/ResetPassword";
+import VerifyEmail from "./features/auth/VerifyEmail";
 
 const RootLayout = () => {
   return (
     <>
+      <VerificationBanner />
       <Navbar />
       <div className="min-h-screen pb-10 bg-brand-beige">
         <Outlet />
@@ -54,6 +59,7 @@ const router = createBrowserRouter([
     path: "/",
     element: <RootLayout />,
     errorElement: <NotFound />,
+    action: sendVerificationAction,
     children: [
       { index: true, element: <Home /> },
       {
@@ -87,9 +93,7 @@ const router = createBrowserRouter([
       {
         path: "all-courses",
         element: (
-          <ProtectedRoute>
             <CourseCatalog />
-          </ProtectedRoute>
         ),
         loader: CatalogLoader,
       },
@@ -143,6 +147,11 @@ const router = createBrowserRouter([
           </GuestRoute>
         ),
         action: resetPasswordAction,
+      },
+      {
+        path: "/verify-email/:token",
+        element: <VerifyEmail />,
+        action: verifyEmailAction,
       },
     ],
   },

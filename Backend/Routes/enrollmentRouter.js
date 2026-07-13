@@ -7,6 +7,7 @@ const authMiddleware = require("../Middlewares/authMiddleware");
 enrollmentRouter.post(
   "/",
   authMiddleware.protect,
+  authMiddleware.requireVerified,
   enrollmentController.enrollInCourse,
 );
 enrollmentRouter.get(
