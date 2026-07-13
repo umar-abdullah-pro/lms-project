@@ -214,27 +214,6 @@ exports.verifyEmail = async (req, res) => {
   try {
     const token = req.params.token;
 
-    console.log("\n========================================");
-    console.log("🕵️ STARTING EMAIL VERIFICATION DIAGNOSTIC");
-    console.log("1. Token arriving from Frontend:", token);
-
-    // Let's search the database WITHOUT checking the expiration timer first
-    const userJustToken = await user.findOne({ emailVerificationToken: token });
-
-    console.log(
-      "2. Did we find this token in the DB?",
-      userJustToken ? "YES" : "NO",
-    );
-
-    if (userJustToken) {
-      console.log(
-        "   -> DB Expiration Time:",
-        userJustToken.emailVerificationExpire,
-      );
-      console.log("   -> Server Current Time:", new Date(Date.now()));
-    }
-    console.log("========================================\n");
-
     const updatedUser = await user.findOneAndUpdate(
       {
         emailVerificationToken: token,
