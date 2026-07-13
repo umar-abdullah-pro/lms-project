@@ -60,21 +60,51 @@ exports.postCreateCourse = async (req, res) => {
 
 exports.getAllCourses = async (req, res) => {
   try {
-    const courses = await Course.find({ isPublished: true }).populate(
-      "instructor",
-      "name email",
-    );
+    // 1. Grab parameters from the URL query, setting defaults
+    const { search, category, page = 1, limit = 10 } = req.query;
+    
+    // 2. Build a dynamic query object
+    let query = {};
+
+    // If a search term exists, look in title OR description (case-insensitive)
+    if (search) {
+      query.$or = [
+        { title: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } }
+      ];
+    }
+
+    // If a specific category is selected, add it to the query
+    if (category && category !== "All") {
+      query.category = category;
+    }
+
+    // 3. Calculate pagination math
+    const skip = (Number(page) - 1) * Number(limit);
+    const totalCourses = await Course.countDocuments(query);
+    const totalPages = Math.ceil(totalCourses / Number(limit));
+
+    // 4. Fetch the exact slice of data we need
+    const courses = await Course.find(query)
+      .populate("instructor", "name avatar") // Assuming you want instructor details
+      .skip(skip)
+      .limit(Number(limit))
+      .sort({ createdAt: -1 }); // Newest courses first
+
     res.status(200).json({
       success: true,
-      data: courses,
+      data: {
+        courses,
+        meta: {
+          totalPages,
+          currentPage: Number(page),
+          totalCourses
+        }
+      }
     });
   } catch (error) {
-    console.log("Error fetching all courses:", error);
-    res.status(500).json({
-      message: "server error while fetching courses",
-      success: false,
-      error: error.message,
-    });
+    console.log("Error fetching courses:", error);
+    res.status(500).json({ success: false, message: "Server error" });
   }
 };
 
