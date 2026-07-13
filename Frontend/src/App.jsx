@@ -5,7 +5,7 @@ import { AuthProvider } from "./features/auth/AuthContext";
 
 //Loaders
 import dashboardLoader from "./features/dashboard/dashboardLoader";
-import CatalogLoader from "./features/courses/CatalogLoader"
+import CatalogLoader from "./features/courses/CatalogLoader";
 import courseDetailsLoader from "./features/courses/courseDetailsLoader";
 import { manageCourseLoader } from "./features/courses/manageCourseLoader";
 
@@ -16,6 +16,8 @@ import updateProfileAction from "./features/dashboard/updateProfileAction";
 import createCourseAction from "./features/courses/createCourseAction";
 import manageCourseAction from "./actions/manageCourseAction";
 import { dashboardAction } from "./features/dashboard/dashboardAction";
+import { forgotPasswordAction } from "./features/auth/forgotPasswordAction";
+import { resetPasswordAction } from "./features/auth/resetPasswordAction";
 
 //pages
 import Register from "./features/auth/Register";
@@ -33,6 +35,8 @@ import ManageCourse from "./features/courses/ManageCourse";
 import Navbar from "./components/Navbar";
 import ProtectedRoute from "./features/auth/ProtectedRoute";
 import GuestRoute from "./features/auth/GuestRoute";
+import ForgotPassword from "./features/auth/forgotPassword";
+import ResetPassword from "./features/auth/ResetPassword";
 
 const RootLayout = () => {
   return (
@@ -121,6 +125,24 @@ const router = createBrowserRouter([
         ),
         loader: manageCourseLoader,
         action: manageCourseAction,
+      },
+      {
+        path: "/forgot-password",
+        element: (
+          <GuestRoute>
+            <ForgotPassword />
+          </GuestRoute>
+        ),
+        action: forgotPasswordAction,
+      },
+      {
+        path: "/reset-password/:token",
+        element: (
+          <GuestRoute>
+            <ResetPassword />
+          </GuestRoute>
+        ),
+        action: resetPasswordAction,
       },
     ],
   },

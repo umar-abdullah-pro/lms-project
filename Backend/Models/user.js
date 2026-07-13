@@ -28,6 +28,14 @@ const userSchema = mongoose.Schema(
       type: String,
       default: "https://api.dicebear.com/7.x/bottts/svg?seed=Learnly",
     },
+
+    resetPasswordToken: {
+      type: String,
+    },
+    
+    resetPasswordExpire: {
+      type: Date,
+    },
   },
   { timestamps: true },
 );

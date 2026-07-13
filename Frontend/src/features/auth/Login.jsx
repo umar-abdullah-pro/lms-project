@@ -85,6 +85,15 @@ const Login = () => {
                 required
               />
             </div>
+            
+            <div className="flex justify-end mt-1 mb-4">
+              <Link
+                to="/forgot-password"
+                className="text-sm font-bold text-brand-purple hover:underline"
+              >
+                Forgot Password?
+              </Link>
+            </div>
 
             <button
               type="submit"

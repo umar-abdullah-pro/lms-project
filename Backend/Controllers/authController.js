@@ -1,6 +1,8 @@
 const bcrypt = require("bcryptjs");
 const user = require('../Models/user')
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
+const sendEmail = require("../utils/sendEmail");
 
 exports.postUserRegister = async (req, res) => {
   const { name, email, password, role, avatar } = req.body;
@@ -119,5 +121,97 @@ exports.updateProfile = async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+exports.forgotPassword = async (req, res) => {
+  try {
+    // 1. Find user by email
+    const existingUser = await user.findOne({ email: req.body.email });
+    if (!existingUser) {
+      return res.status(404).json({ success: false, message: "There is no user with that email." });
+    }
+
+    // 2. Generate a random reset token
+    const resetToken = crypto.randomBytes(20).toString("hex");
+
+    // 3. Save the token and an expiration time (10 minutes) to the database
+    existingUser.resetPasswordToken = resetToken;
+    existingUser.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+    await existingUser.save();
+
+    // 4. Create the reset URL (pointing to your React frontend)
+    // IMPORTANT: Make sure this port matches your Vite frontend (default is usually 5173)
+    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+
+    const message = `You requested a password reset. Please click this link to reset your password:\n\n${resetUrl}\n\nThis link is valid for 10 minutes. If you did not request this, please ignore this email.`;
+
+    // 5. Send the email
+    try {
+      await sendEmail({
+        email: existingUser.email,
+        subject: "Password Reset Request",
+        message: message,
+      });
+
+      res.status(200).json({ success: true, message: "Email sent successfully!" });
+    } catch (emailError) {
+      // If email fails, wipe the token from the database for security
+      existingUser.resetPasswordToken = undefined;
+      existingUser.resetPasswordExpire = undefined;
+      await existingUser.save();
+
+      console.error("Email Error: ", emailError);
+      return res.status(500).json({ success: false, message: "Email could not be sent." });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
+  }
+};
+
+exports.resetPassword = async (req, res) => {
+  try {
+    const resetToken = req.params.token;
+    
+    console.log("\n========================================");
+    console.log("🕵️ STARTING PASSWORD RESET DIAGNOSTIC");
+    console.log("1. Token arriving from Frontend:", resetToken);
+
+    // Let's search the database WITHOUT checking the timer first
+    const userJustToken = await user.findOne({ resetPasswordToken: resetToken });
+    
+    console.log("2. Did we find this token in the DB?", userJustToken ? "YES" : "NO");
+
+    if (userJustToken) {
+        console.log("   -> DB Expiration Time:", userJustToken.resetPasswordExpire);
+        console.log("   -> Server Current Time:", new Date(Date.now()));
+    }
+    console.log("========================================\n");
+
+    const existingUser = await user.findOne({
+      resetPasswordToken: resetToken,
+      resetPasswordExpire: { $gt: Date.now() }, 
+    });
+
+    if (!existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired password reset token.",
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(req.body.password, 12);
+    existingUser.password = hashedPassword;
+    existingUser.resetPasswordToken = undefined;
+    existingUser.resetPasswordExpire = undefined;
+    await existingUser.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Password reset successfully. You can now log in.",
+    });
+  } catch (error) {
+    console.error("🚨 CRASH:", error.message);
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };
