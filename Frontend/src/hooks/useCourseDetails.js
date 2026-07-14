@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, useLoaderData } from "react-router-dom";
 import { useAuth } from "../features/auth/AuthContext";
 import apiClient from "../api/client";
+import { showSuccessToast, showErrorToast } from "../utils/alertUtils";
 
 export const useCourseDetails = () => {
   const { user } = useAuth();
@@ -22,11 +23,10 @@ export const useCourseDetails = () => {
 
   const handleEnrollment = async () => {
     if (!user) {
-      alert("Please log in to purchase this course.");
+      showErrorToast("Please log in to purchase this course.");
       return;
     }
 
-    //FREE Course, Skip the Razorpay
     try {
       if (course.price === 0) {
         try {
@@ -34,25 +34,23 @@ export const useCourseDetails = () => {
             course: course._id,
           });
           if (data.success) {
-            alert("You have been Enrolled in the Course, Start Learning!");
+            showSuccessToast("You have been Enrolled in the Course, Start Learning!");
             window.location.reload();
           }
         } catch (error) {
           const msg =
             error.response?.data?.message || "Could not enroll. Try again.";
-          alert(`Enrollment Error: ${msg}`);
+          showErrorToast(`Enrollment Error: ${msg}`);
         }
 
         return;
       }
-      
-      // 3. PAID Course, Ask the backend to generate the Bill (Order)
+
       const orderResponse = await apiClient.post("/payments/create-order", {
         courseId: course._id,
       });
       const { order } = orderResponse.data;
 
-      // 4. Configure the Razorpay Popup
       const options = {
         key: import.meta.env.VITE_RAZORPAY_KEY,
         amount: order.amount,
@@ -62,10 +60,9 @@ export const useCourseDetails = () => {
         image: course.thumbnail,
         order_id: order.id,
 
-        // 5. The 'handler' runs automatically when the student pays successfully
         handler: async function (response) {
           try {
-            // Send the secret signatures back to our backend for cryptographic verification
+
             const verifyResponse = await apiClient.post(
               "/payments/verify-payment",
               {
@@ -77,8 +74,8 @@ export const useCourseDetails = () => {
             );
 
             if (verifyResponse.data.success) {
-              alert("Payment Successful! Welcome to the course 🚀");
-              // Refresh the page so the padlocks disappear!
+              showSuccessToast("Payment Successful! Welcome to the course 🚀");
+
               window.location.reload();
             }
           } catch (error) {
@@ -89,7 +86,7 @@ export const useCourseDetails = () => {
 
             const errorMessage =
               error.response?.data?.message || "Could not initiate checkout.";
-            alert(`Checkout Error: ${errorMessage}`);
+            showErrorToast(`Checkout Error: ${errorMessage}`);
           }
         },
         prefill: {
@@ -101,18 +98,17 @@ export const useCourseDetails = () => {
         },
       };
 
-      // 6. Open the beautiful Razorpay Popup!
       const razorpayPopup = new window.Razorpay(options);
 
       razorpayPopup.on("payment.failed", function (response) {
         console.error("Payment Failed:", response.error.description);
-        alert("Payment failed or was cancelled. You have not been charged.");
+        showErrorToast("Payment failed or was cancelled. You have not been charged.");
       });
 
       razorpayPopup.open();
     } catch (error) {
       console.error("Order creation failed", error);
-      alert("Could not initiate checkout. Please try again.");
+      showErrorToast("Could not initiate checkout. Please try again.");
     }
   };
 
@@ -135,8 +131,7 @@ export const useCourseDetails = () => {
 
   const updateVideoProgress = async (lessonId, watchedSeconds, totalSeconds) => {
     if (!enrollment) return;
-    
-    // Optimistically update local state so the progress reflects immediately on re-visit
+
     setEnrollment((prev) => {
       const lessonProgress = prev.lessonProgress || [];
       const index = lessonProgress.findIndex((p) => p.lessonId === lessonId);
@@ -162,7 +157,6 @@ export const useCourseDetails = () => {
     }
   };
 
-  // 4. Return everything the UI needs
   return {
     course,
     currentLesson,

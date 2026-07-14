@@ -66,7 +66,7 @@ const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
       if (data.success) {
         setHasReviewed(true);
         setPage(1);
-        fetchReviews(1); // Refresh list from beginning
+        fetchReviews(1);
       }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit review.");
@@ -77,8 +77,7 @@ const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
 
   const isCompleted = progressPercentage === 100;
 
-  // We could check if user already left a review by parsing the reviews array if we have the user context
-  // For simplicity, we just rely on `hasReviewed` local state and backend duplicate prevention.
+
 
   return (
     <div className="mt-12">

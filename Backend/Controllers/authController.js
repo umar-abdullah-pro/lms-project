@@ -49,19 +49,16 @@ exports.postUserRegister = async (req, res) => {
 exports.postUserLogin = async (req, res) => {
   const { email, password } = req.body;
   try {
-    // Check if user exists
     const existingUser = await user.findOne({ email });
     if (!existingUser) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Check password
     const isMatch = await bcrypt.compare(password, existingUser.password);
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
-    // Generate JWT token
     const token = jwt.sign({ id: existingUser._id }, process.env.JWT_SECRET, {
       expiresIn: "2d",
     });
@@ -93,7 +90,6 @@ exports.updateProfile = async (req, res) => {
         .json({ success: false, message: "user not found" });
     }
 
-    // Update fields if they are provided in the request body
     existingUser.name = req.body.name || existingUser.name;
 
     let emailChanged = false;
@@ -111,11 +107,6 @@ exports.updateProfile = async (req, res) => {
     existingUser.email = req.body.email || existingUser.email;
 
     const updatedUser = await existingUser.save();
-
-    // If the email was changed, we could automatically send a verification email, 
-    // but the easiest approach is to just let the frontend know so it prompts the user.
-
-    // Send back the updated user data (DO NOT send the password back!)
     res.status(200).json({
       success: true,
       data: {
@@ -126,7 +117,9 @@ exports.updateProfile = async (req, res) => {
         avatar: updatedUser.avatar,
         isEmailVerified: updatedUser.isEmailVerified,
       },
-      message: emailChanged ? "Profile updated. Please verify your new email address." : "Profile updated successfully.",
+      message: emailChanged
+        ? "Profile updated. Please verify your new email address."
+        : "Profile updated successfully.",
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
@@ -135,29 +128,21 @@ exports.updateProfile = async (req, res) => {
 
 exports.forgotPassword = async (req, res) => {
   try {
-    // 1. Find user by email
     const existingUser = await user.findOne({ email: req.body.email });
     if (!existingUser) {
       return res
         .status(404)
         .json({ success: false, message: "There is no user with that email." });
     }
-
-    // 2. Generate a random reset token
     const resetToken = crypto.randomBytes(20).toString("hex");
 
-    // 3. Save the token and an expiration time (10 minutes) to the database
     existingUser.resetPasswordToken = resetToken;
     existingUser.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
     await existingUser.save();
 
-    // 4. Create the reset URL (pointing to your React frontend)
-    // IMPORTANT: Make sure this port matches your Vite frontend (default is usually 5173)
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     const message = `You requested a password reset. Please click this link to reset your password:\n\n${resetUrl}\n\nThis link is valid for 10 minutes. If you did not request this, please ignore this email.`;
-
-    // 5. Send the email
     try {
       await sendEmail({
         email: existingUser.email,
@@ -169,7 +154,6 @@ exports.forgotPassword = async (req, res) => {
         .status(200)
         .json({ success: true, message: "Email sent successfully!" });
     } catch (emailError) {
-      // If email fails, wipe the token from the database for security
       existingUser.resetPasswordToken = undefined;
       existingUser.resetPasswordExpire = undefined;
       await existingUser.save();
@@ -256,14 +240,11 @@ exports.verifyEmail = async (req, res) => {
 
 exports.sendVerificationEmail = async (req, res) => {
   try {
-    // 1. Get the logged-in user's ID
     const userId = req.user._id;
 
-    // 2. Generate the token
     const verificationToken = crypto.randomBytes(20).toString("hex");
     const expireTime = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
 
-    // 3. Save token to DB using findByIdAndUpdate to safely bypass any password save hooks
     const updatedUser = await user.findByIdAndUpdate(
       userId,
       {
@@ -279,7 +260,6 @@ exports.sendVerificationEmail = async (req, res) => {
       return res.status(400).json({ message: "Email is already verified." });
     }
 
-    // 4. Send the email
     const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
     const message = `Welcome! Please click this link to verify your email address:\n\n${verifyUrl}`;
 

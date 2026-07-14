@@ -1,15 +1,12 @@
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 
-//Context
 import { AuthProvider } from "./features/auth/AuthContext";
 
-//Loaders
 import dashboardLoader from "./features/dashboard/dashboardLoader";
 import CatalogLoader from "./features/courses/CatalogLoader";
 import courseDetailsLoader from "./features/courses/courseDetailsLoader";
 import { manageCourseLoader } from "./features/courses/manageCourseLoader";
 
-//Actions
 import loginAction from "./features/auth/loginAction";
 import registerAction from "./features/auth/registerAction";
 import updateProfileAction from "./features/dashboard/updateProfileAction";
@@ -21,7 +18,6 @@ import { resetPasswordAction } from "./features/auth/resetPasswordAction";
 import { verifyEmailAction } from "./features/auth/verifyEmailAction";
 import { sendVerificationAction } from "./features/auth/sendVerificationAction";
 
-//pages
 import Register from "./features/auth/Register";
 import Login from "./features/auth/Login";
 import Home from "./features/home/Home";
@@ -33,7 +29,6 @@ import CourseCatalog from "./features/courses/CourseCatalog";
 import UpdateProfile from "./features/dashboard/UpdateProfile";
 import ManageCourse from "./features/courses/ManageCourse";
 
-//Components and Routes
 import Navbar from "./components/Navbar";
 import VerificationBanner from "./components/VerificationBanner";
 import ProtectedRoute from "./features/auth/ProtectedRoute";
@@ -41,10 +36,12 @@ import GuestRoute from "./features/auth/GuestRoute";
 import ForgotPassword from "./features/auth/ForgotPassword";
 import ResetPassword from "./features/auth/ResetPassword";
 import VerifyEmail from "./features/auth/VerifyEmail";
+import { Toaster } from "react-hot-toast";
 
 const RootLayout = () => {
   return (
     <>
+      <Toaster position="top-center" />
       <VerificationBanner />
       <Navbar />
       <div className="min-h-screen pb-10 bg-brand-beige">

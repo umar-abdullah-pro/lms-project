@@ -31,7 +31,7 @@ const DesktopMenu = ({ user, onLogout }) => {
                 <img
                   src={
                     user.avatar ||
-                    `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`
+                    `https:
                   }
                   alt={user.name}
                   className="object-cover w-full h-full"

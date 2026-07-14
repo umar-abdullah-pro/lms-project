@@ -4,7 +4,7 @@ import { useRef } from "react";
 const VideoPlayer = ({ url, title, isLocked, initialTime = 0, onVideoEnd, onProgressUpdate }) => {
   const videoRef = useRef(null);
   const lastSyncTimeRef = useRef(0);
-  //Empty State
+
   if (!url) {
     return (
       <div className="flex items-center justify-center w-full bg-gray-900 aspect-video rounded-3xl shadow-2xl">
@@ -15,7 +15,6 @@ const VideoPlayer = ({ url, title, isLocked, initialTime = 0, onVideoEnd, onProg
     );
   }
 
-  //Paywall State (If they click a locked lesson!)
   if (isLocked) {
     return (
       <div className="overflow-hidden bg-gray-900 rounded-3xl shadow-2xl">
@@ -40,7 +39,6 @@ const VideoPlayer = ({ url, title, isLocked, initialTime = 0, onVideoEnd, onProg
     );
   }
 
-  //Playing State (Unlocked)
   return (
     <div className="overflow-hidden bg-black shadow-2xl rounded-3xl group">
       <video
@@ -60,7 +58,7 @@ const VideoPlayer = ({ url, title, isLocked, initialTime = 0, onVideoEnd, onProg
           
           const currentTime = videoRef.current.currentTime;
           const totalTime = videoRef.current.duration || 0;
-          // Sync every 5 seconds
+
           if (Math.abs(currentTime - lastSyncTimeRef.current) >= 5) {
             onProgressUpdate(currentTime, totalTime);
             lastSyncTimeRef.current = currentTime;

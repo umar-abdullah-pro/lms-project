@@ -1,7 +1,7 @@
 import apiClient from "../../api/client";
 
 export const forgotPasswordAction = async ({ request }) => {
-  // Extract form data securely using React Router
+
   const formData = await request.formData();
   const email = formData.get("email");
 

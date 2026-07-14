@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { HiOutlineClock } from "react-icons/hi2";
 
 const CourseCard = ({ course, index }) => {
-  // Creating dynamic pastel colors based on index
+
   const colors = [
     {
       bg: "bg-[#ffeae5]",
@@ -22,7 +22,7 @@ const CourseCard = ({ course, index }) => {
   ];
   const theme = colors[index % 3];
 
-  const fallbackImage ="https://placehold.co/600x400/f3f4f6/6b7280?text=No+Thumbnail";
+  const fallbackImage ="https:
   
   return (
     <Link

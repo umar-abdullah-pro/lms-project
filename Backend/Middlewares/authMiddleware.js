@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 const user = require("../Models/user");
 
-//Checks if the user is logged in
 const protect = async (req, res, next) => {
   let token;
   if (
@@ -30,7 +29,6 @@ const protect = async (req, res, next) => {
   }
 };
 
-// Add this below your existing 'protect' middleware
 const requireVerified = (req, res, next) => {
   if (req.user && req.user.isEmailVerified === false) {
     return res.status(403).json({
@@ -42,7 +40,6 @@ const requireVerified = (req, res, next) => {
   next();
 };
 
-//Checks if the logged-in user is an instructor
 const instructorOnly = (req, res, next) => {
   if (req.user && req.user.role === "instructor") {
     next();
@@ -51,8 +48,7 @@ const instructorOnly = (req, res, next) => {
   }
 };
 
-//Attaches req.user if a valid token is present, but never blocks the request.
-//Used for public routes that should still behave differently for logged-in users.
+
 const optionalAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (authHeader && authHeader.startsWith("Bearer")) {
@@ -61,7 +57,7 @@ const optionalAuth = async (req, res, next) => {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await user.findById(decoded.id).select("-password");
     } catch (error) {
-      // Invalid or expired token: proceed as a logged-out request instead of blocking.
+
     }
   }
   next();

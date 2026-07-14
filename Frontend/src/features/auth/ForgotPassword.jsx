@@ -1,10 +1,9 @@
 import { Form, Link, useActionData, useNavigation } from "react-router-dom";
 
 const ForgotPassword = () => {
-  const actionData = useActionData(); // Grabs the return value from forgotPasswordAction
+  const actionData = useActionData();
   const navigation = useNavigation();
-  
-  // React Router automatically knows when the form is submitting
+
   const isLoading = navigation.state === "submitting"; 
 
   return (
@@ -38,7 +37,7 @@ const ForgotPassword = () => {
             <input
               type="email"
               id="email"
-              name="email" // 'name' attribute is REQUIRED for the action to read the data
+              name="email"
               required
               className="w-full px-4 py-3 text-gray-900 transition-colors border-2 border-gray-200 outline-none rounded-xl focus:border-brand-purple focus:ring-0"
               placeholder="you@example.com"

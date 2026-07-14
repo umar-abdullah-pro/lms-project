@@ -3,6 +3,7 @@ import StudentDashboard from "./StudentDashboard";
 import InstructorDashboard from "./InstructorDashboard";
 import { useNavigate } from "react-router-dom";
 import apiClient from "../../api/client";
+import { showErrorToast } from "../../utils/alertUtils";
 
 const Dashboard = () => {
   const { user } = useAuth();
@@ -16,7 +17,7 @@ const Dashboard = () => {
       navigate(".", { replace: true });
     } catch (error) {
       console.error("Failed to update course status", error);
-      alert("Could not update the publish status.");
+      showErrorToast("Could not update the publish status.");
     }
   };
 

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 
 const MobileMenu = ({ isOpen, user, onLogout, closeMenu }) => {
-  if (!isOpen) return null; // If the menu isn't open, render absolutely nothing!
+  if (!isOpen) return null;
 
   return (
     <div className="absolute top-0 left-0 w-full h-screen flex flex-col pt-24 px-8 bg-brand-beige z-40 md:hidden">
@@ -33,7 +33,7 @@ const MobileMenu = ({ isOpen, user, onLogout, closeMenu }) => {
                 <img
                   src={
                     user.avatar ||
-                    `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`
+                    `https:
                   }
                   alt={user.name}
                   className="object-cover w-full h-full"

@@ -9,6 +9,7 @@ import {
   FiTrash2,
 } from "react-icons/fi";
 import Footer from "../../components/Footer";
+import { confirmAction } from "../../utils/alertUtils";
 
 const InstructorDashboard = ({ onToggle }) => {
   const fetcher = useFetcher();
@@ -155,13 +156,15 @@ const InstructorDashboard = ({ onToggle }) => {
                       <input type="hidden" name="courseId" value={course._id} />
                       <button
                         type="submit"
-                        onClick={(e) => {
-                          if (
-                            !window.confirm(
-                              "WARNING: Delete this ENTIRE course? This is permanent.",
-                            )
-                          ) {
-                            e.preventDefault();
+                        onClick={async (e) => {
+                          e.preventDefault();
+                          const confirmed = await confirmAction(
+                            "Delete Course?",
+                            "WARNING: Delete this ENTIRE course? This is permanent.",
+                            "Yes, delete it"
+                          );
+                          if (confirmed) {
+                            fetcher.submit(e.currentTarget.form, { method: "delete" });
                           }
                         }}
                         className="flex items-center justify-center w-12 h-12 text-red-500 transition-all border-2 border-red-100 bg-red-50 hover:bg-red-500 hover:text-white hover:border-red-500 rounded-xl"

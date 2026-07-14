@@ -4,6 +4,7 @@ import {
   HiOutlinePlayCircle,
 } from "react-icons/hi2";
 import { FiTrash2 } from "react-icons/fi";
+import { confirmAction } from "../../utils/alertUtils";
 
 const CourseLessonList = ({
   lessons,
@@ -31,15 +32,14 @@ const CourseLessonList = ({
       ) : (
         <div className="flex flex-col gap-3">
           {displayLessons.map((lesson, index) => {
-            // Find the original chronological number of the lesson
+
             const chronologicalNumber = index + 1;
             const isCompleted = completedLessons?.some(
               (id) => String(id) === String(lesson._id),
             );
 
             const isLocked = !isEnrolled && chronologicalNumber !== 1;
-            
-            // Calculate progress line percentage
+
             const progressObj = lessonProgress.find((p) => p.lessonId === lesson._id);
             let progressPercent = 0;
             if (isCompleted) {
@@ -115,9 +115,14 @@ const CourseLessonList = ({
                   <div className="shrink-0 p-2">
                     {isCourseOwner && (
                       <button
-                        onClick={(e) => {
+                        onClick={async (e) => {
                           e.stopPropagation();
-                          if (window.confirm(`Delete "${lesson.title}"?`)) {
+                          const confirmed = await confirmAction(
+                            "Delete Lesson?",
+                            `Are you sure you want to delete "${lesson.title}"?`,
+                            "Yes, delete it"
+                          );
+                          if (confirmed) {
                             onDeleteLesson(lesson._id);
                           }
                         }}

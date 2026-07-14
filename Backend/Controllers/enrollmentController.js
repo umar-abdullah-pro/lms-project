@@ -121,19 +121,18 @@ exports.updateProgress = async (req, res) => {
       });
     }
 
-    // Find if the lesson progress already exists
     const progressIndex = enrollment.lessonProgress.findIndex(
       (p) => p.lessonId.toString() === lessonId,
     );
 
     if (progressIndex > -1) {
-      // Update existing
+
       enrollment.lessonProgress[progressIndex].watchedSeconds = watchedSeconds;
       if (totalSeconds) {
         enrollment.lessonProgress[progressIndex].totalSeconds = totalSeconds;
       }
     } else {
-      // Create new entry
+
       enrollment.lessonProgress.push({
         lessonId,
         watchedSeconds,

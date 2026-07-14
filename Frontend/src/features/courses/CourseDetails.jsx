@@ -24,7 +24,6 @@ const CourseDetail = () => {
     enrollment,
   } = useCourseDetails();
 
-  // We need local state to track if the lesson they just clicked is locked!
   const [isCurrentLessonLocked, setIsCurrentLessonLocked] = useState(false);
   const [secureVideoUrl, setSecureVideoUrl] = useState(null);
 
@@ -40,11 +39,11 @@ const CourseDetail = () => {
         if (data.success && data.url) {
           setSecureVideoUrl(data.url);
         } else {
-          setSecureVideoUrl(currentLesson.videoUrl); // fallback
+          setSecureVideoUrl(currentLesson.videoUrl);
         }
       } catch (err) {
         console.error("Failed to fetch secure video URL", err);
-        setSecureVideoUrl(currentLesson.videoUrl); // fallback
+        setSecureVideoUrl(currentLesson.videoUrl);
       }
     };
 
@@ -70,7 +69,6 @@ const CourseDetail = () => {
     }
   };
 
-  // Find initial time for the current lesson
   const currentLessonProgress = enrollment?.lessonProgress?.find(
     (p) => p.lessonId === currentLesson?._id
   );

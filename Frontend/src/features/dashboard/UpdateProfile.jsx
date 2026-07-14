@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigation, useActionData, Form } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
+import { showSuccessToast } from "../../utils/alertUtils";
 
 const UpdateProfile = () => {
   const actionData = useActionData();
@@ -12,7 +13,7 @@ const UpdateProfile = () => {
   useEffect(() => {
     if (actionData?.success && actionData.updatedUserData) {
       updateUser(actionData.updatedUserData);
-      alert("Profile updated successfully!");
+      showSuccessToast("Profile updated successfully!");
     }
   }, [actionData, updateUser]);
 
@@ -24,7 +25,7 @@ const UpdateProfile = () => {
             <img
               src={
                 user.avatar ||
-                `https://api.dicebear.com/7.x/bottts/svg?seed=${user.name}`
+                `https:
               }
               alt={user.name}
               className="object-cover w-full h-full"

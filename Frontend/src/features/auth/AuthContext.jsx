@@ -21,11 +21,10 @@ const getInitialUser = () => {
 };
 
 export const AuthProvider = ({ children }) => {
-  // Read initial state safely from localStorage
+
   const [user, setUser] = useState(getInitialUser);
   const [token, setToken] = useState(localStorage.getItem("token") || null);
 
-  // Called after a successful login api response
   const login = ({ userData, userToken }) => {
     setUser(userData);
     setToken(userToken);

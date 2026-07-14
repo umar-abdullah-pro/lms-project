@@ -11,7 +11,6 @@ const CourseCatalog = () => {
   
   const isSearching = navigation.state === "loading" && navigation.location?.pathname === location.pathname;
 
-  // Handles page changes without needing a full form submit button
   const handlePageChange = (newPage) => {
     submit(
       { 

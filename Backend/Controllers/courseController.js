@@ -70,13 +70,8 @@ exports.postCreateCourse = async (req, res) => {
 
 exports.getAllCourses = async (req, res) => {
   try {
-    // 1. Grab parameters from the URL query, setting defaults
     const { search, category, page = 1, limit = 10 } = req.query;
-
-    // 2. Build a dynamic query object
     let query = { isPublished: true };
-
-    // If a search term exists, look in title OR description (case-insensitive)
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },
@@ -84,22 +79,18 @@ exports.getAllCourses = async (req, res) => {
       ];
     }
 
-    // If a specific category is selected, add it to the query
     if (category && category !== "All") {
       query.category = category;
     }
-
-    // 3. Calculate pagination math
     const skip = (Number(page) - 1) * Number(limit);
     const totalCourses = await Course.countDocuments(query);
     const totalPages = Math.ceil(totalCourses / Number(limit));
 
-    // 4. Fetch the exact slice of data we need
     const courses = await Course.find(query)
-      .populate("instructor", "name avatar") // Assuming you want instructor details
+      .populate("instructor", "name avatar") 
       .skip(skip)
       .limit(Number(limit))
-      .sort({ createdAt: -1 }); // Newest courses first
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
@@ -146,8 +137,7 @@ exports.getCourseById = async (req, res) => {
 
     const courseData = course.toObject();
 
-    // Only the first lesson is a free preview. Strip the real video source from
-    // every other lesson unless the requester owns the course or is enrolled in it.
+
     if (!isOwner && !isEnrolled) {
       courseData.lessons = courseData.lessons.map((lesson, index) => {
         if (index === 0) return lesson;
@@ -174,7 +164,6 @@ exports.postaddLesson = async (req, res) => {
     const { title, description } = req.body;
     const courseId = req.params.id;
 
-    // 1. Verify the course and ownership
     const course = await Course.findById(courseId);
     if (!course) {
       return res
@@ -188,19 +177,19 @@ exports.postaddLesson = async (req, res) => {
       });
     }
 
-    // 2. Check if a video file was actually attached to the request
     if (!req.file) {
       return res
         .status(400)
         .json({ success: false, message: "Please upload a video file" });
     }
 
-    // 3. Upload the video to Cloudinary using a Promise (so our code waits for it to finish)
+    const safeFolderName = course.title.replace(/[^a-zA-Z0-9]/g, "_");
+
     const uploadResult = await new Promise((resolve, reject) => {
       const uploadStream = cloudinary.uploader.upload_stream(
         {
           resource_type: "video",
-          folder: "lms_lessons",
+          folder: `lms_courses/${safeFolderName}/lessons`,
           type: "authenticated",
         },
         (error, result) => {
@@ -289,7 +278,6 @@ exports.deleteLesson = async (req, res) => {
 
     const lesson = course.lessons.id(lessonId);
     if (lesson && lesson.videoPublicId) {
-      // Clean up from cloudinary
       await cloudinary.uploader.destroy(lesson.videoPublicId, { resource_type: "video" });
     }
 
@@ -325,19 +313,16 @@ exports.deleteCourse = async (req, res) => {
       });
     }
 
-    // 1. Delete all lesson videos from Cloudinary
     for (const lesson of course.lessons) {
       if (lesson.videoPublicId) {
         await cloudinary.uploader.destroy(lesson.videoPublicId, { resource_type: "video" });
       }
     }
 
-    // 2. Delete the course thumbnail from Cloudinary
     if (course.thumbnailPublicId) {
-      await cloudinary.uploader.destroy(course.thumbnailPublicId); // default is image
+      await cloudinary.uploader.destroy(course.thumbnailPublicId);
     }
 
-    // 3. Delete related database documents (Enrollments and Reviews)
     await Enrollment.deleteMany({ course: courseId });
     await Review.deleteMany({ course: courseId });
 
@@ -357,8 +342,6 @@ exports.updateCourse = async (req, res) => {
   try {
     const courseId = req.params.id;
     const { isPublished } = req.body;
-
-    // 1. Find the course
     const course = await Course.findById(courseId);
     if (!course) {
       return res
@@ -366,7 +349,6 @@ exports.updateCourse = async (req, res) => {
         .json({ success: false, message: "Course not found" });
     }
 
-    // 2. Security Check: Ensure the logged-in user actually owns this course
     if (course.instructor.toString() !== req.user._id.toString()) {
       return res
         .status(403)
@@ -376,12 +358,10 @@ exports.updateCourse = async (req, res) => {
         });
     }
 
-    // 3. Update the field if it was provided
     if (isPublished !== undefined) {
       course.isPublished = isPublished;
     }
 
-    // Save to database
     await course.save();
 
     res.status(200).json({
@@ -445,7 +425,6 @@ exports.postCourseReview = async (req, res) => {
       return res.status(400).json({ success: false, message: "Rating must be between 1 and 5" });
     }
 
-    // Verify enrollment
     const enrollment = await Enrollment.findOne({
       course: courseId,
       student: studentId,
@@ -466,7 +445,6 @@ exports.postCourseReview = async (req, res) => {
         .json({ success: false, message: "Course not found." });
     }
 
-    // Verify completion (Optional, but per requirements)
     const isCompleted =
       enrollment.completedLessons.length === course.lessons.length &&
       course.lessons.length > 0;
@@ -479,7 +457,6 @@ exports.postCourseReview = async (req, res) => {
         });
     }
 
-    // Check for existing review
     const existingReview = await Review.findOne({
       course: courseId,
       student: studentId,
@@ -493,7 +470,6 @@ exports.postCourseReview = async (req, res) => {
         });
     }
 
-    // Create review
     const review = await Review.create({
       course: courseId,
       student: studentId,
@@ -501,7 +477,6 @@ exports.postCourseReview = async (req, res) => {
       comment,
     });
 
-    // Update aggregate on course
     const newCount = course.reviewCount + 1;
     const newAverage =
       (course.averageRating * course.reviewCount + Number(rating)) / newCount;
@@ -533,7 +508,6 @@ exports.getSecureVideoUrl = async (req, res) => {
     const { courseId, lessonId } = req.params;
     const studentId = req.user._id;
 
-    // 1. Fetch course to get the lesson and instructor info
     const course = await Course.findById(courseId);
     if (!course) {
       return res
@@ -541,14 +515,12 @@ exports.getSecureVideoUrl = async (req, res) => {
         .json({ success: false, message: "Course not found" });
     }
 
-    // 2. Verify user is enrolled or is the instructor
     const isInstructor = course.instructor.toString() === studentId.toString();
     const enrollment = await Enrollment.findOne({
       course: courseId,
       student: studentId,
     });
 
-    // Find the lesson and its index
     const lesson = course.lessons.id(lessonId);
     if (!lesson) {
       return res
@@ -559,7 +531,6 @@ exports.getSecureVideoUrl = async (req, res) => {
       (l) => l._id.toString() === lessonId,
     );
 
-    // Free preview is the first lesson (index 0)
     const isFreePreview = lessonIndex === 0;
 
     if (!isInstructor && !enrollment && !isFreePreview) {
@@ -568,9 +539,8 @@ exports.getSecureVideoUrl = async (req, res) => {
         .json({ success: false, message: "Not enrolled in this course" });
     }
 
-    // 4. Generate signed URL (if publicId exists, otherwise fallback to existing videoUrl)
     if (lesson.videoPublicId) {
-      const expirationTimestamp = Math.floor(Date.now() / 1000) + 60 * 60 * 2; // Valid for 2 hours
+      const expirationTimestamp = Math.floor(Date.now() / 1000) + 60 * 60 * 2;
 
       const secureUrl = cloudinary.url(lesson.videoPublicId, {
         resource_type: "video",
@@ -578,14 +548,9 @@ exports.getSecureVideoUrl = async (req, res) => {
         sign_url: true,
         auth_token: {
           key: process.env.CLOUDINARY_API_SECRET,
-          duration: 7200, // 2 hours
+          duration: 7200,
         },
       });
-
-      // Note: Cloudinary provides multiple ways to sign URLs.
-      // If `sign_url: true` with standard api_secret works for your tier, great.
-      // Otherwise `cloudinary.utils.private_download_url` is another option.
-      // For basic signature:
       const basicSignedUrl = cloudinary.url(lesson.videoPublicId, {
         resource_type: "video",
         type: "authenticated",
@@ -595,7 +560,6 @@ exports.getSecureVideoUrl = async (req, res) => {
 
       return res.status(200).json({ success: true, url: basicSignedUrl });
     } else {
-      // Fallback for old videos that weren't uploaded as authenticated
       return res.status(200).json({ success: true, url: lesson.videoUrl });
     }
   } catch (error) {

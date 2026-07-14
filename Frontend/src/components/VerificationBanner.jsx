@@ -4,10 +4,9 @@ import { useAuth } from "../features/auth/AuthContext";
 
 const VerificationBanner = () => {
   const { user } = useAuth();
-  const fetcher = useFetcher(); // Use React Router's fetcher for background actions
+  const fetcher = useFetcher();
   const [bannerMessage, setBannerMessage] = useState("");
 
-  // Listen for the result of the fetcher action
   useEffect(() => {
     if (fetcher.state === "idle" && fetcher.data) {
       setBannerMessage(fetcher.data.message);
@@ -33,7 +32,7 @@ const VerificationBanner = () => {
           {bannerMessage}
         </span>
       ) : (
-        // fetcher.Form submits to the root route ("/") by default since we are in the root layout
+
         <fetcher.Form method="POST" action="/">
           <button 
             type="submit"

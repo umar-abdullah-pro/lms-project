@@ -5,6 +5,7 @@ import {
   useActionData,
   useNavigate,
 } from "react-router-dom";
+import { showSuccessToast } from "../../utils/alertUtils";
 
 const CreateCourseForm = () => {
   const actionData = useActionData();
@@ -14,7 +15,7 @@ const CreateCourseForm = () => {
   const isSubmitting = navigation.state === "submitting";
   useEffect(() => {
     if (actionData?.success) {
-      alert("Course created successfully! Let's add some lessons.");
+      showSuccessToast("Course created successfully! Let's add some lessons.");
       navigate(`/course/${actionData.courseId}`);
     }
   }, [actionData, navigate]);

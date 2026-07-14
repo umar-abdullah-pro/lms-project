@@ -8,7 +8,6 @@ const razorpayInstance = new Razorpay({
   key_secret: process.env.RAZORPAY_API_SECRET || process.env.RAZORPAY_TEST_API_SECRET,
 });
 
-// 1. GENERATE THE BILL (Order)
 exports.createRazorpayOrder = async (req, res) => {
   try {
     const { courseId } = req.body;
@@ -45,7 +44,6 @@ exports.createRazorpayOrder = async (req, res) => {
   }
 };
 
-// 2. VERIFY THE PAYMENT & ENROLL THE STUDENT
 exports.verifyRazorpayPayment = async (req, res) => {
   try {
     const {
@@ -56,7 +54,6 @@ exports.verifyRazorpayPayment = async (req, res) => {
     } = req.body;
     const studentId = req.user._id;
 
-    //Cryptographically verify the signature using your Secret Key
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_API_SECRET || process.env.RAZORPAY_TEST_API_SECRET)
@@ -74,7 +71,6 @@ exports.verifyRazorpayPayment = async (req, res) => {
         });
     }
 
-    //If authentic, check if they are already enrolled (just in case)
     const existingEnrollment = await Enrollment.findOne({
       student: studentId,
       course: courseId,
@@ -85,7 +81,6 @@ exports.verifyRazorpayPayment = async (req, res) => {
         .json({ success: false, message: "Already enrolled in this course." });
     }
 
-    //Securely enroll the student!
     const newEnrollment = await Enrollment.create({
       student: studentId,
       course: courseId,

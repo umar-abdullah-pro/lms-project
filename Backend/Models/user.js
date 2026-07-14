@@ -26,7 +26,7 @@ const userSchema = mongoose.Schema(
 
     avatar: {
       type: String,
-      default: "https://api.dicebear.com/7.x/bottts/svg?seed=Learnly",
+      default: "https:
     },
 
     resetPasswordToken: {

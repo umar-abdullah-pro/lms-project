@@ -7,7 +7,6 @@ const ResetPassword = () => {
   const navigate = useNavigate();
   const isLoading = navigation.state === "submitting";
 
-  // Automatically redirect 3 seconds after a successful password reset
   useEffect(() => {
     if (actionData?.success) {
       const timer = setTimeout(() => navigate("/login"), 3000);
@@ -45,7 +44,7 @@ const ResetPassword = () => {
             <input
               type="password"
               id="password"
-              name="password" // Required for React Router action
+              name="password"
               required
               minLength="6"
               className="w-full px-4 py-3 text-gray-900 transition-colors border-2 border-gray-200 outline-none rounded-xl focus:border-brand-purple focus:ring-0"
@@ -60,7 +59,7 @@ const ResetPassword = () => {
             <input
               type="password"
               id="confirmPassword"
-              name="confirmPassword" // Required for React Router action
+              name="confirmPassword"
               required
               minLength="6"
               className="w-full px-4 py-3 text-gray-900 transition-colors border-2 border-gray-200 outline-none rounded-xl focus:border-brand-purple focus:ring-0"
