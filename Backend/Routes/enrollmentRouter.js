@@ -21,4 +21,10 @@ enrollmentRouter.post(
   enrollmentController.completeLesson,
 );
 
+enrollmentRouter.put(
+  "/:enrollmentId/progress",
+  authMiddleware.protect,
+  enrollmentController.updateProgress,
+);
+
 module.exports = enrollmentRouter;

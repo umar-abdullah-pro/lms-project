@@ -5,6 +5,7 @@ import apiClient from "../../api/client";
 import CourseHeader from "./CourseHeader";
 import CourseLessonList from "./CourseLessonList";
 import CourseSidebar from "./CourseSidebar";
+import CourseReviews from "./CourseReviews";
 import Footer from "../../components/Footer";
 import VideoPlayer from "../../components/VideoPlayer";
 
@@ -19,6 +20,8 @@ const CourseDetail = () => {
     progressPercentage,
     handleEnrollment,
     markLessonComplete,
+    updateVideoProgress,
+    enrollment,
   } = useCourseDetails();
 
   // We need local state to track if the lesson they just clicked is locked!
@@ -43,6 +46,12 @@ const CourseDetail = () => {
     }
   };
 
+  // Find initial time for the current lesson
+  const currentLessonProgress = enrollment?.lessonProgress?.find(
+    (p) => p.lessonId === currentLesson?._id
+  );
+  const initialTime = currentLessonProgress?.watchedSeconds || 0;
+
   return (
     <div className="w-full min-h-screen bg-brand-beige">
       <div className="px-6 py-12 mx-auto max-w-7xl md:px-12 md:py-16">
@@ -53,6 +62,10 @@ const CourseDetail = () => {
                 url={currentLesson.videoUrl}
                 title={currentLesson.title}
                 isLocked={isCurrentLessonLocked}
+                initialTime={initialTime}
+                onProgressUpdate={(seconds, totalSeconds) => {
+                  if (isEnrolled) updateVideoProgress(currentLesson._id, seconds, totalSeconds);
+                }}
                 onVideoEnd={() => {
                   if (isEnrolled) markLessonComplete(currentLesson._id);
                 }}
@@ -64,11 +77,18 @@ const CourseDetail = () => {
             <CourseLessonList
               lessons={course.lessons}
               completedLessons={completedLessons}
+              lessonProgress={enrollment?.lessonProgress || []}
               isEnrolled={isEnrolled || isCourseOwner}
               isCourseOwner={isCourseOwner}
               onPlay={handleLessonPlay}
               onMarkComplete={markLessonComplete}
               onDeleteLesson={handleDeleteLesson}
+            />
+            
+            <CourseReviews 
+              courseId={course._id} 
+              isEnrolled={isEnrolled} 
+              progressPercentage={progressPercentage} 
             />
           </div>
 

@@ -133,6 +133,35 @@ export const useCourseDetails = () => {
     }
   };
 
+  const updateVideoProgress = async (lessonId, watchedSeconds, totalSeconds) => {
+    if (!enrollment) return;
+    
+    // Optimistically update local state so the progress reflects immediately on re-visit
+    setEnrollment((prev) => {
+      const lessonProgress = prev.lessonProgress || [];
+      const index = lessonProgress.findIndex((p) => p.lessonId === lessonId);
+      
+      let newProgress = [...lessonProgress];
+      if (index > -1) {
+        newProgress[index] = { ...newProgress[index], watchedSeconds, totalSeconds };
+      } else {
+        newProgress.push({ lessonId, watchedSeconds, totalSeconds, isCompleted: false });
+      }
+      
+      return { ...prev, lessonProgress: newProgress };
+    });
+
+    try {
+      await apiClient.put(`/enrollments/${enrollment._id}/progress`, {
+        lessonId,
+        watchedSeconds,
+        totalSeconds
+      });
+    } catch (error) {
+      console.error("Failed to sync video progress with backend");
+    }
+  };
+
   // 4. Return everything the UI needs
   return {
     course,
@@ -144,6 +173,8 @@ export const useCourseDetails = () => {
     progressPercentage,
     handleEnrollment,
     markLessonComplete,
+    updateVideoProgress,
+    enrollment,
   };
 };
 

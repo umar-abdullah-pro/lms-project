@@ -1,6 +1,9 @@
 import { HiOutlineLockClosed } from "react-icons/hi2";
+import { useRef } from "react";
 
-const VideoPlayer = ({ url, title, isLocked, onVideoEnd }) => {
+const VideoPlayer = ({ url, title, isLocked, initialTime = 0, onVideoEnd, onProgressUpdate }) => {
+  const videoRef = useRef(null);
+  const lastSyncTimeRef = useRef(0);
   //Empty State
   if (!url) {
     return (
@@ -41,11 +44,28 @@ const VideoPlayer = ({ url, title, isLocked, onVideoEnd }) => {
   return (
     <div className="overflow-hidden bg-black shadow-2xl rounded-3xl group">
       <video
+        ref={videoRef}
         key={url}
         controls
         controlsList="nodownload"
         className="w-full aspect-video outline-none"
         autoPlay
+        onLoadedMetadata={() => {
+          if (videoRef.current && initialTime > 0) {
+            videoRef.current.currentTime = initialTime;
+          }
+        }}
+        onTimeUpdate={() => {
+          if (!videoRef.current || !onProgressUpdate) return;
+          
+          const currentTime = videoRef.current.currentTime;
+          const totalTime = videoRef.current.duration || 0;
+          // Sync every 5 seconds
+          if (Math.abs(currentTime - lastSyncTimeRef.current) >= 5) {
+            onProgressUpdate(currentTime, totalTime);
+            lastSyncTimeRef.current = currentTime;
+          }
+        }}
         onEnded={() => {
           if (onVideoEnd) onVideoEnd();
         }}

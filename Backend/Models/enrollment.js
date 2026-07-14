@@ -23,6 +23,15 @@ const enrollmentSchema = mongoose.Schema(
       type: Number,
       default: 0,
     },
+
+    lessonProgress: [
+      {
+        lessonId: { type: mongoose.Schema.Types.ObjectId, ref: "lesson" },
+        watchedSeconds: { type: Number, default: 0 },
+        totalSeconds: { type: Number, default: 0 },
+        isCompleted: { type: Boolean, default: false },
+      },
+    ],
   },
   { timestamps: true },
 );

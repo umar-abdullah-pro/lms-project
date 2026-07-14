@@ -49,4 +49,13 @@ courseRouter.delete(
 
 courseRouter.put('/:id', authMiddleware.protect, authMiddleware.instructorOnly, courseController.updateCourse)
 
+courseRouter.get("/:id/reviews", courseController.getCourseReviews);
+
+courseRouter.post(
+  "/:id/reviews",
+  authMiddleware.protect,
+  authMiddleware.requireVerified,
+  courseController.postCourseReview
+);
+
 module.exports = courseRouter;

@@ -1,5 +1,6 @@
 const { Course } = require("../Models/course");
 const Enrollment = require("../Models/enrollment");
+const Review = require("../Models/review");
 const cloudinary = require("../cloudinaryConfig");
 
 exports.postCreateCourse = async (req, res) => {
@@ -329,5 +330,69 @@ exports.updateCourse = async (req, res) => {
       message: "Server error while updating course", 
       error: error.message 
     });
+  }
+};
+
+exports.getCourseReviews = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const reviews = await Review.find({ course: courseId })
+      .populate("student", "name avatar")
+      .sort("-createdAt");
+
+    res.status(200).json({ success: true, data: reviews });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error fetching reviews", error: error.message });
+  }
+};
+
+exports.postCourseReview = async (req, res) => {
+  try {
+    const courseId = req.params.id;
+    const { rating, comment } = req.body;
+    const studentId = req.user._id;
+
+    // Verify enrollment
+    const enrollment = await Enrollment.findOne({ course: courseId, student: studentId });
+    if (!enrollment) {
+      return res.status(403).json({ success: false, message: "You must be enrolled to leave a review." });
+    }
+
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found." });
+    }
+
+    // Verify completion (Optional, but per requirements)
+    const isCompleted = enrollment.completedLessons.length === course.lessons.length && course.lessons.length > 0;
+    if (!isCompleted) {
+      return res.status(403).json({ success: false, message: "You must complete the course before leaving a review." });
+    }
+
+    // Check for existing review
+    const existingReview = await Review.findOne({ course: courseId, student: studentId });
+    if (existingReview) {
+      return res.status(400).json({ success: false, message: "You have already reviewed this course." });
+    }
+
+    // Create review
+    const review = await Review.create({
+      course: courseId,
+      student: studentId,
+      rating: Number(rating),
+      comment
+    });
+
+    // Update aggregate on course
+    const newCount = course.reviewCount + 1;
+    const newAverage = ((course.averageRating * course.reviewCount) + Number(rating)) / newCount;
+    
+    course.reviewCount = newCount;
+    course.averageRating = newAverage;
+    await course.save();
+
+    res.status(201).json({ success: true, data: review, message: "Review submitted successfully" });
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Error posting review", error: error.message });
   }
 };

@@ -65,6 +65,16 @@ const courseSchema = mongoose.Schema(
       default: false,
     },
 
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+
+    reviewCount: {
+      type: Number,
+      default: 0,
+    },
+
     lessons: [lessonSchema],
   },
   { timestamps: true },

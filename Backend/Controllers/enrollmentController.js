@@ -94,3 +94,50 @@ exports.completeLesson = async (req, res) => {
     res.status(500).json({ success: false, message: error.message });
   }
 };
+
+exports.updateProgress = async (req, res) => {
+  try {
+    const { enrollmentId } = req.params;
+    const { lessonId, watchedSeconds, totalSeconds } = req.body;
+
+    const enrollment = await Enrollment.findById(enrollmentId);
+    if (!enrollment) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Enrollment not found" });
+    }
+
+    if (enrollment.student.toString() !== req.user._id.toString()) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to modify someone else's progress.",
+      });
+    }
+
+    // Find if the lesson progress already exists
+    const progressIndex = enrollment.lessonProgress.findIndex(
+      (p) => p.lessonId.toString() === lessonId
+    );
+
+    if (progressIndex > -1) {
+      // Update existing
+      enrollment.lessonProgress[progressIndex].watchedSeconds = watchedSeconds;
+      if (totalSeconds) {
+        enrollment.lessonProgress[progressIndex].totalSeconds = totalSeconds;
+      }
+    } else {
+      // Create new entry
+      enrollment.lessonProgress.push({
+        lessonId,
+        watchedSeconds,
+        totalSeconds: totalSeconds || 0,
+      });
+    }
+
+    await enrollment.save();
+
+    res.status(200).json({ success: true, data: enrollment.lessonProgress });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};

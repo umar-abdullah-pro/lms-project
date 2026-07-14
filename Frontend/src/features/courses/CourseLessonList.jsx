@@ -8,6 +8,7 @@ import { FiTrash2 } from "react-icons/fi";
 const CourseLessonList = ({
   lessons,
   completedLessons,
+  lessonProgress = [],
   isEnrolled,
   isCourseOwner,
   onDeleteLesson,
@@ -37,34 +38,46 @@ const CourseLessonList = ({
             );
 
             const isLocked = !isEnrolled && chronologicalNumber !== 1;
+            
+            // Calculate progress line percentage
+            const progressObj = lessonProgress.find((p) => p.lessonId === lesson._id);
+            let progressPercent = 0;
+            if (isCompleted) {
+              progressPercent = 100;
+            } else if (progressObj && progressObj.totalSeconds > 0) {
+              progressPercent = (progressObj.watchedSeconds / progressObj.totalSeconds) * 100;
+            }
 
             return (
               <div
                 key={lesson._id}
                 onClick={() => onPlay(lesson, isLocked)}
-                className={`flex items-center justify-between p-5 transition-all border shadow-sm rounded-2xl cursor-pointer
+                className={`relative overflow-hidden flex items-center justify-between p-5 transition-all border shadow-sm rounded-2xl cursor-pointer
                   ${isLocked ? "bg-gray-50 border-gray-100 hover:bg-gray-100 opacity-80" : "bg-white border-gray-200 hover:border-brand-purple hover:shadow-md"}
                 `}
               >
-                <div className="flex items-center gap-5">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      if (!isLocked && isEnrolled) onMarkComplete(lesson._id);
-                    }}
-                    disabled={isLocked || !isEnrolled}
-                    className="disabled:opacity-50"
-                  >
+                {/* Sleek Progress Line */}
+                {!isLocked && (progressPercent > 0 || isCompleted) && (
+                  <div className="absolute bottom-0 left-0 h-1 bg-gray-100 w-full">
+                    <div 
+                      className="h-full bg-brand-purple transition-all duration-500 ease-out" 
+                      style={{ width: `${Math.min(progressPercent, 100)}%` }} 
+                    />
+                  </div>
+                )}
+                
+                <div className="flex items-center gap-5 z-10">
+                  <div className="shrink-0 text-gray-200">
                     <div
                       className={
                         isCompleted
                           ? "text-[#1de9b6]"
-                          : "text-gray-200 hover:text-[#1de9b6]"
+                          : "text-gray-200"
                       }
                     >
                       <HiOutlineCheckCircle className="w-6 h-6" />
                     </div>
-                  </button>
+                  </div>
 
                   <div>
                     <div className="flex items-center gap-4 mb-1">
