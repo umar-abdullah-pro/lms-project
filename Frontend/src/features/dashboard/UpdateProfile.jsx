@@ -24,8 +24,7 @@ const UpdateProfile = () => {
           <div className="w-20 h-20 overflow-hidden bg-white border-2 rounded-full border-brand-purple/20">
             <img
               src={
-                user.avatar ||
-                `https:
+                user.avatar || "https://api.dicebear.com/7.x/bottts/svg?seed=Learnly",
               }
               alt={user.name}
               className="object-cover w-full h-full"
