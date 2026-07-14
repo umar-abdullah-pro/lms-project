@@ -11,6 +11,10 @@ const lessonSchema = mongoose.Schema({
     required: true,
   },
 
+  videoPublicId: {
+    type: String,
+  },
+
   description: {
     type: String,
     required: true,

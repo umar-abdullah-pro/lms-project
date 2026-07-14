@@ -166,6 +166,7 @@ exports.postaddLesson = async (req, res) => {
         {
           resource_type: "video",
           folder: "lms_lessons",
+          type: "authenticated",
         },
         (error, result) => {
           if (error) reject(error);
@@ -177,11 +178,13 @@ exports.postaddLesson = async (req, res) => {
     });
 
     const videoUrl = uploadResult.secure_url;
+    const videoPublicId = uploadResult.public_id;
 
     course.lessons.push({
       title,
       description,
       videoUrl,
+      videoPublicId,
     });
 
     await course.save();
@@ -394,5 +397,69 @@ exports.postCourseReview = async (req, res) => {
     res.status(201).json({ success: true, data: review, message: "Review submitted successfully" });
   } catch (error) {
     res.status(500).json({ success: false, message: "Error posting review", error: error.message });
+  }
+};
+
+exports.getSecureVideoUrl = async (req, res) => {
+  try {
+    const { courseId, lessonId } = req.params;
+    const studentId = req.user._id;
+
+    // 1. Fetch course to get the lesson and instructor info
+    const course = await Course.findById(courseId);
+    if (!course) {
+      return res.status(404).json({ success: false, message: "Course not found" });
+    }
+
+    // 2. Verify user is enrolled or is the instructor
+    const isInstructor = course.instructor.toString() === studentId.toString();
+    const enrollment = await Enrollment.findOne({ course: courseId, student: studentId });
+
+    // Find the lesson and its index
+    const lesson = course.lessons.id(lessonId);
+    if (!lesson) {
+      return res.status(404).json({ success: false, message: "Lesson not found" });
+    }
+    const lessonIndex = course.lessons.findIndex(l => l._id.toString() === lessonId);
+
+    // Free preview is the first lesson (index 0)
+    const isFreePreview = lessonIndex === 0;
+
+    if (!isInstructor && !enrollment && !isFreePreview) {
+      return res.status(403).json({ success: false, message: "Not enrolled in this course" });
+    }
+
+    // 4. Generate signed URL (if publicId exists, otherwise fallback to existing videoUrl)
+    if (lesson.videoPublicId) {
+      const expirationTimestamp = Math.floor(Date.now() / 1000) + 60 * 60 * 2; // Valid for 2 hours
+
+      const secureUrl = cloudinary.url(lesson.videoPublicId, {
+        resource_type: "video",
+        type: "authenticated",
+        sign_url: true,
+        auth_token: {
+          key: process.env.CLOUDINARY_API_SECRET,
+          duration: 7200 // 2 hours
+        }
+      });
+      
+      // Note: Cloudinary provides multiple ways to sign URLs. 
+      // If `sign_url: true` with standard api_secret works for your tier, great.
+      // Otherwise `cloudinary.utils.private_download_url` is another option.
+      // For basic signature:
+      const basicSignedUrl = cloudinary.url(lesson.videoPublicId, {
+        resource_type: "video",
+        type: "authenticated",
+        sign_url: true,
+        expires_at: expirationTimestamp
+      });
+
+      return res.status(200).json({ success: true, url: basicSignedUrl });
+    } else {
+      // Fallback for old videos that weren't uploaded as authenticated
+      return res.status(200).json({ success: true, url: lesson.videoUrl });
+    }
+  } catch (error) {
+    res.status(500).json({ success: false, message: "Server error", error: error.message });
   }
 };

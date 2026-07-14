@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import useCourseDetails from "../../hooks/useCourseDetails";
 import apiClient from "../../api/client";
 
@@ -26,6 +26,30 @@ const CourseDetail = () => {
 
   // We need local state to track if the lesson they just clicked is locked!
   const [isCurrentLessonLocked, setIsCurrentLessonLocked] = useState(false);
+  const [secureVideoUrl, setSecureVideoUrl] = useState(null);
+
+  useEffect(() => {
+    const fetchSecureUrl = async () => {
+      if (!currentLesson || isCurrentLessonLocked) {
+        setSecureVideoUrl(null);
+        return;
+      }
+      
+      try {
+        const { data } = await apiClient.get(`/courses/${course._id}/lessons/${currentLesson._id}/video-url`);
+        if (data.success && data.url) {
+          setSecureVideoUrl(data.url);
+        } else {
+          setSecureVideoUrl(currentLesson.videoUrl); // fallback
+        }
+      } catch (err) {
+        console.error("Failed to fetch secure video URL", err);
+        setSecureVideoUrl(currentLesson.videoUrl); // fallback
+      }
+    };
+
+    fetchSecureUrl();
+  }, [currentLesson, isCurrentLessonLocked, course?._id]);
 
   const handleLessonPlay = (lesson, lockedStatus) => {
     setCurrentLesson(lesson);
@@ -59,7 +83,7 @@ const CourseDetail = () => {
           <div className="lg:col-span-2">
             {currentLesson ? (
               <VideoPlayer
-                url={currentLesson.videoUrl}
+                url={secureVideoUrl || currentLesson.videoUrl}
                 title={currentLesson.title}
                 isLocked={isCurrentLessonLocked}
                 initialTime={initialTime}

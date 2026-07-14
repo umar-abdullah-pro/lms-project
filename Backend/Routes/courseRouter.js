@@ -58,4 +58,10 @@ courseRouter.post(
   courseController.postCourseReview
 );
 
+courseRouter.get(
+  "/:courseId/lessons/:lessonId/video-url",
+  authMiddleware.protect,
+  courseController.getSecureVideoUrl
+);
+
 module.exports = courseRouter;
