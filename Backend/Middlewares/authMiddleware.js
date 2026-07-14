@@ -51,4 +51,20 @@ const instructorOnly = (req, res, next) => {
   }
 };
 
-module.exports = { protect, instructorOnly, requireVerified };
+//Attaches req.user if a valid token is present, but never blocks the request.
+//Used for public routes that should still behave differently for logged-in users.
+const optionalAuth = async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+  if (authHeader && authHeader.startsWith("Bearer")) {
+    try {
+      const token = authHeader.split(" ")[1];
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      req.user = await user.findById(decoded.id).select("-password");
+    } catch (error) {
+      // Invalid or expired token: proceed as a logged-out request instead of blocking.
+    }
+  }
+  next();
+};
+
+module.exports = { protect, instructorOnly, requireVerified, optionalAuth };

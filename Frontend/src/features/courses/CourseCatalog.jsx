@@ -1,7 +1,7 @@
 import { useLoaderData, Form, Link, useNavigation, useSubmit, useLocation } from "react-router-dom";
 import CourseCard from "../../components/CourseCard";
 
-const categories = ["All", "Development", "Business", "Design", "Marketing"]; // Adjust to match your DB
+const categories = ["All", "Programming", "Design", "Business", "Marketing", "General", "Uncategorized"];
 
 const CourseCatalog = () => {
   const { courses, meta, searchParams } = useLoaderData();

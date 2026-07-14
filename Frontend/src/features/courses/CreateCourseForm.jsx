@@ -1,4 +1,3 @@
-// Frontend/src/pages/CreateCourse.jsx
 import { useEffect } from "react";
 import {
   Form,
@@ -7,7 +6,7 @@ import {
   useNavigate,
 } from "react-router-dom";
 
-const CreateCourse = () => {
+const CreateCourseForm = () => {
   const actionData = useActionData();
   const navigation = useNavigation();
   const navigate = useNavigate();
@@ -21,14 +20,10 @@ const CreateCourse = () => {
   }, [actionData, navigate]);
 
   return (
-    <div className="min-h-screen px-6 py-12 bg-brand-beige md:px-12">
       <div className="max-w-3xl mx-auto">
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-extrabold text-gray-900 lg:text-5xl">
-            Create a
-            <span className="underline decoration-brand-yellow decoration-4 underline-offset-8">
-              New Course
-            </span>
+          <h1 className="text-4xl font-extrabold text-gray-900 lg:text-5xl underline decoration-brand-yellow decoration-4 underline-offset-8">
+            Create a New Course
           </h1>
           <p className="mt-4 text-lg text-gray-600">
             Share your knowledge with the Learnly community.
@@ -148,8 +143,7 @@ const CreateCourse = () => {
           </Form>
         </div>
       </div>
-    </div>
   );
 };
 
-export default CreateCourse;
+export default CreateCourseForm;

@@ -22,7 +22,11 @@ courseRouter.get(
   courseController.getInstructorDashboard,
 );
 
-courseRouter.get("/:id", courseController.getCourseById);
+courseRouter.get(
+  "/:id",
+  authMiddleware.optionalAuth,
+  courseController.getCourseById,
+);
 
 courseRouter.post(
   "/:id/lessons",
@@ -47,7 +51,12 @@ courseRouter.delete(
   courseController.deleteLesson,
 );
 
-courseRouter.put('/:id', authMiddleware.protect, authMiddleware.instructorOnly, courseController.updateCourse)
+courseRouter.put(
+  "/:id",
+  authMiddleware.protect,
+  authMiddleware.instructorOnly,
+  courseController.updateCourse,
+);
 
 courseRouter.get("/:id/reviews", courseController.getCourseReviews);
 
@@ -55,13 +64,13 @@ courseRouter.post(
   "/:id/reviews",
   authMiddleware.protect,
   authMiddleware.requireVerified,
-  courseController.postCourseReview
+  courseController.postCourseReview,
 );
 
 courseRouter.get(
   "/:courseId/lessons/:lessonId/video-url",
   authMiddleware.protect,
-  courseController.getSecureVideoUrl
+  courseController.getSecureVideoUrl,
 );
 
 module.exports = courseRouter;

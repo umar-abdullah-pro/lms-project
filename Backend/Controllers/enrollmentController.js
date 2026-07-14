@@ -13,6 +13,13 @@ exports.enrollInCourse = async (req, res) => {
         .json({ success: false, message: "Course not found" });
     }
 
+    if (existingCourse.price > 0) {
+      return res.status(403).json({
+        success: false,
+        message: "This is a paid course. Please complete payment to enroll.",
+      });
+    }
+
     const existingEnrollment = await Enrollment.findOne({
       student: student,
       course: course,
@@ -116,7 +123,7 @@ exports.updateProgress = async (req, res) => {
 
     // Find if the lesson progress already exists
     const progressIndex = enrollment.lessonProgress.findIndex(
-      (p) => p.lessonId.toString() === lessonId
+      (p) => p.lessonId.toString() === lessonId,
     );
 
     if (progressIndex > -1) {

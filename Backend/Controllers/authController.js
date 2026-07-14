@@ -51,7 +51,7 @@ exports.postUserLogin = async (req, res) => {
   try {
     // Check if user exists
     const existingUser = await user.findOne({ email });
-    if (!user) {
+    if (!existingUser) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
 
@@ -144,7 +144,7 @@ exports.forgotPassword = async (req, res) => {
 
     // 4. Create the reset URL (pointing to your React frontend)
     // IMPORTANT: Make sure this port matches your Vite frontend (default is usually 5173)
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
     const message = `You requested a password reset. Please click this link to reset your password:\n\n${resetUrl}\n\nThis link is valid for 10 minutes. If you did not request this, please ignore this email.`;
 
@@ -271,7 +271,7 @@ exports.sendVerificationEmail = async (req, res) => {
     }
 
     // 4. Send the email
-    const verifyUrl = `http://localhost:5173/verify-email/${verificationToken}`;
+    const verifyUrl = `${process.env.FRONTEND_URL}/verify-email/${verificationToken}`;
     const message = `Welcome! Please click this link to verify your email address:\n\n${verifyUrl}`;
 
     await sendEmail({

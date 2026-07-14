@@ -63,15 +63,15 @@ exports.getAllCourses = async (req, res) => {
   try {
     // 1. Grab parameters from the URL query, setting defaults
     const { search, category, page = 1, limit = 10 } = req.query;
-    
+
     // 2. Build a dynamic query object
-    let query = {};
+    let query = { isPublished: true };
 
     // If a search term exists, look in title OR description (case-insensitive)
     if (search) {
       query.$or = [
         { title: { $regex: search, $options: "i" } },
-        { description: { $regex: search, $options: "i" } }
+        { description: { $regex: search, $options: "i" } },
       ];
     }
 
@@ -99,9 +99,9 @@ exports.getAllCourses = async (req, res) => {
         meta: {
           totalPages,
           currentPage: Number(page),
-          totalCourses
-        }
-      }
+          totalCourses,
+        },
+      },
     });
   } catch (error) {
     console.log("Error fetching courses:", error);
@@ -121,9 +121,35 @@ exports.getCourseById = async (req, res) => {
         error: "Course not found",
       });
     }
+
+    const isOwner =
+      !!req.user &&
+      course.instructor._id.toString() === req.user._id.toString();
+
+    let isEnrolled = false;
+    if (req.user && !isOwner) {
+      const enrollment = await Enrollment.findOne({
+        student: req.user._id,
+        course: course._id,
+      });
+      isEnrolled = !!enrollment;
+    }
+
+    const courseData = course.toObject();
+
+    // Only the first lesson is a free preview. Strip the real video source from
+    // every other lesson unless the requester owns the course or is enrolled in it.
+    if (!isOwner && !isEnrolled) {
+      courseData.lessons = courseData.lessons.map((lesson, index) => {
+        if (index === 0) return lesson;
+        const { videoUrl, videoPublicId, ...lessonWithoutVideo } = lesson;
+        return lessonWithoutVideo;
+      });
+    }
+
     res.status(200).json({
       success: true,
-      data: course,
+      data: courseData,
     });
   } catch (error) {
     res.status(400).json({
@@ -269,7 +295,6 @@ exports.deleteLesson = async (req, res) => {
 };
 
 exports.deleteCourse = async (req, res) => {
-
   try {
     const courseId = req.params.id;
     const course = await Course.findById(courseId);
@@ -305,12 +330,19 @@ exports.updateCourse = async (req, res) => {
     // 1. Find the course
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ success: false, message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
 
     // 2. Security Check: Ensure the logged-in user actually owns this course
     if (course.instructor.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: "Not authorized to edit this course" });
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "Not authorized to edit this course",
+        });
     }
 
     // 3. Update the field if it was provided
@@ -321,17 +353,16 @@ exports.updateCourse = async (req, res) => {
     // Save to database
     await course.save();
 
-    res.status(200).json({ 
-      success: true, 
+    res.status(200).json({
+      success: true,
       message: "Course updated successfully",
-      data: course 
+      data: course,
     });
-
   } catch (error) {
-    res.status(500).json({ 
-      success: false, 
-      message: "Server error while updating course", 
-      error: error.message 
+    res.status(500).json({
+      success: false,
+      message: "Server error while updating course",
+      error: error.message,
     });
   }
 };
@@ -345,7 +376,13 @@ exports.getCourseReviews = async (req, res) => {
 
     res.status(200).json({ success: true, data: reviews });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error fetching reviews", error: error.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error fetching reviews",
+        error: error.message,
+      });
   }
 };
 
@@ -356,26 +393,51 @@ exports.postCourseReview = async (req, res) => {
     const studentId = req.user._id;
 
     // Verify enrollment
-    const enrollment = await Enrollment.findOne({ course: courseId, student: studentId });
+    const enrollment = await Enrollment.findOne({
+      course: courseId,
+      student: studentId,
+    });
     if (!enrollment) {
-      return res.status(403).json({ success: false, message: "You must be enrolled to leave a review." });
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "You must be enrolled to leave a review.",
+        });
     }
 
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ success: false, message: "Course not found." });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found." });
     }
 
     // Verify completion (Optional, but per requirements)
-    const isCompleted = enrollment.completedLessons.length === course.lessons.length && course.lessons.length > 0;
+    const isCompleted =
+      enrollment.completedLessons.length === course.lessons.length &&
+      course.lessons.length > 0;
     if (!isCompleted) {
-      return res.status(403).json({ success: false, message: "You must complete the course before leaving a review." });
+      return res
+        .status(403)
+        .json({
+          success: false,
+          message: "You must complete the course before leaving a review.",
+        });
     }
 
     // Check for existing review
-    const existingReview = await Review.findOne({ course: courseId, student: studentId });
+    const existingReview = await Review.findOne({
+      course: courseId,
+      student: studentId,
+    });
     if (existingReview) {
-      return res.status(400).json({ success: false, message: "You have already reviewed this course." });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          message: "You have already reviewed this course.",
+        });
     }
 
     // Create review
@@ -383,20 +445,33 @@ exports.postCourseReview = async (req, res) => {
       course: courseId,
       student: studentId,
       rating: Number(rating),
-      comment
+      comment,
     });
 
     // Update aggregate on course
     const newCount = course.reviewCount + 1;
-    const newAverage = ((course.averageRating * course.reviewCount) + Number(rating)) / newCount;
-    
+    const newAverage =
+      (course.averageRating * course.reviewCount + Number(rating)) / newCount;
+
     course.reviewCount = newCount;
     course.averageRating = newAverage;
     await course.save();
 
-    res.status(201).json({ success: true, data: review, message: "Review submitted successfully" });
+    res
+      .status(201)
+      .json({
+        success: true,
+        data: review,
+        message: "Review submitted successfully",
+      });
   } catch (error) {
-    res.status(500).json({ success: false, message: "Error posting review", error: error.message });
+    res
+      .status(500)
+      .json({
+        success: false,
+        message: "Error posting review",
+        error: error.message,
+      });
   }
 };
 
@@ -408,25 +483,36 @@ exports.getSecureVideoUrl = async (req, res) => {
     // 1. Fetch course to get the lesson and instructor info
     const course = await Course.findById(courseId);
     if (!course) {
-      return res.status(404).json({ success: false, message: "Course not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Course not found" });
     }
 
     // 2. Verify user is enrolled or is the instructor
     const isInstructor = course.instructor.toString() === studentId.toString();
-    const enrollment = await Enrollment.findOne({ course: courseId, student: studentId });
+    const enrollment = await Enrollment.findOne({
+      course: courseId,
+      student: studentId,
+    });
 
     // Find the lesson and its index
     const lesson = course.lessons.id(lessonId);
     if (!lesson) {
-      return res.status(404).json({ success: false, message: "Lesson not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Lesson not found" });
     }
-    const lessonIndex = course.lessons.findIndex(l => l._id.toString() === lessonId);
+    const lessonIndex = course.lessons.findIndex(
+      (l) => l._id.toString() === lessonId,
+    );
 
     // Free preview is the first lesson (index 0)
     const isFreePreview = lessonIndex === 0;
 
     if (!isInstructor && !enrollment && !isFreePreview) {
-      return res.status(403).json({ success: false, message: "Not enrolled in this course" });
+      return res
+        .status(403)
+        .json({ success: false, message: "Not enrolled in this course" });
     }
 
     // 4. Generate signed URL (if publicId exists, otherwise fallback to existing videoUrl)
@@ -439,11 +525,11 @@ exports.getSecureVideoUrl = async (req, res) => {
         sign_url: true,
         auth_token: {
           key: process.env.CLOUDINARY_API_SECRET,
-          duration: 7200 // 2 hours
-        }
+          duration: 7200, // 2 hours
+        },
       });
-      
-      // Note: Cloudinary provides multiple ways to sign URLs. 
+
+      // Note: Cloudinary provides multiple ways to sign URLs.
       // If `sign_url: true` with standard api_secret works for your tier, great.
       // Otherwise `cloudinary.utils.private_download_url` is another option.
       // For basic signature:
@@ -451,7 +537,7 @@ exports.getSecureVideoUrl = async (req, res) => {
         resource_type: "video",
         type: "authenticated",
         sign_url: true,
-        expires_at: expirationTimestamp
+        expires_at: expirationTimestamp,
       });
 
       return res.status(200).json({ success: true, url: basicSignedUrl });
@@ -460,6 +546,8 @@ exports.getSecureVideoUrl = async (req, res) => {
       return res.status(200).json({ success: true, url: lesson.videoUrl });
     }
   } catch (error) {
-    res.status(500).json({ success: false, message: "Server error", error: error.message });
+    res
+      .status(500)
+      .json({ success: false, message: "Server error", error: error.message });
   }
 };
