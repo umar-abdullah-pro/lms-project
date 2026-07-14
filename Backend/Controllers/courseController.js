@@ -13,9 +13,16 @@ exports.postCreateCourse = async (req, res) => {
         error: "Title and Description are required",
       });
     }
+    if (Number(price) < 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Price cannot be negative" });
+    }
+
     const publishStatus = isPublished === "true";
 
     let thumbnailUrl = "";
+    let thumbnailPublicId = "";
 
     if (req.file) {
       const uploadResult = await new Promise((resolve, reject) => {
@@ -29,6 +36,7 @@ exports.postCreateCourse = async (req, res) => {
         uploadStream.end(req.file.buffer);
       });
       thumbnailUrl = uploadResult.secure_url;
+      thumbnailPublicId = uploadResult.public_id;
     }
 
     let formattedCategory = req.body.category
@@ -41,6 +49,7 @@ exports.postCreateCourse = async (req, res) => {
       price: Number(price) || 0,
       category: formattedCategory,
       thumbnail: thumbnailUrl,
+      thumbnailPublicId: thumbnailPublicId,
       instructor: req.user._id,
       isPublished: publishStatus,
     });
@@ -278,6 +287,12 @@ exports.deleteLesson = async (req, res) => {
       });
     }
 
+    const lesson = course.lessons.id(lessonId);
+    if (lesson && lesson.videoPublicId) {
+      // Clean up from cloudinary
+      await cloudinary.uploader.destroy(lesson.videoPublicId, { resource_type: "video" });
+    }
+
     course.lessons = course.lessons.filter(
       (lesson) => lesson._id.toString() !== lessonId,
     );
@@ -309,6 +324,22 @@ exports.deleteCourse = async (req, res) => {
         message: "Not authorized to delete this course",
       });
     }
+
+    // 1. Delete all lesson videos from Cloudinary
+    for (const lesson of course.lessons) {
+      if (lesson.videoPublicId) {
+        await cloudinary.uploader.destroy(lesson.videoPublicId, { resource_type: "video" });
+      }
+    }
+
+    // 2. Delete the course thumbnail from Cloudinary
+    if (course.thumbnailPublicId) {
+      await cloudinary.uploader.destroy(course.thumbnailPublicId); // default is image
+    }
+
+    // 3. Delete related database documents (Enrollments and Reviews)
+    await Enrollment.deleteMany({ course: courseId });
+    await Review.deleteMany({ course: courseId });
 
     await Course.findByIdAndDelete(courseId);
 
@@ -370,11 +401,29 @@ exports.updateCourse = async (req, res) => {
 exports.getCourseReviews = async (req, res) => {
   try {
     const courseId = req.params.id;
+    const { page = 1, limit = 5 } = req.query;
+
+    const skip = (Number(page) - 1) * Number(limit);
+    const totalReviews = await Review.countDocuments({ course: courseId });
+    const totalPages = Math.ceil(totalReviews / Number(limit));
+
     const reviews = await Review.find({ course: courseId })
       .populate("student", "name avatar")
-      .sort("-createdAt");
+      .sort("-createdAt")
+      .skip(skip)
+      .limit(Number(limit));
 
-    res.status(200).json({ success: true, data: reviews });
+    res.status(200).json({ 
+      success: true, 
+      data: {
+        reviews,
+        meta: {
+          totalPages,
+          currentPage: Number(page),
+          totalReviews,
+        }
+      } 
+    });
   } catch (error) {
     res
       .status(500)
@@ -391,6 +440,10 @@ exports.postCourseReview = async (req, res) => {
     const courseId = req.params.id;
     const { rating, comment } = req.body;
     const studentId = req.user._id;
+
+    if (!rating || rating < 1 || rating > 5) {
+      return res.status(400).json({ success: false, message: "Rating must be between 1 and 5" });
+    }
 
     // Verify enrollment
     const enrollment = await Enrollment.findOne({

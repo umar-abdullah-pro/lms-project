@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const dotenv = require("dotenv");
 const express = require("express");
 const cors = require("cors");
+const rateLimit = require("express-rate-limit");
 
 dotenv.config();
 
@@ -14,18 +15,35 @@ const paymentRouter = require("./Routes/paymentRouter");
 
 const app = express();
 
-const allowedOrigins = process.env.FRONTEND_URL
-  ? [process.env.FRONTEND_URL]
-  : ["http://localhost:5173", "http://localhost:5174"];
-
+// Global middlewares
+app.use(express.json());
 app.use(
   cors({
-    origin: allowedOrigins,
-    credentials: true,
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Allow requests from this origin
+    methods: "GET,POST,PUT,DELETE", // Allowed methods
+    credentials: true, // Allow cookies to be sent if needed
   }),
 );
 
-app.use(express.json());
+
+// Rate limiters for authentication routes
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 10, // Limit each IP to 10 login/forgot-password requests per `window` (here, per 15 minutes)
+  message: "Too many attempts from this IP, please try again after 15 minutes",
+  standardHeaders: true, // Return rate limit info in the `RateLimit-*` headers
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers
+});
+
+// Apply rate limiting to specific routes
+app.use("/api/auth/login", authLimiter);
+app.use("/api/auth/forgot-password", authLimiter);
+
+// Routes
+app.use("/api/auth", authRouter);
+app.use("/api/courses", courseRouter);
+app.use("/api/enrollments", enrollmentRouter);
+app.use("/api/payments", paymentRouter);
 
 mongoose
   .connect(process.env.DB_PATH)
@@ -41,7 +59,4 @@ mongoose
     process.exit(1);
   });
 
-app.use("/api/auth", authRouter);
-app.use("/api/courses", courseRouter);
-app.use("/api/enrollments", enrollmentRouter);
-app.use("/api/payments", paymentRouter);
+

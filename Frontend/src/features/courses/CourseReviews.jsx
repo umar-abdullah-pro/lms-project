@@ -5,6 +5,8 @@ import { HiStar, HiOutlineStar } from "react-icons/hi2";
 const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(false);
   
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
@@ -13,16 +15,20 @@ const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
   const [hasReviewed, setHasReviewed] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchReviews = async () => {
+  const fetchReviews = async (pageNum = 1) => {
     try {
-      setLoading(true);
-      const { data } = await apiClient.get(`/courses/${courseId}/reviews`);
+      if (pageNum === 1) setLoading(true);
+      const { data } = await apiClient.get(`/courses/${courseId}/reviews?page=${pageNum}&limit=5`);
       if (data.success) {
-        setReviews(data.data);
-        // We will assume the user has not reviewed until we check the backend or their token
-        // In a real app we might check if user._id matches any review.student._id
+        if (pageNum === 1) {
+          setReviews(data.data.reviews);
+        } else {
+          setReviews((prev) => [...prev, ...data.data.reviews]);
+        }
+        setHasMore(data.data.meta.currentPage < data.data.meta.totalPages);
       }
-    } catch (err) {
+    }
+    catch (err) {
       console.error("Failed to fetch reviews", err);
     } finally {
       setLoading(false);
@@ -30,8 +36,14 @@ const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
   };
 
   useEffect(() => {
-    fetchReviews();
+    fetchReviews(1);
   }, [courseId]);
+
+  const loadMore = () => {
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchReviews(nextPage);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -53,7 +65,8 @@ const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
       });
       if (data.success) {
         setHasReviewed(true);
-        fetchReviews(); // Refresh list
+        setPage(1);
+        fetchReviews(1); // Refresh list from beginning
       }
     } catch (err) {
       setError(err.response?.data?.message || "Failed to submit review.");
@@ -152,6 +165,16 @@ const CourseReviews = ({ courseId, isEnrolled, progressPercentage }) => {
               <p className="text-gray-600">{review.comment}</p>
             </div>
           ))}
+          {hasMore && (
+            <div className="flex justify-center mt-4">
+              <button
+                onClick={loadMore}
+                className="px-6 py-2 text-sm font-bold text-gray-700 transition-colors bg-gray-100 rounded-xl hover:bg-gray-200"
+              >
+                Load More
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -52,6 +52,10 @@ const courseSchema = mongoose.Schema(
       default: "",
     },
 
+    thumbnailPublicId: {
+      type: String,
+    },
+
     instructor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
@@ -62,6 +66,7 @@ const courseSchema = mongoose.Schema(
       type: Number,
       required: true,
       default: 0,
+      min: 0,
     },
 
     isPublished: {
@@ -85,5 +90,4 @@ const courseSchema = mongoose.Schema(
 );
 
 const Course = mongoose.model("course", courseSchema);
-const Lesson = mongoose.model("lesson", lessonSchema);
-module.exports = { Course, Lesson };
+module.exports = { Course };

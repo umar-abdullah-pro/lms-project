@@ -6,12 +6,14 @@ const enrollmentSchema = mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
+      index: true,
     },
 
     course: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "course",
       required: true,
+      index: true,
     },
 
     completedLessons: {
@@ -35,5 +37,7 @@ const enrollmentSchema = mongoose.Schema(
   },
   { timestamps: true },
 );
+
+enrollmentSchema.index({ student: 1, course: 1 }, { unique: true });
 
 module.exports = mongoose.model("Enrollment", enrollmentSchema);

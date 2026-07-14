@@ -4,8 +4,8 @@ const { Course } = require("../Models/course");
 const Enrollment = require("../Models/enrollment");
 
 const razorpayInstance = new Razorpay({
-  key_id: process.env.RAZORPAY_TEST_API_KEY,
-  key_secret: process.env.RAZORPAY_TEST_API_SECRET,
+  key_id: process.env.RAZORPAY_API_KEY || process.env.RAZORPAY_TEST_API_KEY,
+  key_secret: process.env.RAZORPAY_API_SECRET || process.env.RAZORPAY_TEST_API_SECRET,
 });
 
 // 1. GENERATE THE BILL (Order)
@@ -59,7 +59,7 @@ exports.verifyRazorpayPayment = async (req, res) => {
     //Cryptographically verify the signature using your Secret Key
     const body = razorpay_order_id + "|" + razorpay_payment_id;
     const expectedSignature = crypto
-      .createHmac("sha256", process.env.RAZORPAY_TEST_API_SECRET)
+      .createHmac("sha256", process.env.RAZORPAY_API_SECRET || process.env.RAZORPAY_TEST_API_SECRET)
       .update(body.toString())
       .digest("hex");
 

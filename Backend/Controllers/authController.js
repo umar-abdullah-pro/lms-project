@@ -96,6 +96,8 @@ exports.updateProfile = async (req, res) => {
     // Update fields if they are provided in the request body
     existingUser.name = req.body.name || existingUser.name;
 
+    let emailChanged = false;
+
     if (req.body.email && req.body.email !== existingUser.email) {
       const emailExists = await user.findOne({ email: req.body.email });
       if (emailExists) {
@@ -103,10 +105,15 @@ exports.updateProfile = async (req, res) => {
           .status(400)
           .json({ success: false, message: "Email is already in use." });
       }
+      emailChanged = true;
+      existingUser.isEmailVerified = false;
     }
     existingUser.email = req.body.email || existingUser.email;
 
     const updatedUser = await existingUser.save();
+
+    // If the email was changed, we could automatically send a verification email, 
+    // but the easiest approach is to just let the frontend know so it prompts the user.
 
     // Send back the updated user data (DO NOT send the password back!)
     res.status(200).json({
@@ -117,7 +124,9 @@ exports.updateProfile = async (req, res) => {
         email: updatedUser.email,
         role: updatedUser.role,
         avatar: updatedUser.avatar,
+        isEmailVerified: updatedUser.isEmailVerified,
       },
+      message: emailChanged ? "Profile updated. Please verify your new email address." : "Profile updated successfully.",
     });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
