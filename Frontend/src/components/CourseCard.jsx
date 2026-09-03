@@ -22,7 +22,7 @@ const CourseCard = ({ course, index }) => {
   ];
   const theme = colors[index % 3];
 
-  const fallbackImage ="https:
+  const fallbackImage ="https://api.dicebear.com/7.x/bottts/svg?seed=Mia ";
   
   return (
     <Link

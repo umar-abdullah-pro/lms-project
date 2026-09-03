@@ -15,12 +15,11 @@ import {
 import { useAuth } from "./AuthContext";
 
 const AVATAR_OPTIONS = [
-  "https:
-  "https:
-  "https:
-  "https:
-  "https:
-  "https:
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Mia",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=John",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Jane",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Bob",
+  "https://api.dicebear.com/7.x/bottts/svg?seed=Alice",
 ];
 
 const Register = () => {

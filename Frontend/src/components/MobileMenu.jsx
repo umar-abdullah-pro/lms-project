@@ -32,8 +32,7 @@ const MobileMenu = ({ isOpen, user, onLogout, closeMenu }) => {
               <div className="w-10 h-10 overflow-hidden bg-white border-2 rounded-full border-brand-purple/20">
                 <img
                   src={
-                    user.avatar ||
-                    `https:
+                    user.avatar ||"https://api.dicebear.com/7.x/bottts/svg?seed=Mia"
                   }
                   alt={user.name}
                   className="object-cover w-full h-full"

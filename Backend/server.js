@@ -17,7 +17,7 @@ const app = express();
 app.use(express.json());
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http:
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     methods: "GET,POST,PUT,DELETE",
     credentials: true,
   }),
@@ -45,12 +45,10 @@ mongoose
     console.log("✅ Connected to MongoDB successfully!");
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on http:
+      console.log(`🚀 Server is running on http://localhost:${PORT}`);
     });
   })
   .catch((err) => {
     console.log("❌ MongoDB connection error:", err);
     process.exit(1);
   });
-
-
