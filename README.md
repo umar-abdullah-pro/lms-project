@@ -115,7 +115,7 @@ npm run dev
 
 The application will be running at `http://localhost:5173`.
 
----
+----------------------------------
 
 ## 💡 Acknowledgements
 Built as an internship submission, demonstrating full-stack engineering capabilities, secure data-handling, and third-party API integration.
