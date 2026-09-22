@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: process.env.FRONTEND_URL || "http://localhost:5173",
-    methods: "GET,POST,PUT,DELETE",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
     credentials: true,
   }),
 );
@@ -45,7 +45,7 @@ mongoose
     console.log("✅ Connected to MongoDB successfully!");
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      console.log(`🚀 Server is running on ${PORT}`);
     });
   })
   .catch((err) => {
